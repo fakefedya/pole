@@ -20,7 +20,7 @@ services:
       retries: 5
 
   minio:
-    image: quay.io/minio/minio:latest
+    image: docker.io/pgsty/silo:RELEASE.2026-10-15T00-00-00Z
     container_name: pole-minio
     restart: unless-stopped
     command: server /data --console-address ":9001"
@@ -28,39 +28,43 @@ services:
       MINIO_ROOT_USER: ${S3_ACCESS_KEY:?S3_ACCESS_KEY is required}
       MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY:?S3_SECRET_KEY is required}
     ports:
-      - "9000:9000" # S3 API порт
-      - "9001:9001" # Web UI консоль (http://localhost:9001)
+      - "9000:9000"
+      - "9001:9001"
     volumes:
       - minio_data:/data
     healthcheck:
-      test: ["CMD", "mc", "ready", "local"]
+      test: ["CMD", "silo", "healthcheck", "ready"]
       interval: 5s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   minio-init:
-    image: quay.io/minio/mc:latest
+    image: docker.io/pgsty/silo:RELEASE.2026-10-15T00-00-00Z
     container_name: pole-minio-init
     depends_on:
       minio:
         condition: service_healthy
-    entrypoint: >
-      /bin/sh -c "
-      mc alias set local http://minio:9000 '${S3_ACCESS_KEY}' '${S3_SECRET_KEY}';
-      mc mb --ignore-existing local/${S3_PUBLIC_BUCKET};
-      mc mb --ignore-existing local/${S3_PRIVATE_BUCKET};
-      mc anonymous set download local/${S3_PUBLIC_BUCKET};
-      mc anonymous set none local/${S3_PRIVATE_BUCKET};
-      exit 0;
-      "
+    environment:
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY:?S3_ACCESS_KEY is required}
+      S3_SECRET_KEY: ${S3_SECRET_KEY:?S3_SECRET_KEY is required}
+      S3_PUBLIC_BUCKET: ${S3_PUBLIC_BUCKET:?S3_PUBLIC_BUCKET is required}
+      S3_PRIVATE_BUCKET: ${S3_PRIVATE_BUCKET:?S3_PRIVATE_BUCKET is required}
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        mc alias set local http://minio:9000 "$$S3_ACCESS_KEY" "$$S3_SECRET_KEY"
+        mc mb --ignore-existing "local/$$S3_PUBLIC_BUCKET"
+        mc mb --ignore-existing "local/$$S3_PRIVATE_BUCKET"
+        mc anonymous set download "local/$$S3_PUBLIC_BUCKET"
+        mc anonymous set none "local/$$S3_PRIVATE_BUCKET"
 
   mailpit:
     image: axllent/mailpit:latest
     container_name: pole-mailpit
     restart: unless-stopped
     ports:
-      - "${SMTP_PORT:-1025}:1025" # SMTP порт для отправки из Next.js
-      - "8025:8025"               # Web UI для просмотра писем (http://localhost:8025)
+      - "${SMTP_PORT:-1025}:1025"
+      - "8025:8025"
     environment:
       MP_MAX_MESSAGES: 500
       MP_SMTP_AUTH_ACCEPT_ANY: 1
