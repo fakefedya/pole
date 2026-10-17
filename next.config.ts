@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import '@/env'
 
 import { getPublicMediaBaseUrl } from './src/lib/storage/public-media-config'
 
