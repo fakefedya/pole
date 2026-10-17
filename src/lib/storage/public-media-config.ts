@@ -1,8 +1,8 @@
 export const getPublicMediaBaseUrl = (): string => {
-	const value = process.env.NEXT_PUBLIC_STORAGE_URL
+	const value = process.env.S3_PUBLIC_BASE_URL
 
 	if (!value) {
-		throw new Error('NEXT_PUBLIC_STORAGE_URL is required')
+		throw new Error('S3_PUBLIC_BASE_URL is required')
 	}
 
 	let url: URL
@@ -10,12 +10,12 @@ export const getPublicMediaBaseUrl = (): string => {
 	try {
 		url = new URL(value)
 	} catch {
-		throw new Error('NEXT_PUBLIC_STORAGE_URL must be an absolute URL')
+		throw new Error('S3_PUBLIC_BASE_URL must be an absolute URL')
 	}
 
 	if (url.username || url.password || url.search || url.hash) {
 		throw new Error(
-			'NEXT_PUBLIC_STORAGE_URL must not contain credentials, query or hash',
+			'S3_PUBLIC_BASE_URL must not contain credentials, query or hash',
 		)
 	}
 
@@ -26,10 +26,9 @@ export const getPublicMediaBaseUrl = (): string => {
 
 	if (url.protocol !== 'https:' && !isDevLoopback) {
 		throw new Error(
-			'NEXT_PUBLIC_STORAGE_URL must use HTTPS outside local development',
+			'S3_PUBLIC_BASE_URL must use HTTPS outside local development',
 		)
 	}
 
-	// Remove the trailing slash to produce stable media URLs.
 	return `${url.origin}${url.pathname.replace(/\/+$/, '')}`
 }
