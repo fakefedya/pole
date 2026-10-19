@@ -1,10 +1,19 @@
 @import 'tailwindcss';
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
+	--color-brand-terracota: #954520;
+	--color-brand-terracota-accent: #b1562a;
+	--color-brand-charcoal: #232323;
+	--color-brand-milk: #fcf7f4;
+	--color-brand-espresso: #442219;
+	--color-brand-cacao: #5b2f26;
+	--color-brand-olive: #94895b;
+	--color-brand-olive-accent: #797049;
+
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--font-sans: var(--font-sans);
@@ -122,13 +131,13 @@ body {
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+	* {
+		@apply border-border outline-ring/50;
 	}
-  body {
-    @apply bg-background text-foreground;
+	body {
+		@apply bg-background text-foreground;
 	}
-  html {
-    @apply font-sans;
+	html {
+		@apply font-sans;
 	}
 }

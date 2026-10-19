@@ -55,4 +55,24 @@ export const siteNavigation = [
 			},
 		],
 	},
+	{
+		type: 'link',
+		label: 'Проекты',
+		href: '/projects',
+	},
+	{
+		type: 'link',
+		label: 'О студии',
+		href: '/about',
+	},
+	{
+		type: 'link',
+		label: 'Цены',
+		href: '/prices',
+	},
+	{
+		type: 'link',
+		label: 'Контакты',
+		href: '/contacts',
+	},
 ] as const satisfies readonly SiteNavigationItem[]

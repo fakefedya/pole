@@ -14,6 +14,7 @@ import {
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 type DesktopNavigationProps = {
 	siteNavigation: readonly SiteNavigationItem[]
@@ -44,12 +45,20 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 						const isCurrent = isCurrentPath(item.href, pathname)
 
 						return (
-							<NavigationMenuItem key={item.href}>
+							<NavigationMenuItem
+								key={item.href}
+								className='h-11.5 flex items-center '
+							>
 								<NavigationMenuLink
 									render={<Link href={item.href} />}
 									active={isCurrent}
 									aria-current={isCurrent ? 'page' : undefined}
-									className={navigationMenuTriggerStyle()}
+									className={cn(
+										navigationMenuTriggerStyle(),
+										'h-full px-5 py-0 text-base text-brand-milk',
+										'hover:bg-brand-terracota-accent',
+										isCurrent && 'bg-brand-terracota-accent',
+									)}
 								>
 									{item.label}
 								</NavigationMenuLink>
@@ -70,8 +79,14 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 					)
 
 					return (
-						<NavigationMenuItem key={item.label}>
-							<NavigationMenuTrigger data-active={hasActiveChild || undefined}>
+						<NavigationMenuItem
+							key={item.label}
+							className='h-11.5 flex items-center'
+						>
+							<NavigationMenuTrigger
+								data-active={hasActiveChild || undefined}
+								className='h-full px-5 py-0 text-base text-brand-milk'
+							>
 								{item.label}
 							</NavigationMenuTrigger>
 
