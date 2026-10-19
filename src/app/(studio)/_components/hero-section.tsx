@@ -69,5 +69,22 @@ const hotspots = [
 ] satisfies readonly HeroHotspot[]
 
 export function HeroSection() {
-	return <HeroLighting scenes={scenes} hotspots={hotspots} />
+	return (
+		<HeroLighting scenes={scenes} hotspots={hotspots}>
+			<div className='absolute top-7.5 left-7.5 w-16 h-16'>
+				<img
+					src='/logo-icon.svg'
+					alt='Company Logo'
+					className='h-full w-full flex-shrink-0 flex'
+				/>
+			</div>
+			<div className='absolute top-7.5 right-7.5 origin-top-right -rotate-90'>
+				<img
+					src='/logo-pole.svg'
+					alt='Company Logo'
+					className='h-full w-full flex-shrink-0 flex'
+				/>
+			</div>
+		</HeroLighting>
+	)
 }

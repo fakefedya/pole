@@ -133,15 +133,18 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 												const isCurrent = isCurrentPath(child.href, pathname)
 
 												return (
-													<li key={child.href}>
+													<li key={child.href} className='bg-transparent'>
 														<NavigationMenuLink
 															render={<Link href={child.href} />}
 															active={isCurrent}
 															aria-current={isCurrent ? 'page' : undefined}
 															closeOnClick
-															className='w-full'
+															className='w-full flex flex-col items-start gap-1 bg-transparent'
 														>
-															{child.label}
+															<span className='font-display text-base'>
+																{child.label}
+															</span>
+															<p className='text-sm'>{child.description}</p>
 														</NavigationMenuLink>
 													</li>
 												)

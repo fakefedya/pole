@@ -24,9 +24,14 @@ export type HeroHotspot = {
 type HeroLightingProps = {
 	scenes: readonly HeroScene[]
 	hotspots: readonly HeroHotspot[]
+	children: React.ReactNode
 }
 
-export function HeroLighting({ scenes, hotspots }: HeroLightingProps) {
+export function HeroLighting({
+	scenes,
+	hotspots,
+	children,
+}: HeroLightingProps) {
 	const [selectedScene, setSelectedScene] = useState<HeroSceneId>('day')
 
 	const [visibleScene, setVisibleScene] = useState<HeroSceneId>('day')
@@ -215,6 +220,7 @@ export function HeroLighting({ scenes, hotspots }: HeroLightingProps) {
 					Не удалось загрузить выбранный сценарий освещения.
 				</p>
 			)}
+			{children}
 		</section>
 	)
 }

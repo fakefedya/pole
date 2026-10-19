@@ -9,6 +9,7 @@ type NavigationLink = {
 
 type NavigationDropdownItem = {
 	label: string
+	description: string
 	href: InternalHref
 	cover?: string
 	isVisible?: boolean
@@ -35,11 +36,13 @@ export const siteNavigation = [
 		items: [
 			{
 				label: 'Индивидуальные услуги',
+				description: 'Проектирование и сопровождение вашего интерьера.',
 				href: '/individual',
 				cover: 'coverIndividual',
 			},
 			{
 				label: 'Паспорт интерьерного стиля',
+				description: 'Ваши предпочтения — в инструкции по обустройству дома.',
 				href: '/passport',
 				cover: 'coverPassport',
 			},
@@ -51,11 +54,13 @@ export const siteNavigation = [
 		items: [
 			{
 				label: 'Готовые решения',
+				description: 'Готовые проекты и подборки мебели и декора.',
 				href: '/ready',
 				cover: 'coverReady',
 			},
 			{
 				label: 'Полезные материалы',
+				description: 'Чек-листы, таблицы и инструкции для дома.',
 				href: '/materials',
 				cover: 'coverMaterials',
 			},
