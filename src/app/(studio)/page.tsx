@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 const testImageKey = 'site/home/hero/hero.jpg'
 
-export default function Home() {
+export function HomePage() {
 	return (
 		<SiteSection className='min-h-full h-dvh'>
 			<div className='h-full relative aspect-video w-full overflow-hidden rounded-xl'>
@@ -20,3 +20,5 @@ export default function Home() {
 		</SiteSection>
 	)
 }
+
+export { HomePage as default }

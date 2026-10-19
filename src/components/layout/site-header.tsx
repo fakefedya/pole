@@ -11,7 +11,7 @@ export function SiteHeader() {
 		>
 			<div
 				className={cn(
-					'bg-black/80 backdrop-blur-md relative mx-auto w-fit flex rounded-full p-1.5',
+					'bg-black/80 backdrop-blur-md relative mx-2.5 w-fit flex rounded-full p-1.5',
 				)}
 			>
 				<DesktopNavigation siteNavigation={siteNavigation} />

@@ -12,109 +12,146 @@ import {
 	navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu'
 
+import { cn } from '@/lib/utils'
+import { LayoutGroup, MotionConfig, motion } from 'motion/react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { cn } from '@/lib/utils'
 
 type DesktopNavigationProps = {
 	siteNavigation: readonly SiteNavigationItem[]
 }
 
+const navigationItemClassName = cn(
+	'relative isolate h-full rounded-full px-5 py-0',
+	'text-base text-brand-milk',
+	'bg-transparent!',
+	'[&_svg]:relative [&_svg]:size-3.5 [&_svg]:z-10',
+)
+
 const isCurrentPath = (href: string, pathname: string) => {
-	if (href === '/') {
-		return pathname === '/'
-	}
+	if (href === '/') return pathname === '/'
 
 	return pathname === href || pathname.startsWith(`${href}/`)
+}
+
+function ActivePill() {
+	return (
+		<motion.span
+			layoutId='site-navigation-active-pill'
+			initial={false}
+			transition={{
+				type: 'spring',
+				stiffness: 420,
+				damping: 36,
+			}}
+			className={cn(
+				'pointer-events-none absolute inset-0 z-0',
+				'rounded-full bg-brand-terracota-accent',
+			)}
+			aria-hidden='true'
+		/>
+	)
 }
 
 export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 	const pathname = usePathname()
 
-	const visibleItems = siteNavigation.filter((item) => item.isVisible !== false)
+	const visibleItems = siteNavigation.filter(
+		(item) =>
+			item.isVisible !== false &&
+			(item.type === 'link' ||
+				item.items.some((child) => child.isVisible !== false)),
+	)
 
-	if (visibleItems.length === 0) {
-		return null
-	}
+	if (visibleItems.length === 0) return null
+
+	const activeIndex = visibleItems.findIndex((item) => {
+		if (item.type === 'link') {
+			return isCurrentPath(item.href, pathname)
+		}
+
+		return item.items.some(
+			(child) =>
+				child.isVisible !== false && isCurrentPath(child.href, pathname),
+		)
+	})
 
 	return (
-		<NavigationMenu aria-label='Основная навигация'>
-			<NavigationMenuList>
-				{visibleItems.map((item) => {
-					if (item.type === 'link') {
-						const isCurrent = isCurrentPath(item.href, pathname)
+		<MotionConfig reducedMotion='user'>
+			<LayoutGroup id='studio-pole-desktop-navigation'>
+				<NavigationMenu aria-label='Основная навигация'>
+					<NavigationMenuList>
+						{visibleItems.map((item, index) => {
+							const isSelected = index === activeIndex
 
-						return (
-							<NavigationMenuItem
-								key={item.href}
-								className='h-11.5 flex items-center '
-							>
-								<NavigationMenuLink
-									render={<Link href={item.href} />}
-									active={isCurrent}
-									aria-current={isCurrent ? 'page' : undefined}
-									className={cn(
-										navigationMenuTriggerStyle(),
-										'h-full px-5 py-0 text-base text-brand-milk',
-										'hover:bg-brand-terracota-accent',
-										isCurrent && 'bg-brand-terracota-accent',
-									)}
+							if (item.type === 'link') {
+								return (
+									<NavigationMenuItem
+										key={item.href}
+										className='flex h-11.5 items-center'
+									>
+										<NavigationMenuLink
+											render={<Link href={item.href} />}
+											active={isSelected}
+											aria-current={isSelected ? 'page' : undefined}
+											className={cn(
+												navigationMenuTriggerStyle(),
+												navigationItemClassName,
+											)}
+										>
+											{isSelected && <ActivePill />}
+
+											<span className='relative z-10'>{item.label}</span>
+										</NavigationMenuLink>
+									</NavigationMenuItem>
+								)
+							}
+
+							const visibleChildren = item.items.filter(
+								(child) => child.isVisible !== false,
+							)
+
+							return (
+								<NavigationMenuItem
+									key={item.label}
+									className='flex h-11.5 items-center'
 								>
-									{item.label}
-								</NavigationMenuLink>
-							</NavigationMenuItem>
-						)
-					}
+									<NavigationMenuTrigger
+										data-active={isSelected || undefined}
+										className={navigationItemClassName}
+									>
+										{isSelected && <ActivePill />}
 
-					const visibleChildren = item.items.filter(
-						(child) => child.isVisible !== false,
-					)
+										<span className='relative z-10'>{item.label}</span>
+									</NavigationMenuTrigger>
 
-					if (visibleChildren.length === 0) {
-						return null
-					}
+									<NavigationMenuContent>
+										<ul className='grid min-w-64 gap-1'>
+											{visibleChildren.map((child) => {
+												const isCurrent = isCurrentPath(child.href, pathname)
 
-					const hasActiveChild = visibleChildren.some((child) =>
-						isCurrentPath(child.href, pathname),
-					)
-
-					return (
-						<NavigationMenuItem
-							key={item.label}
-							className='h-11.5 flex items-center'
-						>
-							<NavigationMenuTrigger
-								data-active={hasActiveChild || undefined}
-								className='h-full px-5 py-0 text-base text-brand-milk'
-							>
-								{item.label}
-							</NavigationMenuTrigger>
-
-							<NavigationMenuContent>
-								<ul className='grid min-w-64 gap-1'>
-									{visibleChildren.map((child) => {
-										const isCurrent = isCurrentPath(child.href, pathname)
-
-										return (
-											<li key={child.href}>
-												<NavigationMenuLink
-													render={<Link href={child.href} />}
-													active={isCurrent}
-													aria-current={isCurrent ? 'page' : undefined}
-													closeOnClick
-													className='w-full'
-												>
-													{child.label}
-												</NavigationMenuLink>
-											</li>
-										)
-									})}
-								</ul>
-							</NavigationMenuContent>
-						</NavigationMenuItem>
-					)
-				})}
-			</NavigationMenuList>
-		</NavigationMenu>
+												return (
+													<li key={child.href}>
+														<NavigationMenuLink
+															render={<Link href={child.href} />}
+															active={isCurrent}
+															aria-current={isCurrent ? 'page' : undefined}
+															closeOnClick
+															className='w-full'
+														>
+															{child.label}
+														</NavigationMenuLink>
+													</li>
+												)
+											})}
+										</ul>
+									</NavigationMenuContent>
+								</NavigationMenuItem>
+							)
+						})}
+					</NavigationMenuList>
+				</NavigationMenu>
+			</LayoutGroup>
+		</MotionConfig>
 	)
 }

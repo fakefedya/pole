@@ -31,7 +31,7 @@ export const siteNavigation = [
 	},
 	{
 		type: 'dropdown',
-		label: 'Услуги и продукты',
+		label: 'Услуги',
 		items: [
 			{
 				label: 'Индивидуальные услуги',
@@ -43,6 +43,12 @@ export const siteNavigation = [
 				href: '/passport',
 				cover: 'coverPassport',
 			},
+		],
+	},
+	{
+		type: 'dropdown',
+		label: 'Продукты',
+		items: [
 			{
 				label: 'Готовые решения',
 				href: '/ready',
