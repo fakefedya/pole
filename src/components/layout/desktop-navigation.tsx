@@ -25,6 +25,7 @@ const navigationItemClassName = cn(
 	'relative isolate h-full rounded-full px-5 py-0',
 	'text-base text-brand-milk',
 	'bg-transparent!',
+	'transition-colors duration-300 hover:text-brand-milk/70 data-popup-open:hover:text-brand-milk/70 data-popup-open:text-brand-milk/70 data-open:text-brand-milk/70',
 	'[&_svg]:relative [&_svg]:size-3.5 [&_svg]:z-10',
 )
 
@@ -97,6 +98,7 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 											className={cn(
 												navigationMenuTriggerStyle(),
 												navigationItemClassName,
+												isSelected && 'hover:text-brand-milk',
 											)}
 										>
 											{isSelected && <ActivePill />}
