@@ -33,15 +33,11 @@ export function HeroLighting({
 	children,
 }: HeroLightingProps) {
 	const [selectedScene, setSelectedScene] = useState<HeroSceneId>('day')
-
 	const [visibleScene, setVisibleScene] = useState<HeroSceneId>('day')
-
 	const [selectedHotspot, setSelectedHotspot] = useState<string | null>(
 		'window',
 	)
-
 	const [loadAlternates, setLoadAlternates] = useState(false)
-
 	const [failedScene, setFailedScene] = useState<HeroSceneId | null>(null)
 
 	const requestedScene = useRef<HeroSceneId>('day')
@@ -145,18 +141,21 @@ export function HeroLighting({
 									'cursor-pointer place-items-center rounded-full',
 									'focus-visible:outline-2',
 									'focus-visible:outline-offset-2',
-									'focus-visible:outline-white',
+									'focus-visible:outline-rand-milk',
 								)}
 							>
 								<span
 									className={cn(
 										'grid size-8 place-items-center rounded-full',
-										'border border-white/80 bg-black/25',
+										'border border-brand-milk/80 bg-black/25',
 										'backdrop-blur-sm transition-colors duration-300',
 										isSelected &&
 											'border-brand-terracota-accent bg-brand-terracota-accent/80',
 									)}
 								>
+									{!isSelected && (
+										<span className='bg-brand-milk/60 absolute inline-flex h-6 w-6 animate-[ping_2s_ease-in-out_infinite] rounded-full' />
+									)}
 									<span
 										className={cn(
 											'size-1.5 rounded-full',
