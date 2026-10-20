@@ -3,13 +3,24 @@ import { cva } from 'class-variance-authority'
 import { cn } from 'cn'
 import { ChevronDownIcon } from 'lucide-react'
 
+// Позволяет привязать Popup к произвольному элементу.
+type NavigationMenuProps = NavigationMenuPrimitive.Root.Props &
+	Pick<
+		NavigationMenuPrimitive.Positioner.Props,
+		'anchor' | 'align' | 'sideOffset'
+	> & {
+		matchAnchorWidth?: boolean
+	}
+
 function NavigationMenu({
 	align = 'start',
+	anchor,
+	sideOffset = 8,
+	matchAnchorWidth = false,
 	className,
 	children,
 	...props
-}: NavigationMenuPrimitive.Root.Props &
-	Pick<NavigationMenuPrimitive.Positioner.Props, 'align'>) {
+}: NavigationMenuProps) {
 	return (
 		<NavigationMenuPrimitive.Root
 			data-slot='navigation-menu'
@@ -20,7 +31,13 @@ function NavigationMenu({
 			{...props}
 		>
 			{children}
-			<NavigationMenuPositioner align={align} />
+
+			<NavigationMenuPositioner
+				anchor={anchor}
+				align={align}
+				sideOffset={sideOffset}
+				matchAnchorWidth={matchAnchorWidth}
+			/>
 		</NavigationMenuPrimitive.Root>
 	)
 }
@@ -95,13 +112,17 @@ function NavigationMenuContent({
 }
 
 function NavigationMenuPositioner({
+	matchAnchorWidth = false,
 	className,
 	side = 'bottom',
 	sideOffset = 8,
 	align = 'start',
 	alignOffset = 0,
+	style,
 	...props
-}: NavigationMenuPrimitive.Positioner.Props) {
+}: NavigationMenuPrimitive.Positioner.Props & {
+	matchAnchorWidth?: boolean
+}) {
 	return (
 		<NavigationMenuPrimitive.Portal>
 			<NavigationMenuPrimitive.Positioner
@@ -109,13 +130,25 @@ function NavigationMenuPositioner({
 				sideOffset={sideOffset}
 				align={align}
 				alignOffset={alignOffset}
+				style={
+					matchAnchorWidth
+						? {
+								...style,
+								width: 'var(--anchor-width)',
+								maxWidth: 'none',
+							}
+						: style
+				}
 				className={cn(
 					'isolate z-50 h-(--positioner-height) w-(--positioner-width) max-w-(--available-width) transition-[top,left,right,bottom] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] data-instant:transition-none data-[side=bottom]:before:top-[-10px] data-[side=bottom]:before:right-0 data-[side=bottom]:before:left-0',
 					className,
 				)}
 				{...props}
 			>
-				<NavigationMenuPrimitive.Popup className='data-[ending-style]:easing-[ease] xs:w-(--popup-width) relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) rounded-3xl bg-popover text-popover-foreground shadow-lg ring-1 ring-foreground/5 transition-[opacity,transform,width,height,scale,translate] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-90 data-starting-style:opacity-0 dark:ring-foreground/10'>
+				<NavigationMenuPrimitive.Popup
+					className='data-[ending-style]:easing-[ease] xs:w-(--popup-width) relative h-(--popup-height) w-(--popup-width) origin-(--transform-origin) rounded-3xl bg-popover text-popover-foreground shadow-lg ring-1 ring-foreground/5 transition-[opacity,transform,width,height,scale,translate] duration-[0.35s] ease-[cubic-bezier(0.22,1,0.36,1)] outline-none data-ending-style:scale-90 data-ending-style:opacity-0 data-ending-style:duration-150 data-starting-style:scale-90 data-starting-style:opacity-0 dark:ring-foreground/10'
+					style={matchAnchorWidth ? { width: '100%' } : undefined}
+				>
 					<NavigationMenuPrimitive.Viewport className='relative size-full overflow-hidden' />
 				</NavigationMenuPrimitive.Popup>
 			</NavigationMenuPrimitive.Positioner>
