@@ -73,14 +73,19 @@ export function HeroSection() {
 	return (
 		<HeroLighting scenes={scenes} hotspots={hotspots}>
 			<div className='absolute top-7.5 left-7.5 z-5 block'>
-				<Image src='/logo-icon.svg' alt='STUDIO POLE' width={64} height={64} />
+				<Image
+					src='/brand/logo-icon.svg'
+					alt='STUDIO POLE'
+					width={64}
+					height={64}
+				/>
 			</div>
 			<div
 				aria-hidden='true'
 				className=' pointer-events-none absolute top-1/2 right-7.5 z-5 h-[80dvh] w-[20dvh] -translate-y-1/2'
 			>
 				<Image
-					src='/logo-pole.svg'
+					src='/brand/logo-pole.svg'
 					alt=''
 					width={456}
 					height={114}

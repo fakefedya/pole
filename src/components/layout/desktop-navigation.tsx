@@ -2,6 +2,7 @@
 
 import type { SiteNavigationItem } from '@/config/site-navigation'
 import { useRef } from 'react'
+import Image from 'next/image'
 
 import {
 	NavigationMenu,
@@ -139,24 +140,42 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 											<span className='relative z-10'>{item.label}</span>
 										</NavigationMenuTrigger>
 
-										<NavigationMenuContent className='w-full'>
-											<ul className='grid w-full grid-cols-2 gap-3 p-2'>
+										<NavigationMenuContent className='w-full p-1.5'>
+											<ul className='grid w-full grid-cols-2 gap-1.5'>
 												{visibleChildren.map((child) => {
 													const isCurrent = isCurrentPath(child.href, pathname)
+													const cover = `/layout/${child.cover}`
 
 													return (
-														<li key={child.href} className='bg-transparent'>
+														<li key={child.href}>
 															<NavigationMenuLink
 																render={<Link href={child.href} />}
 																active={isCurrent}
 																aria-current={isCurrent ? 'page' : undefined}
 																closeOnClick
-																className='w-full flex flex-col items-start gap-1 bg-transparent'
+																className={cn(
+																	'relative overflow-hidden w-full h-75 flex flex-col items-start justify-between p-8 bg-brand-milk/5',
+																	'hover:bg-brand-milk/10 transition-colors duration-300',
+																)}
 															>
-																<span className='font-display text-base'>
-																	{child.label}
-																</span>
-																<p className='text-sm'>{child.description}</p>
+																<div className='flex flex-col gap-1'>
+																	<span className='font-display font-semibold text-brand-milk text-base'>
+																		{child.label}
+																	</span>
+																	<p className='text-sm text-brand-milk/80'>
+																		{child.description}
+																	</p>
+																</div>
+
+																<div className='absolute -right-1/3 -bottom-1/3 h-full w-full'>
+																	<Image
+																		src={cover}
+																		alt={child.label}
+																		fill
+																		sizes='(max-width: 1024px) 100vw, 66vw'
+																		className={cn('object-contain')}
+																	/>
+																</div>
 															</NavigationMenuLink>
 														</li>
 													)
