@@ -16,11 +16,19 @@ const sectionDescription: Description = {
 
 export function AboutSection() {
 	return (
-		<SiteSection>
-			<SiteContainer>
-				<h2>{sectionDescription.title}</h2>
-				<p>{sectionDescription.subtitle}</p>
-				<p>{sectionDescription.description}</p>
+		<SiteSection className='bg-brand-milk'>
+			<SiteContainer className='max-w-7xl py-75 px-10'>
+				<div className='max-w-[80%] mx-auto flex flex-col gap-4 items-center text-center'>
+					<h2 className='uppercase font-display text-5xl text-brand-charcoal'>
+						{sectionDescription.title}
+					</h2>
+					<p className='text-3xl font-medium text-brand-terracota'>
+						{sectionDescription.subtitle}
+					</p>
+					<p className='text-xl text-brand-charcoal'>
+						{sectionDescription.description}
+					</p>
+				</div>
 			</SiteContainer>
 		</SiteSection>
 	)
