@@ -20,7 +20,7 @@
         "lucide-react": "^1.58.0",
         "motion": "^14.3.0",
         "next": "16.4.2",
-        "nodemailer": "^10.1.2",
+        "nodemailer": "^10.1.7",
         "pg": "^8.23.1",
         "react": "19.3.0",
         "react-dom": "19.3.0",
@@ -1280,7 +1280,7 @@
 
     "node-releases": ["node-releases@2.0.59", "", {}, "sha512-5qr2okC4ItAI0hG5SaV0HoYMpnM/Y6+Oqr7AmPYy/2uEoGvS+GbSKLeRxSS1uAdu59yz0ouzcuXievSgg///WA=="],
 
-    "nodemailer": ["nodemailer@10.1.2", "", {}, "sha512-rnQn9Rzh8RAwcp42MVsIvxbsv6YZ2a2/av+uyJ/LPU1+2QSlrRgFsWWZTKenyRUqkIl8urOI0c4+CEcmFdsvQw=="],
+    "nodemailer": ["nodemailer@10.1.7", "", {}, "sha512-OQa6FDln5fLttmqSbjDiRYvFDOFNrBqfiOwHPlEbURil3b+vPB1v8xpi+Sp46drzNDlsTnNsS502vthmz56r4w=="],
 
     "npm-run-path": ["npm-run-path@6.0.0", "", { "dependencies": { "path-key": "^4.0.0", "unicorn-magic": "^0.3.0" } }, "sha512-9qny7Z9DsQU8Ou39ERsPU4OZQlSTP47ShQzuKZ6PRXpYLtIFgl/DEBYEXKlvcEa+9tHVcK8CF81Y2V72qaZhWA=="],
 

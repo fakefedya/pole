@@ -1,23 +1,34 @@
 import { createEnv } from '@t3-oss/env-nextjs'
 import { z } from 'zod'
 
+const isAllowedPublicProtocol = (url: URL): boolean => {
+	if (url.protocol === 'https:') {
+		return true
+	}
+
+	return (
+		url.protocol === 'http:' &&
+		['localhost', '127.0.0.1'].includes(url.hostname)
+	)
+}
+
+const hasSafeUrlParts = (url: URL): boolean => {
+	return !url.username && !url.password && !url.search && !url.hash
+}
+
 const isValidPublicMediaUrl = (value: string): boolean => {
 	const url = new URL(value)
 
-	const isLocalDevelopment =
-		process.env.NODE_ENV !== 'production' &&
-		url.protocol === 'http:' &&
-		['localhost', '127.0.0.1'].includes(url.hostname)
+	return (
+		isAllowedPublicProtocol(url) && hasSafeUrlParts(url) && url.pathname !== '/'
+	)
+}
 
-	const validProtocol = url.protocol === 'https:' || isLocalDevelopment
+const isValidAuthUrl = (value: string): boolean => {
+	const url = new URL(value)
 
 	return (
-		validProtocol &&
-		!url.username &&
-		!url.password &&
-		!url.search &&
-		!url.hash &&
-		url.pathname !== '/'
+		isAllowedPublicProtocol(url) && hasSafeUrlParts(url) && url.pathname === '/'
 	)
 }
 
@@ -30,7 +41,7 @@ export const env = createEnv({
 		S3_SECRET_KEY: z.string().trim().min(10),
 		S3_PUBLIC_BUCKET: z.string().trim().min(3),
 		S3_PUBLIC_BASE_URL: z.url().refine(isValidPublicMediaUrl, {
-			message: 'Expected HTTPS URL or local HTTP URL in development',
+			message: 'Expected HTTPS URL or loopback HTTP URL with bucket path',
 		}),
 		S3_PRIVATE_BUCKET: z.string().trim().min(3),
 
@@ -48,21 +59,9 @@ export const env = createEnv({
 
 		// Better Auth
 		AUTH_SECRET: z.string().min(32),
-		BETTER_AUTH_URL: z.url().refine(
-			(value) => {
-				const url = new URL(value)
-
-				return (
-					url.protocol === 'https:' ||
-					(process.env.NODE_ENV !== 'production' &&
-						url.protocol === 'http:' &&
-						['localhost', '127.0.0.1'].includes(url.hostname))
-				)
-			},
-			{
-				message: 'Expected HTTPS, or localhost HTTP outside production',
-			},
-		),
+		BETTER_AUTH_URL: z.url().refine(isValidAuthUrl, {
+			message: 'Expected HTTPS origin or loopback HTTP origin',
+		}),
 	},
 
 	experimental__runtimeEnv: process.env,
