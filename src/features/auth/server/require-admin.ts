@@ -16,3 +16,13 @@ export async function requireAdmin() {
 
 	return session
 }
+
+export async function requireAdminWith2FA() {
+	const session = await requireAdmin()
+
+	if (session.user.twoFactorEnabled !== true) {
+		redirect('/dashboard/security')
+	}
+
+	return session
+}

@@ -36,6 +36,15 @@ export function LoginForm() {
 				return
 			}
 
+			if (
+				result.data &&
+				'twoFactorRedirect' in result.data &&
+				result.data.twoFactorRedirect
+			) {
+				router.replace('/dashboard/verify')
+				return
+			}
+
 			router.replace('/dashboard')
 			router.refresh()
 		} catch {

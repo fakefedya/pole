@@ -62,6 +62,16 @@ export const env = createEnv({
 		BETTER_AUTH_URL: z.url().refine(isValidAuthUrl, {
 			message: 'Expected HTTPS origin or loopback HTTP origin',
 		}),
+
+		// SMTP
+		SMTP_HOST: z.string().trim().min(1),
+		SMTP_PORT: z.coerce.number().int().min(1).max(65535),
+		SMTP_SECURE: z
+			.enum(['true', 'false'])
+			.transform((value) => value === 'true'),
+		SMTP_USER: z.string().optional(),
+		SMTP_PASSWORD: z.string().optional(),
+		SMTP_FROM: z.string().trim().min(3),
 	},
 
 	experimental__runtimeEnv: process.env,

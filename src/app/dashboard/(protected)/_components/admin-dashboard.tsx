@@ -1,9 +1,9 @@
-import { requireAdmin } from '@/features/auth/server/require-admin'
+import { requireAdminWith2FA } from '@/features/auth/server/require-admin'
 
 import { LogoutButton } from '@/features/auth/components/logout-button'
 
 export async function AdminDashboard() {
-	const session = await requireAdmin()
+	const session = await requireAdminWith2FA()
 
 	return (
 		<main className='mx-auto flex max-w-5xl flex-col gap-8 p-10'>
