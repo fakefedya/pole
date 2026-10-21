@@ -6,19 +6,17 @@ loadEnvConfig(process.cwd())
 const databaseUrl = process.env.DATABASE_URL
 
 if (!databaseUrl) {
-  throw new Error(
-    'DATABASE_URL is required. Check your .env.local file.',
-  )
+	throw new Error('DATABASE_URL is required. Check your .env.local file.')
 }
 
 export default defineConfig({
-  schema: 'prisma/schema.prisma',
+	schema: 'prisma',
 
-  migrations: {
-    path: 'prisma/migrations',
-  },
+	migrations: {
+		path: 'prisma/migrations',
+	},
 
-  datasource: {
-    url: databaseUrl,
-  },
+	datasource: {
+		url: databaseUrl,
+	},
 })

@@ -4,9 +4,9 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "bun --bun next dev",
-		"build": "bun run db:generate && bun --bun next build",
-		"start": "bun --bun next start",
+		"dev": "node ./node_modules/next/dist/bin/next dev",
+		"build": "bun run db:generate && node ./node_modules/next/dist/bin/next build",
+		"start": "node ./node_modules/next/dist/bin/next start",
 		"lint": "eslint",
 		"format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
 		"db:generate": "bunx --bun prisma generate",
