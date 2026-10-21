@@ -2,9 +2,10 @@
 	"name": "pole",
 	"version": "0.1.0",
 	"private": true,
+  "type": "module",
 	"scripts": {
 		"dev": "bun --bun next dev",
-		"build": "bun --bun next build",
+		"build": "bun run db:generate && bun --bun next build",
 		"start": "bun --bun next start",
 		"lint": "eslint",
 		"format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
@@ -40,6 +41,7 @@
 		"zod": "^4.6.7"
 	},
 	"devDependencies": {
+		"@next/env": "16.4.2",
 		"@tailwindcss/turbopack": "^4",
 		"@types/bun": "^1.4.3",
 		"@types/node": "^26.6.5",

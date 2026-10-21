@@ -33,6 +33,18 @@ export const env = createEnv({
 			message: 'Expected HTTPS URL or local HTTP URL in development',
 		}),
 		S3_PRIVATE_BUCKET: z.string().trim().min(3),
+
+    // DB
+    DATABASE_URL: z.url().refine(
+      (value) => {
+        const protocol = new URL(value).protocol
+
+        return ['postgres', 'postgresql:'].includes(protocol)
+      },
+      {
+        message: 'Expected PostgresSQL connection URL'
+      }
+    )
 	},
 
 	experimental__runtimeEnv: process.env,

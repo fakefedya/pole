@@ -46,3 +46,6 @@ repomix*.xml
 
 # editor
 .vscode/
+
+# prisma
+/src/generated/prisma/
