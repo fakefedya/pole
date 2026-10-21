@@ -39,12 +39,31 @@ export const env = createEnv({
       (value) => {
         const protocol = new URL(value).protocol
 
-        return ['postgres', 'postgresql:'].includes(protocol)
+        return ['postgres:', 'postgresql:'].includes(protocol)
       },
       {
         message: 'Expected PostgresSQL connection URL'
       }
     )
+    // Better Auth
+    AUTH_SECRET: z.string().min(32),
+    BETTER_AUTH_URL: z.(url).refine(
+      (value) => {
+        const url = new URL(value)
+
+        return (
+          url.protocol === 'https:' ||
+            (
+              process.env.NODE_ENV !== 'production' &&
+                url.protocol === 'http:' &&
+                ['localhost', '127.0.0.1'].includes(url.hostname)
+          )
+        )
+      },
+      {
+        message: 'Expected HTTPS, or localhost HTTP outside production',
+      },
+    ),
 	},
 
 	experimental__runtimeEnv: process.env,
