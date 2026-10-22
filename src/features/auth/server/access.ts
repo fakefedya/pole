@@ -17,7 +17,6 @@ export async function requireDashboardSession() {
 	const session = await currentSession()
 	if (!session) redirect('/dashboard/login')
 	if (session.user.banned) redirect('/dashboard/forbidden')
-	if (session.user.banned) redirect('/dashboard/forbidden')
 	if (!hasPermission(session.user.role, PERMISSION.DASHBOARD_VIEW)) {
 		redirect('/dashboard/forbidden')
 	}

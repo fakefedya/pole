@@ -158,7 +158,9 @@ export function TwoFactorSetup({ initiallyEnabled }: Props) {
 			)}
 
 			<Link href='/dashboard' className='text-sm underline'>
-				Вернуться в Dashboard
+				{enabled
+					? 'Вернуться в Dashboard'
+					: 'Вернуться в Dashboard без настройки 2FA'}
 			</Link>
 		</div>
 	)

@@ -1,42 +1,51 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
 import { authClient } from '@/lib/auth/auth-client'
+import { Button } from '@/components/ui/button'
 
 export function LogoutButton() {
-	const router = useRouter()
 	const [pending, setPending] = useState(false)
+	const [error, setError] = useState<string | null>(null)
 
 	async function handleLogout() {
 		if (pending) return
 
 		setPending(true)
+		setError(null)
 
 		try {
-			const { error } = await authClient.signOut()
+			const result = await authClient.signOut()
 
-			if (error) {
+			if (result.error) {
 				throw new Error('Sign-out failed')
 			}
 
-			router.replace('/dashboard/login')
-			router.refresh()
+			window.location.replace('/dashboard/login')
 		} catch {
+			setError('Не удалось выйти. Повторите попытку.')
 			setPending(false)
-			window.alert('Не удалось выйти. Повторите попытку.')
 		}
 	}
 
 	return (
-		<button
-			type='button'
-			onClick={handleLogout}
-			disabled={pending}
-			className='rounded-full border px-5 py-2 disabled:opacity-50'
-		>
-			{pending ? 'Выходим…' : 'Выйти'}
-		</button>
+		<div className='flex flex-col items-start gap-2'>
+			<Button
+				type='button'
+				variant='outline'
+				size='sm'
+				onClick={handleLogout}
+				disabled={pending}
+			>
+				{pending ? 'Выходим…' : 'Выйти'}
+			</Button>
+
+			{error && (
+				<p role='alert' className='text-xs text-red-600'>
+					{error}
+				</p>
+			)}
+		</div>
 	)
 }
