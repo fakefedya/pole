@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, type SubmitEvent } from 'react'
+import { useEffect, useRef, useState, type SubmitEvent } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { authClient } from '@/lib/auth/auth-client'
+
+const RESEND_COOLDOWN_SECONDS = 60
 
 export function VerifyOtpForm() {
 	const router = useRouter()
@@ -14,6 +16,19 @@ export function VerifyOtpForm() {
 	const [resending, setResending] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const [message, setMessage] = useState<string | null>(null)
+	const [resendCooldown, setResendCooldown] = useState(RESEND_COOLDOWN_SECONDS)
+
+	const resendInFlightRef = useRef(false)
+
+	useEffect(() => {
+		if (resendCooldown <= 0) return
+
+		const timer = window.setTimeout(() => {
+			setResendCooldown((seconds) => Math.max(0, seconds - 1))
+		}, 1000)
+
+		return () => window.clearTimeout(timer)
+	}, [resendCooldown])
 
 	async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
 		event.preventDefault()
@@ -49,8 +64,11 @@ export function VerifyOtpForm() {
 	}
 
 	async function handleResend() {
-		if (resending) return
+		if (resendInFlightRef.current || resendCooldown > 0 || pending) {
+			return
+		}
 
+		resendInFlightRef.current = true
 		setResending(true)
 		setError(null)
 		setMessage(null)
@@ -61,16 +79,25 @@ export function VerifyOtpForm() {
 			})
 
 			if (result.error) {
-				setError(
-					'Не удалось отправить код. Попробуйте позже или начните вход заново.',
-				)
+				if (result.error.status === 429) {
+					setResendCooldown(RESEND_COOLDOWN_SECONDS)
+					setError('Слишком много запросов. Повторите попытку позже.')
+				} else {
+					setError(
+						'Не удалось запросить новый код. ' +
+							'Повторите вход, если срок ожидания истёк.',
+					)
+				}
+
 				return
 			}
 
-			setMessage('Новый код отправлен.')
+			setResendCooldown(RESEND_COOLDOWN_SECONDS)
+			setMessage('Новый код запрошен. Проверьте почтовый ящик.')
 		} catch {
-			setError('Ошибка отправки письма.')
+			setError('Ошибка соединения. Повторите попытку.')
 		} finally {
+			resendInFlightRef.current = false
 			setResending(false)
 		}
 	}
@@ -129,11 +156,15 @@ export function VerifyOtpForm() {
 				{!useBackupCode && (
 					<button
 						type='button'
-						disabled={resending}
+						disabled={pending || resending || resendCooldown > 0}
 						onClick={handleResend}
-						className='text-sm underline disabled:opacity-50'
+						className='text-sm underline disabled:cursor-not-allowed disabled:opacity-50'
 					>
-						{resending ? 'Отправляем…' : 'Отправить код повторно'}
+						{resending
+							? 'Отправляем…'
+							: resendCooldown > 0
+								? `Отправить повторно через ${resendCooldown} сек.`
+								: 'Отправить код повторно'}
 					</button>
 				)}
 

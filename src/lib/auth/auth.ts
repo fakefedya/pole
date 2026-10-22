@@ -61,6 +61,8 @@ export const auth = betterAuth({
 
 			otpOptions: {
 				period: 5,
+				allowedAttempts: 5,
+				storeOTP: 'hashed',
 
 				async sendOTP({ user, otp }) {
 					await sendSecurityCode({

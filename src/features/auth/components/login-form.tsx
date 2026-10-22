@@ -41,6 +41,18 @@ export function LoginForm() {
 				'twoFactorRedirect' in result.data &&
 				result.data.twoFactorRedirect
 			) {
+				const otpResult = await authClient.twoFactor.sendOtp({
+					trustDevice: false,
+				})
+
+				if (otpResult.error) {
+					setError(
+						'Пароль принят, но отправить код не удалось. ' +
+							'Повторите вход немного позже.',
+					)
+					return
+				}
+
 				router.replace('/dashboard/verify')
 				return
 			}
