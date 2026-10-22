@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, type FormEvent } from 'react'
+import { useState, type SubmitEvent } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { authClient } from '@/lib/auth/auth-client'
@@ -15,7 +15,7 @@ export function VerifyOtpForm() {
 	const [error, setError] = useState<string | null>(null)
 	const [message, setMessage] = useState<string | null>(null)
 
-	async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+	async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
 		event.preventDefault()
 
 		if (pending) return
