@@ -1,21 +1,25 @@
 import { Suspense } from 'react'
+import { requireDashboardSession } from '@/features/auth/server/access'
+import { DashboardShell } from '@/features/dashboard/components/dashboard-shell'
+import { DashboardLoading } from '@/features/dashboard/components/dashboard-loading'
 
-import { requireAdmin } from '@/features/auth/server/require-admin'
-
-async function AdminAccess({ children }: { children: React.ReactNode }) {
-	await requireAdmin()
-
+async function ProtectedArea({ children }: { children: React.ReactNode }) {
+	const session = await requireDashboardSession()
 	return (
-		<div className='min-h-dvh bg-neutral-100 text-neutral-900'>{children}</div>
+		<DashboardShell email={session.user.email} role={session.user.role}>
+			{children}
+		</DashboardShell>
 	)
 }
 
-export function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function ProtectedLayout({
+	children,
+}: {
+	children: React.ReactNode
+}) {
 	return (
-		<Suspense fallback={<div>Проверка доступа…</div>}>
-			<AdminAccess>{children}</AdminAccess>
+		<Suspense fallback={<DashboardLoading />}>
+			<ProtectedArea>{children}</ProtectedArea>
 		</Suspense>
 	)
 }
-
-export { AdminLayout as default }

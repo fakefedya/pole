@@ -2,6 +2,8 @@ import { betterAuth } from 'better-auth'
 import { prismaAdapter } from 'better-auth/adapters/prisma'
 import { admin, twoFactor } from 'better-auth/plugins'
 import { sendSecurityCode } from '@/lib/email/send-security-code'
+import { ROLE } from '@/lib/auth/authorization'
+import { authAccessControl, authRoles } from '@/lib/auth/admin-access-control'
 
 import { env } from '@/env'
 import { prisma } from '@/lib/db/prisma'
@@ -54,7 +56,7 @@ export const auth = betterAuth({
 	},
 
 	plugins: [
-		admin(),
+		admin({ defaultRole: ROLE.USER, ac: authAccessControl, roles: authRoles }),
 
 		twoFactor({
 			issuer: 'STUDIO POLE',

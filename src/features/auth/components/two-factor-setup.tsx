@@ -25,12 +25,21 @@ export function TwoFactorSetup({ initiallyEnabled }: Props) {
 
 		if (pending || !password) return
 
+		if (
+			enabled &&
+			!window.confirm(
+				'Создать новый набор резервных кодов? Предыдущие коды перестанут работать.',
+			)
+		)
+			return
+
 		setPending(true)
 		setError(null)
 		setMessage(null)
 
 		try {
-			if (!enabled) {
+			const enablingNow = !enabled
+			if (enablingNow) {
 				const enableResult = await authClient.twoFactor.enable({
 					password,
 					method: 'otp',
@@ -57,6 +66,15 @@ export function TwoFactorSetup({ initiallyEnabled }: Props) {
 
 			setBackupCodes(backupResult.data.backupCodes)
 			setPassword('')
+			if (enablingNow) {
+				const revoked = await authClient.revokeOtherSessions()
+				if (revoked.error) {
+					setError(
+						'2FA включена, но не удалось отозвать другие сессии. Сохраните резервные коды и завершите другие сеансы вручную.',
+					)
+					return
+				}
+			}
 
 			setMessage(
 				'Двухфакторная авторизация включена. Сохраните резервные коды.',
