@@ -11,7 +11,11 @@ import { assertMutationPermission } from '@/features/auth/server/access'
 import { descriptionToBlocks, parseProjectForm, prepareProject } from '@/features/projects/schemas/project-form'
 import { fieldErrorsFromZod } from '@/features/dashboard/lib/form-errors'
 
-export type ProjectActionState = { error: string | null; fieldErrors?: Record<string, string> }
+export type ProjectActionState = {
+  error: string | null
+  fieldErrors?: Record<string, string>
+  savedAt?: number
+}
 
 function invalidateProjects() {
   updateTag('featured-projects')
@@ -37,17 +41,38 @@ export async function saveProjectAction(
   let newId: string | null = null
   try {
     if (id) {
-      const existing = await prisma.project.findUnique({ where: { id }, select: { id: true, coverImageId: true, publishedAt: true } })
-      if (!existing) return { error: 'Проект не найден' }
-      if (data.status === 'PUBLISHED' && !existing.coverImageId) return { error: 'Сначала выберите обложку проекта.', fieldErrors: { status: 'Для публикации требуется обложка.' } }
-      await prisma.$transaction(async (tx) => {
-        await tx.project.update({ where: { id }, data: {
-          ...data,
-          publishedAt: data.status === 'PUBLISHED' ? existing.publishedAt ?? new Date() : existing.publishedAt,
-        } })
-        await tx.projectContentBlock.deleteMany({ where: { projectId: id } })
-        if (blocks.length) await tx.projectContentBlock.createMany({ data: blocks.map(b => ({ ...b, projectId: id })) })
+      // Keep the cover check and the project update together. The conditional
+      // update also checks the cover at write time when another editor deletes it.
+      const existing = await prisma.project.findUnique({
+        where: { id }, select: { id: true, publishedAt: true },
       })
+      if (!existing) return { error: 'Проект не найден.' }
+      const publishedAt = data.status === 'PUBLISHED'
+        ? existing.publishedAt ?? new Date()
+        : existing.publishedAt
+      const saved = await prisma.$transaction(async (tx) => {
+        const changed = await tx.project.updateMany({
+          where: {
+            id,
+            ...(data.status === 'PUBLISHED'
+              ? { coverImageId: { not: null } }
+              : {}),
+          },
+          data: { ...data, publishedAt },
+        })
+        if (changed.count !== 1) return false
+        await tx.projectContentBlock.deleteMany({ where: { projectId: id } })
+        if (blocks.length) await tx.projectContentBlock.createMany({
+          data: blocks.map((block) => ({ ...block, projectId: id })),
+        })
+        return true
+      })
+      if (!saved) {
+        return {
+          error: 'Нельзя опубликовать проект без обложки. Выберите её в галерее.',
+          fieldErrors: { status: 'Для публикации требуется обложка.' },
+        }
+      }
     } else {
       if (data.status === 'PUBLISHED') return { error: 'Новый проект сначала необходимо сохранить как черновик.', fieldErrors: { status: 'Создайте черновик и добавьте обложку перед публикацией.' } }
       const created = await prisma.project.create({ data: { ...data, blocks: { create: blocks } } })
@@ -60,7 +85,9 @@ export async function saveProjectAction(
     throw error
   }
   invalidateProjects()
-  redirect(newId ? `/dashboard/projects/${newId}/edit` : '/dashboard/projects')
+  if (newId) redirect(`/dashboard/projects/${newId}/edit`)
+  // Stay in the editor; gallery and publication remain accessible.
+  return { error: null, savedAt: Date.now() }
 }
 
 export async function deleteProjectAction(id: string): Promise<void> {

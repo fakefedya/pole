@@ -95,7 +95,7 @@ export async function setProjectCoverAction(projectId: string, imageId: string) 
     where: { id: idSchema.parse(imageId), projectId: id }, select: { id: true },
   })
   if (!image) throw new Error('Изображение не принадлежит проекту.')
-  await prisma.project.update({ where: { id }, data: { coverImageId: image.id } })
+  await prisma.project.update({ where: { id }, data: { coverImageId: image.id, updatedAt: new Date() } })
   refreshMedia()
 }
 
