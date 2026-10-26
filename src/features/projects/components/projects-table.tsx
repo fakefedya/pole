@@ -1,0 +1,62 @@
+'use client'
+
+import Link from 'next/link'
+import Image from 'next/image'
+import { useMemo } from 'react'
+import { Pencil } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { DashboardDataTable, type DashboardColumn } from '@/features/dashboard/components/dashboard-data-table'
+import { DeleteProjectButton } from './delete-project-button'
+
+export type ProjectTableRow = {
+  id: string
+  title: string
+  slug: string
+  status: 'DRAFT' | 'HIDDEN' | 'PUBLISHED'
+  areaSqM: string | null
+  location: string | null
+  tags: string[]
+  updatedAt: string
+  showOnHome: boolean
+  imageCount: number
+  coverUrl: string | null
+}
+const statusLabels = { DRAFT: 'Черновик', HIDDEN: 'Скрыт', PUBLISHED: 'Опубликован' } as const
+
+export function ProjectsTable({ projects, canEdit, canDelete }: {
+  projects: ProjectTableRow[]; canEdit: boolean; canDelete: boolean
+}) {
+  const columns = useMemo<DashboardColumn<ProjectTableRow>[]>(() => [
+    {
+      id: 'title', header: 'Проект', sortValue: (r) => r.title,
+      cell: (r) => <div className='flex min-w-52 items-center gap-3'>
+        <div className='relative size-13 shrink-0 overflow-hidden rounded-sm border border-dashboard-border bg-dashboard-input'>
+          {r.coverUrl ? <Image unoptimized src={r.coverUrl} alt={r.title} fill sizes='52px' className='object-cover' /> : null}
+        </div>
+        <div className='min-w-0'><p className='font-medium text-brand-milk'>{r.title}</p><p className='truncate text-xs text-muted-foreground'>/{r.slug}</p></div>
+      </div>,
+    },
+    { id: 'status', header: 'Статус', sortValue: (r) => r.status,
+      cell: (r) => <Badge variant='outline'>{statusLabels[r.status]}</Badge> },
+    { id: 'area', header: 'Площадь', sortValue: (r) => Number(r.areaSqM ?? 0),
+      cell: (r) => <span className='text-brand-milk'>{r.areaSqM ? `${r.areaSqM} м²` : '—'}</span> },
+    { id: 'photos', header: 'Фото', sortValue: (r) => r.imageCount,
+      cell: (r) => <span className='text-brand-milk'>{r.imageCount}</span> },
+    { id: 'featured', header: 'Главная', sortValue: (r) => Number(r.showOnHome),
+      cell: (r) => <span className='text-muted-foreground'>{r.showOnHome && r.status === 'PUBLISHED' ? 'Да' : 'Нет'}</span> },
+    { id: 'updated', header: 'Изменён', sortValue: (r) => Date.parse(r.updatedAt),
+      cell: (r) => <span className='whitespace-nowrap text-muted-foreground'>{new Date(r.updatedAt).toLocaleDateString('ru-RU')}</span> },
+    { id: 'actions', header: '', className: 'text-right', cell: (r) => <div className='flex justify-end gap-2'>
+      {canEdit && <Link href={`/dashboard/projects/${r.id}/edit`} className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'rounded-sm')}><Pencil className='size-4' /> Изменить</Link>}
+      {canDelete && <DeleteProjectButton id={r.id} />}
+    </div> },
+  ], [canDelete, canEdit])
+
+  return <DashboardDataTable
+    rows={projects} columns={columns}
+    searchText={(project) => [project.title, project.slug, project.location, ...project.tags].filter(Boolean).join(' ')}
+    searchPlaceholder='Название, URL, локация или тег…' emptyMessage='Проекты не найдены' pageSize={10}
+  />
+}

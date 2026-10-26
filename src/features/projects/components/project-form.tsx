@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState, useEffect, useState } from 'react'
+import { startTransition, useActionState, useEffect, useState, type SubmitEvent } from 'react'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
@@ -29,15 +29,25 @@ export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
 
   useEffect(() => { if (state.error) toast.error(state.error) }, [state])
 
+  function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (pending) return
+    // Create FormData before scheduling the transition: React clears event.currentTarget.
+    const values = new FormData(event.currentTarget)
+    // Bypass <form action={...}> to prevent React 19 resetting uncontrolled
+    // input/textarea elements when a Server Action returns validation errors.
+    startTransition(() => { formAction(values) })
+  }
+
   return (
-    <form action={formAction} noValidate className="mx-auto max-w-4xl space-y-6">
+    <form onSubmit={handleSubmit} noValidate className="mx-auto w-full max-w-6xl space-y-6">
       {project && <input type="hidden" name="projectId" value={project.id} />}
       <div className="flex items-center justify-between gap-3">
-        <div><h1 className="text-3xl font-semibold tracking-tight">{project ? 'Редактирование проекта' : 'Новый проект'}</h1>
-          <p className="mt-2 text-sm text-muted-foreground">Сначала сохраните черновик; публикация доступна после добавления обложки.</p></div>
+        <div><h1 className="text-3xl font-semibold tracking-tight text-brand-milk">{project ? 'Редактирование проекта' : 'Новый проект'}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Сначала создайте черновик, затем добавьте фотографии и выберите обложку.</p></div>
         <Button type="submit" disabled={pending}>{pending ? 'Сохранение…' : 'Сохранить'}</Button>
       </div>
-      <Card>
+      <Card className="border-dashboard-border bg-dashboard-background text-brand-milk">
         <CardHeader><CardTitle>Основное</CardTitle><CardDescription>Название, адрес страницы и описание</CardDescription></CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           <DashboardInputField id="title" name="title" label="Название *" defaultValue={project?.title} error={errors.title} />
@@ -51,10 +61,10 @@ export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
           <DashboardInputField id="year" name="year" label="Год" defaultValue={project?.year ?? ''} error={errors.year} />
         </CardContent>
       </Card>
-      <Card><CardHeader><CardTitle>Описание проекта</CardTitle><CardDescription>Разделяйте абзацы пустой строкой</CardDescription></CardHeader>
+      <Card className="border-dashboard-border bg-dashboard-background text-brand-milk"><CardHeader><CardTitle>Описание проекта</CardTitle><CardDescription>Разделяйте абзацы пустой строкой</CardDescription></CardHeader>
         <CardContent><DashboardTextareaField id="description" name="description" label="Текст проекта" rows={9} defaultValue={project?.description ?? ''} error={errors.description} /></CardContent>
       </Card>
-      <Card><CardHeader><CardTitle>Публикация</CardTitle></CardHeader>
+      <Card className="border-dashboard-border bg-dashboard-background text-brand-milk"><CardHeader><CardTitle>Публикация</CardTitle></CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           <input type="hidden" name="status" value={status} />
           <DashboardSelectField id="status" label="Статус" value={status} onValueChange={setStatus} options={statusOptions} error={errors.status} />
@@ -63,7 +73,7 @@ export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
             <DashboardCheckboxField id="showOnHome" label="Показывать на главной после публикации" checked={showOnHome} onCheckedChange={setShowOnHome} error={errors.showOnHome} />
             {showOnHome && <input type="hidden" name="showOnHome" value="on" />}
           </div>
-          <p className="text-xs text-muted-foreground sm:col-span-2">Добавление изображений и обложки — следующий этап. Пока без обложки проект опубликовать нельзя.</p>
+          <p className="text-xs text-muted-foreground sm:col-span-2">Обложка выбирается в галерее ниже; без неё публикация недоступна.</p>
         </CardContent>
       </Card>
       <div className="flex justify-end"><Button disabled={pending} type="submit">{pending ? 'Сохранение…' : 'Сохранить проект'}</Button></div>

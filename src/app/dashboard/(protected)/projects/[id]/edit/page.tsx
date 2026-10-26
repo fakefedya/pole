@@ -5,6 +5,8 @@ import { PERMISSION } from '@/lib/auth/authorization'
 import { requirePagePermission } from '@/features/auth/server/access'
 import { getAdminProject } from '@/features/projects/server/admin-queries'
 import { ProjectForm } from '@/features/projects/components/project-form'
+import { ProjectGallery } from '@/features/projects/components/project-gallery'
+import { getPublicImageUrl } from '@/lib/storage/public-image'
 
 type Props = { params: Promise<{ id: string }> }
 async function EditContent({ params }: Props) {
@@ -13,6 +15,7 @@ async function EditContent({ params }: Props) {
 	const project = await getAdminProject(id)
 	if (!project) notFound()
 	return (
+        <main className='mx-auto w-full max-w-6xl space-y-7'>
 		<ProjectForm
 			key={project.id}
 			project={{
@@ -32,6 +35,9 @@ async function EditContent({ params }: Props) {
 				homeOrder: project.homeOrder,
 			}}
 		/>
+        <ProjectGallery projectId={project.id} coverImageId={project.coverImageId}
+          images={project.images.map((image) => ({ id: image.id, alt: image.alt, width: image.width, height: image.height, url: getPublicImageUrl(image.objectKey) }))} />
+        </main>
 	)
 }
 export default function EditProjectPage(props: Props) {

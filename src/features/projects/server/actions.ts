@@ -3,6 +3,8 @@
 import { redirect } from 'next/navigation'
 import { revalidatePath, updateTag } from 'next/cache'
 import { Prisma } from '@/generated/prisma/client'
+import { mediaBuckets } from '@/lib/storage/s3'
+import { drainMediaDeletionJobs } from './media'
 import { prisma } from '@/lib/db/prisma'
 import { PERMISSION } from '@/lib/auth/authorization'
 import { assertMutationPermission } from '@/features/auth/server/access'
@@ -32,6 +34,7 @@ export async function saveProjectAction(
   const data = prepareProject(result.data)
   const blocks = descriptionToBlocks(result.data.description)
 
+  let newId: string | null = null
   try {
     if (id) {
       const existing = await prisma.project.findUnique({ where: { id }, select: { id: true, coverImageId: true, publishedAt: true } })
@@ -47,7 +50,8 @@ export async function saveProjectAction(
       })
     } else {
       if (data.status === 'PUBLISHED') return { error: 'Новый проект сначала необходимо сохранить как черновик.', fieldErrors: { status: 'Создайте черновик и добавьте обложку перед публикацией.' } }
-      await prisma.project.create({ data: { ...data, blocks: { create: blocks } } })
+      const created = await prisma.project.create({ data: { ...data, blocks: { create: blocks } } })
+      newId = created.id
     }
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
@@ -56,16 +60,28 @@ export async function saveProjectAction(
     throw error
   }
   invalidateProjects()
-  redirect('/dashboard/projects')
+  redirect(newId ? `/dashboard/projects/${newId}/edit` : '/dashboard/projects')
 }
 
 export async function deleteProjectAction(id: string): Promise<void> {
   await assertMutationPermission(PERMISSION.PROJECT_DELETE)
-  const existing = await prisma.project.findUnique({ where: { id }, select: { images: { select: { id: true }, take: 1 } } })
-  if (!existing) return
-  // Не оставляем сиротские объекты в S3. Сначала отдельный workflow удаления галереи.
-  if (existing.images.length) throw new Error('Сначала удалите изображения проекта из S3 через управление галереей')
-  await prisma.project.delete({ where: { id } })
+  if (!id || id.length > 128) throw new Error('Некорректный идентификатор.')
+  // The DB transaction deletes the project and queues all object deletions atomically.
+  await prisma.$transaction(async (tx) => {
+    const existing = await tx.project.findUnique({
+      where: { id }, select: { images: { select: { objectKey: true } } },
+    })
+    if (!existing) return
+    await tx.storageDeletionJob.createMany({
+      data: existing.images.map((image) => ({
+        bucket: mediaBuckets.public, objectKey: image.objectKey,
+      })), skipDuplicates: true,
+    })
+    await tx.project.delete({ where: { id } })
+    // Private staged files are retained until their lifecycle expiry.
+    await tx.stagedProjectUpload.deleteMany({ where: { projectId: id } })
+  })
+  await drainMediaDeletionJobs(50)
   invalidateProjects()
   redirect('/dashboard/projects')
 }

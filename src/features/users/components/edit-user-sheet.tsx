@@ -414,7 +414,9 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 						/>
 					)}
 					<AlertDialogFooter>
-						<AlertDialogCancel disabled={pending}>Отмена</AlertDialogCancel>
+						<AlertDialogCancel className='text-black' disabled={pending}>
+							Отмена
+						</AlertDialogCancel>
 						<Button
 							type='button'
 							variant={

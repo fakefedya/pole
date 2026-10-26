@@ -1,18 +1,28 @@
 import 'server-only'
 import { prisma } from '@/lib/db/prisma'
 
-/** Приватные данные. Не используем use cache. */
+/** Always private, no "use cache". The page guards access before calling. */
 export async function listAdminProjects() {
   return prisma.project.findMany({
-    select: { id: true, slug: true, title: true, status: true, showOnHome: true, updatedAt: true, _count: { select: { images: true } } },
+    select: {
+      id: true, slug: true, title: true, status: true,
+      location: true, areaSqM: true, tags: true, showOnHome: true,
+      updatedAt: true,
+      coverImage: { select: { objectKey: true } },
+      _count: { select: { images: true } },
+    },
     orderBy: [{ updatedAt: 'desc' }, { id: 'asc' }],
-    take: 100,
   })
 }
 
 export async function getAdminProject(id: string) {
   return prisma.project.findUnique({
     where: { id },
-    include: { blocks: { orderBy: { sortOrder: 'asc' } }, images: { orderBy: { sortOrder: 'asc' }, select: { id: true, objectKey: true, alt: true, width: true, height: true } } },
+    include: {
+      blocks: { orderBy: { sortOrder: 'asc' } },
+      images: { orderBy: [{ sortOrder: 'asc' }, { id: 'asc' }],
+        select: { id: true, objectKey: true, alt: true, width: true, height: true, sortOrder: true },
+      },
+    },
   })
 }

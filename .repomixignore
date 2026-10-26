@@ -2,3 +2,7 @@
 # Example:
 # *.log
 # tmp/
+
+.next/
+node_modules/
+public/

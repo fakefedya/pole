@@ -59,6 +59,11 @@ services:
         printf '{"Version":"2012-10-17","Statement":[{"Sid":"PublicImageRead","Effect":"Allow","Principal":"*","Action":"s3:GetObject","Resource":"arn:aws:s3:::%s/*"}]}\n' "$$S3_PUBLIC_BUCKET" > /tmp/public-read-policy.json
         mc anonymous set-json /tmp/public-read-policy.json "local/$$S3_PUBLIC_BUCKET"
         mc anonymous set none "local/$$S3_PRIVATE_BUCKET"
+        # Automatically expire staged uploads when clients disappear.
+        # Idempotent setup; permanent public images are NOT subject to this rule.
+        if ! mc ilm rule ls "local/$$S3_PRIVATE_BUCKET" | grep -q 'tmp/'; then
+          mc ilm rule add "local/$$S3_PRIVATE_BUCKET" --prefix 'tmp/' --expire-days 2
+        fi
 
   mailpit:
     image: axllent/mailpit:latest

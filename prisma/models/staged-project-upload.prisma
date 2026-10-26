@@ -1,0 +1,28 @@
+/** An uncommitted upload remains private and is independently TTL-expired in S3. */
+model StagedProjectUpload {
+  id          String   @id @default(cuid())
+  projectId   String
+  uploaderId  String
+  tempKey     String   @unique @db.VarChar(240)
+  finalKey    String   @unique @db.VarChar(240)
+  width       Int
+  height      Int
+  sizeBytes   Int
+  status      String   @default("STAGED") @db.VarChar(16)
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+
+  @@index([projectId, status])
+  @@index([expiresAt])
+}
+
+/** Transactional deletion outbox; drain with scripts/cleanup-media.ts. */
+model StorageDeletionJob {
+  id        String   @id @default(cuid())
+  bucket    String   @db.VarChar(128)
+  objectKey String   @db.VarChar(240)
+  createdAt DateTime @default(now())
+
+  @@unique([bucket, objectKey])
+  @@index([createdAt])
+}

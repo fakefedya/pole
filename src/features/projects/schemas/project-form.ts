@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const projectFormSchema = z.object({
   title: z.string().trim().min(2, 'Укажите название (от 2 символов)').max(180),
-  slug: z.string().trim().min(2).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Только латиница, цифры и дефисы'),
+  slug: z.string().trim().min(2, 'Укажите URL-адрес: минимум 2 символа').max(160, 'URL-адрес слишком длинный').regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, 'Только латиница, цифры и дефисы'),
   summary: z.string().trim().max(320),
   tagsText: z.string().max(600),
   location: z.string().trim().max(160),
