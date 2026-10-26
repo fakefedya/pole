@@ -14,6 +14,7 @@ async function EditContent({ params }: Props) {
 	if (!project) notFound()
 	return (
 		<ProjectForm
+			key={project.id}
 			project={{
 				id: project.id,
 				title: project.title,

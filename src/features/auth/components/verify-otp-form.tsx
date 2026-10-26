@@ -11,7 +11,6 @@ export function VerifyOtpForm() {
 	const router = useRouter()
 
 	const [code, setCode] = useState('')
-	const [useBackupCode, setUseBackupCode] = useState(false)
 	const [pending, setPending] = useState(false)
 	const [resending, setResending] = useState(false)
 	const [error, setError] = useState<string | null>(null)
@@ -39,15 +38,10 @@ export function VerifyOtpForm() {
 		setPending(true)
 
 		try {
-			const result = useBackupCode
-				? await authClient.twoFactor.verifyBackupCode({
-						code: code.trim(),
-						trustDevice: false,
-					})
-				: await authClient.twoFactor.verifyOtp({
-						code: code.trim(),
-						trustDevice: false,
-					})
+			const result = await authClient.twoFactor.verifyOtp({
+				code: code.trim(),
+				trustDevice: false,
+			})
 
 			if (result.error) {
 				setError('Неверный или просроченный код. Попробуйте ещё раз.')
@@ -108,24 +102,22 @@ export function VerifyOtpForm() {
 				<h1 className='text-3xl font-semibold'>Подтверждение входа</h1>
 
 				<p className='text-sm opacity-70'>
-					{useBackupCode
-						? 'Введите один из сохранённых резервных кодов.'
-						: 'Введите шестизначный код из письма.'}
+					Введите шестизначный код из письма.
 				</p>
 			</div>
 
 			<form onSubmit={handleSubmit} className='flex flex-col gap-4'>
 				<label className='flex flex-col gap-2'>
-					<span>{useBackupCode ? 'Резервный код' : 'Код подтверждения'}</span>
+					<span>Код подтверждения</span>
 
 					<input
 						value={code}
 						onChange={(event) => setCode(event.target.value)}
 						type='text'
-						inputMode={useBackupCode ? 'text' : 'numeric'}
-						autoComplete={useBackupCode ? 'off' : 'one-time-code'}
-						maxLength={useBackupCode ? undefined : 6}
-						pattern={useBackupCode ? undefined : '[0-9]{6}'}
+						inputMode='numeric'
+						autoComplete='one-time-code'
+						maxLength={6}
+						pattern='[0-9]{6}'
 						required
 						className='rounded-lg border p-3'
 					/>
@@ -153,34 +145,17 @@ export function VerifyOtpForm() {
 			</form>
 
 			<div className='flex flex-col items-start gap-3'>
-				{!useBackupCode && (
-					<button
-						type='button'
-						disabled={pending || resending || resendCooldown > 0}
-						onClick={handleResend}
-						className='text-sm underline disabled:cursor-not-allowed disabled:opacity-50'
-					>
-						{resending
-							? 'Отправляем…'
-							: resendCooldown > 0
-								? `Отправить повторно через ${resendCooldown} сек.`
-								: 'Отправить код повторно'}
-					</button>
-				)}
-
 				<button
 					type='button'
-					onClick={() => {
-						setUseBackupCode((value) => !value)
-						setCode('')
-						setError(null)
-						setMessage(null)
-					}}
-					className='text-sm underline'
+					disabled={pending || resending || resendCooldown > 0}
+					onClick={handleResend}
+					className='text-sm underline disabled:cursor-not-allowed disabled:opacity-50'
 				>
-					{useBackupCode
-						? 'Вернуться к коду из письма'
-						: 'Использовать резервный код'}
+					{resending
+						? 'Отправляем…'
+						: resendCooldown > 0
+							? `Отправить повторно через ${resendCooldown} сек.`
+							: 'Отправить код повторно'}
 				</button>
 
 				<button

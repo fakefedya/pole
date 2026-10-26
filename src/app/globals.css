@@ -14,6 +14,11 @@
 	--color-brand-olive: #94895b;
 	--color-brand-olive-accent: #797049;
 
+	--color-dashboard-background: #0a0a0a;
+	--color-dashboard-border: #222222;
+	--color-dashboard-input: #181818;
+	--color-dashboard-input-border: #373737;
+
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--font-sans: var(--font-sans);

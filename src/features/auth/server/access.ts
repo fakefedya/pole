@@ -2,35 +2,50 @@ import 'server-only'
 import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth/auth'
+import { prisma } from '@/lib/db/prisma'
 import {
 	hasPermission,
 	PERMISSION,
 	type Permission,
 } from '@/lib/auth/authorization'
 
-async function currentSession() {
-	return auth.api.getSession({ headers: await headers() })
+async function accessContext() {
+	const session = await auth.api.getSession({ headers: await headers() })
+	if (!session) return null
+	// Read the current DB role/policy, not just the session snapshot.
+	const record = await prisma.user.findUnique({
+		where: { id: session.user.id },
+		select: {
+			role: true,
+			banned: true,
+			twoFactorEnabled: true,
+		},
+	})
+	if (!record) return null
+	return {
+		session: { ...session, user: { ...session.user, ...record } },
+		record,
+	}
 }
 
-/** Для страниц. Security-страница доступна и до подключения 2FA. */
+/** Open the workspace for all roles with dashboard.view. */
 export async function requireDashboardSession() {
-	const session = await currentSession()
-	if (!session) redirect('/dashboard/login')
-	if (session.user.banned) redirect('/dashboard/forbidden')
-	if (!hasPermission(session.user.role, PERMISSION.DASHBOARD_VIEW)) {
+	const context = await accessContext()
+	if (!context) redirect('/dashboard/login')
+	if (
+		context.record.banned ||
+		!hasPermission(context.record.role, PERMISSION.DASHBOARD_VIEW)
+	) {
 		redirect('/dashboard/forbidden')
 	}
-	return session
+	return context.session
 }
 
-/** Для защищённых страниц после настройки 2FA. */
+/** Retained for pages that already import this guard. Authentication + role only. */
 export async function requireDashboardReady() {
-	const session = await requireDashboardSession()
-	if (session.user.twoFactorEnabled !== true) redirect('/dashboard/security')
-	return session
+	return requireDashboardSession()
 }
 
-/** Для страниц, не для мутаций. */
 export async function requirePagePermission(permission: Permission) {
 	const session = await requireDashboardReady()
 	if (!hasPermission(session.user.role, permission))
@@ -38,16 +53,20 @@ export async function requirePagePermission(permission: Permission) {
 	return session
 }
 
-/** Для Server Actions: ВСЕГДА проверять отдельно от layout. */
+/** Run in every mutating Server Action. */
 export async function assertMutationPermission(permission: Permission) {
-	const session = await currentSession()
+	const context = await accessContext()
 	if (
-		!session ||
-		session.user.banned ||
-		session.user.twoFactorEnabled !== true ||
-		!hasPermission(session.user.role, permission)
+		!context ||
+		context.record.banned ||
+		!hasPermission(context.record.role, permission)
 	) {
 		throw new Error('FORBIDDEN')
 	}
-	return session
+	return context.session
+}
+
+/** Authorization for any administrator, regardless of optional email-2FA setting. */
+export async function assertUserManagementPermission() {
+	return assertMutationPermission(PERMISSION.USERS_MANAGE)
 }

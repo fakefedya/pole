@@ -16,11 +16,10 @@ import { requireDashboardSession } from '@/features/auth/server/access'
 async function Overview() {
 	const session = await requireDashboardSession()
 
-	const isTwoFactorEnabled = session.user.twoFactorEnabled === true
-
-	const canSeeProjects =
-		isTwoFactorEnabled &&
-		hasPermission(session.user.role, PERMISSION.PROJECT_READ)
+	const canSeeProjects = hasPermission(
+		session.user.role,
+		PERMISSION.PROJECT_READ,
+	)
 
 	const counts = canSeeProjects
 		? await prisma.project.groupBy({
@@ -32,7 +31,7 @@ async function Overview() {
 	const count = (status: 'DRAFT' | 'HIDDEN' | 'PUBLISHED') =>
 		counts.find((row) => row.status === status)?._count._all ?? 0
 	return (
-		<main className='mx-auto max-w-6xl space-y-8'>
+		<main className='mx-auto max-w-6xl space-y-8 bg-red-100'>
 			<header className='flex flex-wrap items-center justify-between gap-4'>
 				<div>
 					<p className='mb-2 text-xs font-semibold uppercase tracking-[.25em] text-[#954520]'>
@@ -48,26 +47,6 @@ async function Overview() {
 				<Badge variant='outline'>Защищённый доступ</Badge>
 			</header>
 
-			{!isTwoFactorEnabled && (
-				<Card className='border-[#954520]/20 bg-[#fcf7f4]'>
-					<CardHeader>
-						<CardTitle>Защитите свою учётную запись</CardTitle>
-						<CardDescription>
-							Двухфакторная авторизация пока не включена. Для управления
-							проектами необходимо подтвердить вход дополнительным кодом.
-						</CardDescription>
-					</CardHeader>
-
-					<CardContent>
-						<Link
-							href='/dashboard/security'
-							className='inline-flex rounded-xl bg-[#954520] px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-[#7d381c]'
-						>
-							Настроить двухфакторную авторизацию
-						</Link>
-					</CardContent>
-				</Card>
-			)}
 			{canSeeProjects ? (
 				<div className='grid gap-4 sm:grid-cols-3'>
 					{(

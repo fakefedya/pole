@@ -1,45 +1,100 @@
 import Link from 'next/link'
-import { FolderKanban, LayoutDashboard, LockKeyhole, ArrowUpRight } from 'lucide-react'
+import {
+	FolderKanban,
+	LayoutDashboard,
+	ArrowUpRight,
+	UsersRound,
+} from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { LogoutButton } from '@/features/auth/components/logout-button'
-import { PERMISSION, hasPermission, primaryRoleLabel } from '@/lib/auth/authorization'
+import {
+	PERMISSION,
+	hasPermission,
+	primaryRoleLabel,
+} from '@/lib/auth/authorization'
+import { cn } from '@/lib/utils'
 
 type Props = {
-  email: string
-  role: string | null | undefined
-  children: React.ReactNode
+	name: string
+	role: string | null | undefined
+	children: React.ReactNode
 }
 
-export function DashboardShell({ email, role, children }: Props) {
-  const items = [
-    { href: '/dashboard', label: 'Обзор', icon: LayoutDashboard, allowed: true },
-    { href: '/dashboard/projects', label: 'Проекты', icon: FolderKanban,
-      allowed: hasPermission(role, PERMISSION.PROJECT_READ) },
-    { href: '/dashboard/security', label: 'Безопасность', icon: LockKeyhole, allowed: true },
-  ]
+export function DashboardShell({ name, role, children }: Props) {
+	const items = [
+		{
+			href: '/dashboard',
+			label: 'Обзор',
+			icon: LayoutDashboard,
+			allowed: true,
+		},
+		{
+			href: '/dashboard/projects',
+			label: 'Проекты',
+			icon: FolderKanban,
+			allowed: hasPermission(role, PERMISSION.PROJECT_READ),
+		},
+		{
+			href: '/dashboard/users',
+			label: 'Пользователи',
+			icon: UsersRound,
+			allowed: hasPermission(role, PERMISSION.USERS_MANAGE),
+		},
+	]
 
-  return (
-    <div className="min-h-dvh bg-[#f6f4f0] text-neutral-950 md:grid md:grid-cols-[250px_minmax(0,1fr)]">
-      <aside className="border-b border-neutral-200 bg-white md:min-h-dvh md:border-b-0 md:border-r">
-        <div className="flex items-center justify-between gap-4 px-6 py-6">
-          <Link href="/dashboard" className="text-xl font-semibold tracking-[-.05em]">POLE <span className="text-sm font-normal text-neutral-400">/ CMS</span></Link>
-          <Badge variant="secondary">{primaryRoleLabel(role)}</Badge>
-        </div>
-        <nav className="flex gap-2 overflow-x-auto px-4 pb-4 md:flex-col" aria-label="Навигация кабинета">
-          {items.filter(item => item.allowed).map(({ href, label, icon: Icon }) => (
-            <Link key={href} href={href} className="flex min-w-max items-center gap-3 rounded-xl px-4 py-3 text-sm text-neutral-700 transition-colors hover:bg-neutral-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800">
-              <Icon className="size-4" aria-hidden="true" />{label}
-            </Link>
-          ))}
-        </nav>
-        <div className="border-t border-neutral-100 px-6 py-5 md:mt-10">
-          <p className="mb-1 truncate text-xs text-neutral-500">{email}</p>
-          <div className="flex flex-wrap items-center gap-4"><LogoutButton />
-            <Link className="inline-flex items-center gap-1 text-xs text-neutral-600 hover:underline" href="/" target="_blank" rel="noopener noreferrer">На сайт <ArrowUpRight className="size-3" /></Link>
-          </div>
-        </div>
-      </aside>
-      <div className="min-w-0 px-5 py-8 sm:px-8 md:px-12 md:py-12">{children}</div>
-    </div>
-  )
+	return (
+		<div className='min-h-dvh bg-dashboard-background md:grid md:grid-cols-[124px_minmax(0,1fr)]'>
+			<aside className='h-dvh sticky top-0 flex items-center mx-7.5'>
+				<nav
+					className='relative flex flex-col w-fit rounded-full bg-brand-charcoal p-1.5 backdrop-blur-md'
+					aria-label='Навигация дашборда'
+				>
+					{items
+						.filter((item) => item.allowed)
+						.map(({ href, icon: Icon }) => (
+							<Link
+								key={href}
+								href={href}
+								className={cn(
+									'w-fit h-fit text-brand-milk p-4 rounded-full',
+									'hover:bg-brand-milk/10 transition-colors duration-300',
+									'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800',
+								)}
+							>
+								<Icon size={20} aria-hidden='true' />
+							</Link>
+						))}
+				</nav>
+			</aside>
+
+			<div className=' min-w-0 p-7.5'>
+				<div className='flex flex-col gap-10 max-w-7xl  mx-auto'>
+					<div className='flex justify-end items-center gap-2'>
+						<div className='border border-chart-5 p-1.5 h-13 flex items-center gap-2  rounded-full'>
+							<p className='text-brand-milk text-sm font-medium px-5'>{name}</p>
+							<Badge
+								variant='secondary'
+								className='h-full px-5 text-brand-charcoal font-medium text-sm'
+							>
+								{primaryRoleLabel(role)}
+							</Badge>
+						</div>
+						<LogoutButton />
+						<Link
+							className={cn(
+								'flex items-center p-4 rounded-full bg-brand-charcoal text-brand-milk',
+								'hover:bg-brand-milk/10 transition-colors duration-300',
+							)}
+							href='/'
+							target='_blank'
+							rel='noopener noreferrer'
+						>
+							<ArrowUpRight size={20} />
+						</Link>
+					</div>
+					{children}
+				</div>
+			</div>
+		</div>
+	)
 }

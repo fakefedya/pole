@@ -7,7 +7,7 @@ async function ProtectedArea({ children }: { children: React.ReactNode }) {
 	const session = await requireDashboardSession()
 
 	return (
-		<DashboardShell email={session.user.email} role={session.user.role}>
+		<DashboardShell name={session.user.name} role={session.user.role}>
 			{children}
 		</DashboardShell>
 	)

@@ -4,6 +4,8 @@ import { useState } from 'react'
 
 import { authClient } from '@/lib/auth/auth-client'
 import { Button } from '@/components/ui/button'
+import { Loader, LogOut } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 export function LogoutButton() {
 	const [pending, setPending] = useState(false)
@@ -33,12 +35,14 @@ export function LogoutButton() {
 		<div className='flex flex-col items-start gap-2'>
 			<Button
 				type='button'
-				variant='outline'
-				size='sm'
+				className={cn(
+					'flex items-center h-13 w-13 p-4 rounded-full bg-brand-charcoal text-brand-milk cursor-pointer ',
+					'hover:bg-brand-milk/10 transition-colors duration-300',
+				)}
 				onClick={handleLogout}
 				disabled={pending}
 			>
-				{pending ? 'Выходим…' : 'Выйти'}
+				{pending ? <Loader size={20} /> : <LogOut size={20} />}
 			</Button>
 
 			{error && (

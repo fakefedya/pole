@@ -12,14 +12,14 @@ import {
 } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { PERMISSION, hasPermission } from '@/lib/auth/authorization'
-import { requireDashboardSession } from '@/features/auth/server/access'
+import { requirePagePermission } from '@/features/auth/server/access'
 import { listAdminProjects } from '@/features/projects/server/admin-queries'
 import { DeleteProjectButton } from '@/features/projects/components/delete-project-button'
 
 const STATUS = { DRAFT: 'Черновик', HIDDEN: 'Скрыт', PUBLISHED: 'Опубликован' }
 
 async function ProjectsList() {
-	const session = await requireDashboardSession()
+	const session = await requirePagePermission(PERMISSION.PROJECT_READ)
 	const [projects] = await Promise.all([listAdminProjects()])
 	const canCreate = hasPermission(session.user.role, PERMISSION.PROJECT_CREATE)
 	const canEdit = hasPermission(session.user.role, PERMISSION.PROJECT_UPDATE)
