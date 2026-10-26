@@ -2,124 +2,99 @@
 
 import { useState, useTransition, type SubmitEvent } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import {
-  Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle,
-} from '@/components/ui/sheet'
-import { ROLE, ROLE_LABEL } from '@/lib/auth/authorization'
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { DashboardInputField, DashboardSelectField } from '@/features/dashboard/components/dashboard-form-controls'
 import { createUserAction } from '@/features/users/server/actions'
-import {
-  PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, validatePasswordConfirmation,
-} from '@/features/auth/schemas/password'
+import { createUserSchema } from '@/features/users/schemas/user'
+import { fieldErrorsFromZod } from '@/features/dashboard/lib/form-errors'
+import { ROLE, ROLE_LABEL } from '@/lib/auth/authorization'
 
-const roles = [ROLE.EDITOR, ROLE.ADMIN, ROLE.USER] as const
+const roles = [ROLE.EDITOR, ROLE.ADMIN, ROLE.USER].map(value => ({ value, label: ROLE_LABEL[value] }))
 type Props = { open: boolean; onOpenChange: (next: boolean) => void }
+
+type Fields = 'name' | 'email' | 'role' | 'password' | 'confirmPassword'
 
 export function CreateUserSheet({ open, onOpenChange }: Props) {
   const router = useRouter()
   const [pending, startTransition] = useTransition()
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
-  const [formVersion, setFormVersion] = useState(0)
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [role, setRole] = useState<string>(ROLE.EDITOR)
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [errors, setErrors] = useState<Record<string, string>>({})
 
+  const update = (key: Fields, value: string) => {
+    const setter = { name: setName, email: setEmail, role: setRole, password: setPassword, confirmPassword: setConfirmPassword }[key]
+    setter(value)
+    setErrors(old => { const next = { ...old }; delete next[key]; return next })
+  }
+  const reset = () => {
+    setName(''); setEmail(''); setRole(ROLE.EDITOR)
+    setPassword(''); setConfirmPassword(''); setErrors({})
+  }
   const changeOpen = (next: boolean) => {
     if (pending) return
-    if (next && !open) {
-      setError(null)
-      setSuccess(false)
-      setFormVersion(version => version + 1)
-    }
+    if (next && !open) reset()
     onOpenChange(next)
   }
-
   const handleSubmit = (event: SubmitEvent<HTMLFormElement>) => {
     event.preventDefault()
     if (pending) return
-    const form = event.currentTarget
-    const data = new FormData(form)
-    const password = String(data.get('password') ?? '')
-    const confirm = String(data.get('confirmPassword') ?? '')
-    const problem = validatePasswordConfirmation(password, confirm)
-    if (problem) { setError(problem); return }
-    setError(null)
+    const parsed = createUserSchema.safeParse({ name, email, role, password })
+    const nextErrors = parsed.success ? {} : fieldErrorsFromZod(parsed.error)
+    if (password !== confirmPassword) nextErrors.confirmPassword = 'Пароли не совпадают.'
+    if (Object.keys(nextErrors).length) { setErrors(nextErrors); toast.error('Проверьте поля формы.'); return }
+    setErrors({})
     startTransition(async () => {
       try {
-        const result = await createUserAction({
-          name: String(data.get('name') ?? '').trim(),
-          email: String(data.get('email') ?? '').trim(),
-          role: String(data.get('role') ?? ROLE.EDITOR), password,
-        })
-        if (result.error) { setError(result.error); return }
-        form.reset()
-        setSuccess(true)
+        const result = await createUserAction({ name, email, role, password })
+        if (result.error) {
+          setErrors(result.fieldErrors ?? {})
+          toast.error(result.error)
+          return
+        }
+        toast.success('Пользователь создан.')
+        reset()
+        onOpenChange(false)
         router.refresh()
       } catch {
-        setError('Не удалось создать пользователя.')
+        toast.error('Не удалось создать пользователя.')
       }
     })
   }
 
   return (
     <Sheet open={open} onOpenChange={changeOpen}>
-      <SheetContent side='right' className='flex h-dvh max-h-dvh w-full flex-col gap-0 overflow-hidden border-dashboard-border bg-dashboard-background p-0 text-brand-milk sm:max-w-xl'>
-        <SheetHeader className='shrink-0 border-b border-dashboard-border px-6 py-7 pr-16'>
-          <SheetTitle className='text-xl text-brand-milk'>Новый пользователь</SheetTitle>
-          <SheetDescription className='text-muted-foreground'>Создание аккаунта и назначение роли</SheetDescription>
+      <SheetContent side="right" className="flex h-dvh max-h-dvh w-full flex-col gap-0 overflow-hidden border-dashboard-border bg-dashboard-background p-0 text-brand-milk sm:max-w-xl">
+        <SheetHeader className="shrink-0 border-b border-dashboard-border px-6 py-7 pr-16">
+          <SheetTitle className="text-xl text-brand-milk">Новый пользователь</SheetTitle>
+          <SheetDescription className="text-muted-foreground">Создание аккаунта и назначение роли</SheetDescription>
         </SheetHeader>
-
-        <div className='min-h-0 flex-1 overflow-y-auto px-6 py-6'>
-          {error && <p role='alert' className='mb-4 rounded-lg border border-destructive/40 bg-destructive/10 p-3 text-sm text-destructive'>{error}</p>}
-          {success ? (
-            <div className='space-y-3 rounded-lg border border-dashboard-input-border bg-dashboard-input p-4'>
-              <p role='status' className='font-semibold'>Пользователь создан</p>
-              <p className='text-sm text-muted-foreground'>Пароль сохранён в Better Auth в виде хеша.</p>
-            </div>
-          ) : (
-            <form id='create-user-form' key={formVersion} onSubmit={handleSubmit} className='space-y-5'>
-              <div className='space-y-2'>
-                <Label htmlFor='create-user-name' className='text-brand-milk'>Имя</Label>
-                <Input id='create-user-name' name='name' minLength={2} maxLength={100} required autoComplete='off'
-                  className='border-dashboard-input-border bg-dashboard-input text-brand-milk' />
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='create-user-email' className='text-brand-milk'>Email</Label>
-                <Input id='create-user-email' name='email' type='email' required autoComplete='off'
-                  className='border-dashboard-input-border bg-dashboard-input text-brand-milk' />
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='create-user-role' className='text-brand-milk'>Роль</Label>
-                <select id='create-user-role' name='role' defaultValue={ROLE.EDITOR}
-                  className='h-10 w-full rounded-lg border border-dashboard-input-border bg-dashboard-input px-3 text-sm text-brand-milk'>
-                  {roles.map(role => <option key={role} value={role}>{ROLE_LABEL[role]}</option>)}
-                </select>
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='create-user-password' className='text-brand-milk'>Пароль</Label>
-                <Input id='create-user-password' name='password' type='password' autoComplete='new-password'
-                  minLength={PASSWORD_MIN_LENGTH} maxLength={PASSWORD_MAX_LENGTH} required
-                  className='border-dashboard-input-border bg-dashboard-input text-brand-milk' />
-                <p className='text-xs text-muted-foreground'>{PASSWORD_MIN_LENGTH}–{PASSWORD_MAX_LENGTH} символов. Используйте уникальную парольную фразу.</p>
-              </div>
-              <div className='space-y-2'>
-                <Label htmlFor='create-user-password-confirm' className='text-brand-milk'>Повторите пароль</Label>
-                <Input id='create-user-password-confirm' name='confirmPassword' type='password' autoComplete='new-password' required
-                  className='border-dashboard-input-border bg-dashboard-input text-brand-milk' />
-              </div>
-            </form>
-          )}
+        <div className="min-h-0 flex-1 overflow-y-auto px-6 py-6">
+          <form noValidate id="create-user-form" onSubmit={handleSubmit} className="space-y-5">
+            <DashboardInputField id="create-user-name" label="Имя" value={name} onChange={e => update('name', e.target.value)}
+              error={errors.name} autoComplete="off" disabled={pending} />
+            <DashboardInputField id="create-user-email" label="Email" type="email" value={email} onChange={e => update('email', e.target.value)}
+              error={errors.email} autoComplete="off" disabled={pending} />
+            <DashboardSelectField id="create-user-role" label="Роль" options={roles} value={role} onValueChange={v => update('role', v)}
+              error={errors.role} disabled={pending} />
+            <DashboardInputField id="create-user-password" label="Пароль" type="password" autoComplete="new-password"
+              value={password} onChange={e => update('password', e.target.value)} error={errors.password} disabled={pending}
+              description="От 12 до 128 символов. Используйте уникальную длинную парольную фразу." />
+            <DashboardInputField id="create-user-password-confirm" label="Повторите пароль" type="password" autoComplete="new-password"
+              value={confirmPassword} onChange={e => update('confirmPassword', e.target.value)} error={errors.confirmPassword} disabled={pending} />
+          </form>
         </div>
-
-        <footer className='shrink-0 flex gap-3 border-t border-dashboard-border bg-brand-charcoal px-6 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]'>
-          <Button type='button' variant='outline' disabled={pending} onClick={() => changeOpen(false)}
-            className='flex-1 border-dashboard-input-border bg-dashboard-input text-brand-milk'>
-            {success ? 'Закрыть' : 'Отмена'}
-          </Button>
-          {!success && <Button type='submit' form='create-user-form' disabled={pending}
-            className='flex-1 bg-brand-milk text-brand-charcoal hover:bg-brand-milk/90'>
+        <footer className="shrink-0 flex gap-3 border-t border-dashboard-border bg-brand-charcoal px-6 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+          <Button type="button" variant="outline" disabled={pending} onClick={() => changeOpen(false)}
+            className="flex-1 border-dashboard-input-border bg-dashboard-input text-brand-milk">Отмена</Button>
+          <Button type="submit" form="create-user-form" disabled={pending}
+            className="flex-1 bg-brand-milk text-brand-charcoal hover:bg-brand-milk/90">
             {pending ? 'Создание…' : 'Создать пользователя'}
-          </Button>}
+          </Button>
         </footer>
       </SheetContent>
     </Sheet>

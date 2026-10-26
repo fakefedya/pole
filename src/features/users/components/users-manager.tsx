@@ -19,11 +19,13 @@ export function UsersManager({ users, actorId }: UsersManagerProps) {
 	const [createOpen, setCreateOpen] = useState(false)
 	const [selectedUserId, setSelectedUserId] = useState<string | null>(null)
 	const [editOpen, setEditOpen] = useState(false)
+	const [editFormVersion, setEditFormVersion] = useState(0)
 	const selectedUser = users.find((user) => user.id === selectedUserId) ?? null
 	const onManage = useCallback((id: string) => {
-        setSelectedUserId(id)
-        setEditOpen(true)
-    }, [])
+		setSelectedUserId(id)
+		setEditFormVersion((version) => version + 1)
+		setEditOpen(true)
+	}, [])
 
 	return (
 		<main className='mx-auto w-full space-y-7'>
@@ -33,7 +35,7 @@ export function UsersManager({ users, actorId }: UsersManagerProps) {
 				action={
 					<Button
 						type='button'
-						className='h-13 p-4 border cursor-pointer bg-brand-charcoal'
+						className='h-9 px-4 border cursor-pointer bg-dashboard-input border-dashboard-input-border rounded-sm'
 						onClick={() => setCreateOpen(true)}
 					>
 						<Plus size={20} aria-hidden='true' />
@@ -45,9 +47,10 @@ export function UsersManager({ users, actorId }: UsersManagerProps) {
 			<UsersDataTable users={users} actorId={actorId} onManage={onManage} />
 			<CreateUserSheet open={createOpen} onOpenChange={setCreateOpen} />
 			<EditUserSheet
+				key={editFormVersion}
 				user={selectedUser}
-                open={editOpen}
-                onOpenChange={setEditOpen}
+				open={editOpen}
+				onOpenChange={setEditOpen}
 			/>
 		</main>
 	)

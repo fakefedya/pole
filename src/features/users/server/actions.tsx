@@ -2,26 +2,14 @@
 
 import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
-import { z } from 'zod'
 import { auth } from '@/lib/auth/auth'
 import { prisma } from '@/lib/db/prisma'
 import { assertUserManagementPermission } from '@/features/auth/server/access'
 import { ROLE, parseRoles, type Role } from '@/lib/auth/authorization'
-import { passwordSchema } from '@/features/auth/schemas/password'
+import { fieldErrorsFromZod } from '@/features/dashboard/lib/form-errors'
+import { createUserSchema, saveUserSchema, userIdSchema } from '@/features/users/schemas/user'
 
-const userIdSchema = z.string().min(1).max(256)
-const roleSchema = z.enum([ROLE.ADMIN, ROLE.EDITOR, ROLE.USER])
-const createSchema = z.object({
-	name: z.string().trim().min(2).max(100),
-	email: z
-		.email()
-		.max(254)
-		.transform((value) => value.toLowerCase()),
-	role: roleSchema,
-	password: passwordSchema,
-})
-
-export type CreateUserResult = { error: string | null }
+export type CreateUserResult = { error: string | null; fieldErrors?: Record<string, string> }
 
 function refresh() {
 	revalidatePath('/dashboard/users')
@@ -64,9 +52,10 @@ export async function createUserAction(input: {
 	password: string
 }): Promise<CreateUserResult> {
 	await assertUserManagementPermission()
-	const parsed = createSchema.safeParse(input)
-	if (!parsed.success)
-		return { error: parsed.error.issues[0]?.message ?? 'Некорректные данные.' }
+	const parsed = createUserSchema.safeParse(input)
+	if (!parsed.success) return { error: 'Проверьте поля формы.', fieldErrors: fieldErrorsFromZod(parsed.error) }
+	const existingEmail = await prisma.user.findUnique({ where: { email: parsed.data.email }, select: { id: true } })
+	if (existingEmail) return { error: 'Этот email уже используется.', fieldErrors: { email: 'Этот email уже зарегистрирован.' } }
 	try {
 		await auth.api.createUser({ headers: await headers(), body: parsed.data })
 		refresh()
@@ -107,19 +96,7 @@ export async function deleteUserAction(userId: string): Promise<void> {
  * Password hashing stays in Better Auth. Since its password API runs separately,
  * errors report partial completion rather than claiming a transaction across both.
  */
-const saveUserSchema = z.object({
-	userId: userIdSchema,
-	name: z.string().trim().min(2).max(100),
-	email: z
-		.email()
-		.max(254)
-		.transform((value) => value.trim().toLowerCase()),
-	role: roleSchema,
-	twoFactorEnabled: z.boolean(),
-	newPassword: z.union([z.literal(''), passwordSchema]),
-})
-
-export type SaveUserResult = { error: string | null; profileSaved: boolean }
+export type SaveUserResult = { error: string | null; profileSaved: boolean; fieldErrors?: Record<string, string> }
 
 export async function saveUserChangesAction(input: {
 	userId: string
@@ -133,8 +110,9 @@ export async function saveUserChangesAction(input: {
 	const parsed = saveUserSchema.safeParse(input)
 	if (!parsed.success) {
 		return {
-			error: parsed.error.issues[0]?.message ?? 'Неверные данные.',
+			error: 'Проверьте поля формы.',
 			profileSaved: false,
+            fieldErrors: fieldErrorsFromZod(parsed.error),
 		}
 	}
 
@@ -148,13 +126,7 @@ export async function saveUserChangesAction(input: {
 
 	const wasAdmin = parseRoles(user.role).includes(ROLE.ADMIN)
 	const willBeAdmin = data.role === ROLE.ADMIN
-	const final2FA = willBeAdmin && (wasAdmin ? data.twoFactorEnabled : false)
-	if (!wasAdmin && data.twoFactorEnabled) {
-		return {
-			error: 'Включить 2FA можно после назначения роли администратора.',
-			profileSaved: false,
-		}
-	}
+	const final2FA = data.twoFactorEnabled
 	if (wasAdmin && !willBeAdmin) await preventLastAdmin(data.userId, target.role)
 
 	const emailChanged = user.email !== data.email
@@ -169,7 +141,7 @@ export async function saveUserChangesAction(input: {
 			select: { id: true },
 		})
 		if (collision && collision.id !== data.userId) {
-			return { error: 'Этот email уже используется.', profileSaved: false }
+			return { error: 'Этот email уже используется.', profileSaved: false, fieldErrors: { email: 'Этот email уже используется.' } }
 		}
 	}
 
@@ -196,7 +168,7 @@ export async function saveUserChangesAction(input: {
 		}
 	} catch {
 		return {
-			error: 'Не удалось сохранить данные. Проверьте уникальность email.',
+			error: 'Не удалось сохранить профиль. Проверьте данные и повторите попытку.',
 			profileSaved: false,
 		}
 	}
@@ -211,9 +183,9 @@ export async function saveUserChangesAction(input: {
 		} catch {
 			refresh()
 			return {
-				error:
-					'Профиль сохранён, но пароль изменить не удалось. Повторите сохранение пароля.',
-				profileSaved: true,
+				error: 'Профиль сохранён, но пароль не изменён. Повторите попытку.',
+                profileSaved: true,
+                fieldErrors: { newPassword: 'Не удалось изменить пароль.' },
 			}
 		}
 	}

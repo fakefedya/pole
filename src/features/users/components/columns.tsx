@@ -15,7 +15,7 @@ export function userColumns(
 		{
 			id: 'name',
 			header: 'Пользователь',
-            sortValue: (item) => item.name,
+			sortValue: (item) => item.name,
 			cell: (item) => (
 				<div className='min-w-40 max-w-xs'>
 					<p className='font-medium text-brand-milk'>{item.name}</p>
@@ -107,7 +107,11 @@ export function userColumns(
 			className: 'text-right',
 			cell: (item) =>
 				item.id === actorId ? (
-					<span className='text-xs text-muted-foreground'>Свой аккаунт</span>
+					<div className='flex justify-end'>
+						<span className='py-2 px-3 w-fit flex items-center text-sm text-muted-foreground bg-dashboard-input rounded-sm border border-transparent'>
+							Свой аккаунт
+						</span>
+					</div>
 				) : (
 					<Button
 						type='button'

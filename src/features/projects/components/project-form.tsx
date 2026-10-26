@@ -1,59 +1,71 @@
 'use client'
-import { useActionState } from 'react'
+
+import { useActionState, useEffect, useState } from 'react'
+import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { Label } from '@/components/ui/label'
+import { DashboardInputField, DashboardTextareaField, DashboardSelectField, DashboardCheckboxField } from '@/features/dashboard/components/dashboard-form-controls'
 import { saveProjectAction, type ProjectActionState } from '@/features/projects/server/actions'
 
 const initialProjectActionState: ProjectActionState = { error: null }
+const statusOptions = [
+  { value: 'DRAFT', label: 'Черновик' },
+  { value: 'HIDDEN', label: 'Скрыт' },
+  { value: 'PUBLISHED', label: 'Опубликован' },
+] as const
 
 export type ProjectFormInitial = {
   id: string; title: string; slug: string; summary: string | null; tags: string[];
   location: string | null; style: string | null; designDuration: string | null;
   areaSqM: string | null; year: number | null; description: string;
-  status: 'DRAFT'|'HIDDEN'|'PUBLISHED'; showOnHome: boolean; homeOrder: number
-}
-
-function Field({ name, label, defaultValue, type = 'text' }: { name: string; label: string; defaultValue?: string | number; type?: string }) {
-  return <div className="grid gap-2"><Label htmlFor={name}>{label}</Label><Input id={name} name={name} type={type} defaultValue={defaultValue} /></div>
+  status: 'DRAFT' | 'HIDDEN' | 'PUBLISHED'; showOnHome: boolean; homeOrder: number
 }
 
 export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
   const [state, formAction, pending] = useActionState(saveProjectAction, initialProjectActionState)
+  const [status, setStatus] = useState<string>(project?.status ?? 'DRAFT')
+  const [showOnHome, setShowOnHome] = useState(project?.showOnHome ?? false)
+  const errors = state.fieldErrors ?? {}
+
+  useEffect(() => { if (state.error) toast.error(state.error) }, [state])
+
   return (
-    <form action={formAction} className="mx-auto max-w-4xl space-y-6">
+    <form action={formAction} noValidate className="mx-auto max-w-4xl space-y-6">
       {project && <input type="hidden" name="projectId" value={project.id} />}
-      <div className="flex items-center justify-between gap-3"><div><h1 className="text-3xl font-semibold tracking-tight">{project ? 'Редактирование проекта' : 'Новый проект'}</h1>
-        <p className="mt-2 text-sm text-neutral-500">Сначала сохраните черновик; публикация доступна после добавления обложки.</p></div>
-        <Button type="submit" disabled={pending}>{pending ? 'Сохранение…' : 'Сохранить'}</Button></div>
-      {state.error && <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">{state.error}</p>}
-      <Card><CardHeader><CardTitle>Основное</CardTitle><CardDescription>Название, адрес страницы и описание</CardDescription></CardHeader>
+      <div className="flex items-center justify-between gap-3">
+        <div><h1 className="text-3xl font-semibold tracking-tight">{project ? 'Редактирование проекта' : 'Новый проект'}</h1>
+          <p className="mt-2 text-sm text-muted-foreground">Сначала сохраните черновик; публикация доступна после добавления обложки.</p></div>
+        <Button type="submit" disabled={pending}>{pending ? 'Сохранение…' : 'Сохранить'}</Button>
+      </div>
+      <Card>
+        <CardHeader><CardTitle>Основное</CardTitle><CardDescription>Название, адрес страницы и описание</CardDescription></CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
-          <Field name="title" label="Название *" defaultValue={project?.title} />
-          <Field name="slug" label="URL-адрес (латиницей) *" defaultValue={project?.slug} />
-          <div className="sm:col-span-2 grid gap-2"><Label htmlFor="summary">Краткое описание</Label>
-            <Textarea name="summary" id="summary" defaultValue={project?.summary ?? ''} maxLength={320}/></div>
-          <div className="sm:col-span-2 grid gap-2"><Label htmlFor="tagsText">Теги через запятую</Label>
-            <Input name="tagsText" id="tagsText" defaultValue={project?.tags.join(', ') ?? ''} placeholder="Квартира, минимализм, светлый интерьер" /></div>
-          <Field name="location" label="Локация" defaultValue={project?.location ?? ''} />
-          <Field name="style" label="Стиль" defaultValue={project?.style ?? ''} />
-          <Field name="areaSqM" label="Площадь, м²" defaultValue={project?.areaSqM ?? ''} />
-          <Field name="designDuration" label="Срок разработки" defaultValue={project?.designDuration ?? ''} />
-          <Field name="year" label="Год" defaultValue={project?.year ?? ''} />
-        </CardContent></Card>
+          <DashboardInputField id="title" name="title" label="Название *" defaultValue={project?.title} error={errors.title} />
+          <DashboardInputField id="slug" name="slug" label="URL-адрес (латиницей) *" defaultValue={project?.slug} error={errors.slug} />
+          <div className="sm:col-span-2"><DashboardTextareaField id="summary" name="summary" label="Краткое описание" defaultValue={project?.summary ?? ''} maxLength={320} error={errors.summary} /></div>
+          <div className="sm:col-span-2"><DashboardInputField id="tagsText" name="tagsText" label="Теги через запятую" defaultValue={project?.tags.join(', ') ?? ''} error={errors.tagsText} placeholder="Квартира, минимализм, светлый интерьер" /></div>
+          <DashboardInputField id="location" name="location" label="Локация" defaultValue={project?.location ?? ''} error={errors.location} />
+          <DashboardInputField id="style" name="style" label="Стиль" defaultValue={project?.style ?? ''} error={errors.style} />
+          <DashboardInputField id="areaSqM" name="areaSqM" label="Площадь, м²" defaultValue={project?.areaSqM ?? ''} error={errors.areaSqM} />
+          <DashboardInputField id="designDuration" name="designDuration" label="Срок разработки" defaultValue={project?.designDuration ?? ''} error={errors.designDuration} />
+          <DashboardInputField id="year" name="year" label="Год" defaultValue={project?.year ?? ''} error={errors.year} />
+        </CardContent>
+      </Card>
       <Card><CardHeader><CardTitle>Описание проекта</CardTitle><CardDescription>Разделяйте абзацы пустой строкой</CardDescription></CardHeader>
-        <CardContent><Textarea name="description" rows={9} defaultValue={project?.description ?? ''}/></CardContent></Card>
-      <Card><CardHeader><CardTitle>Публикация</CardTitle></CardHeader><CardContent className="grid gap-5 sm:grid-cols-2">
-        <div className="grid gap-2"><Label htmlFor="status">Статус</Label>
-          <select id="status" name="status" defaultValue={project?.status ?? 'DRAFT'} className="h-10 w-full rounded-lg border border-input bg-background px-3 text-sm">
-            <option value="DRAFT">Черновик</option><option value="HIDDEN">Скрыт</option><option value="PUBLISHED">Опубликован</option>
-          </select></div>
-        <Field name="homeOrder" label="Порядок на главной" defaultValue={project?.homeOrder ?? 0} type="number" />
-        <label className="flex items-center gap-3 text-sm sm:col-span-2"><input type="checkbox" name="showOnHome" defaultChecked={project?.showOnHome ?? false} className="size-4 accent-neutral-950" />Показывать на главной после публикации</label>
-        <p className="text-xs text-neutral-500 sm:col-span-2">Добавление изображений, обложки и галереи — отдельный следующий подэтап. Пока проект без обложки не может быть опубликован.</p>
-      </CardContent></Card>
+        <CardContent><DashboardTextareaField id="description" name="description" label="Текст проекта" rows={9} defaultValue={project?.description ?? ''} error={errors.description} /></CardContent>
+      </Card>
+      <Card><CardHeader><CardTitle>Публикация</CardTitle></CardHeader>
+        <CardContent className="grid gap-5 sm:grid-cols-2">
+          <input type="hidden" name="status" value={status} />
+          <DashboardSelectField id="status" label="Статус" value={status} onValueChange={setStatus} options={statusOptions} error={errors.status} />
+          <DashboardInputField id="homeOrder" name="homeOrder" type="number" label="Порядок на главной" defaultValue={project?.homeOrder ?? 0} min={0} max={10000} error={errors.homeOrder} />
+          <div className="sm:col-span-2">
+            <DashboardCheckboxField id="showOnHome" label="Показывать на главной после публикации" checked={showOnHome} onCheckedChange={setShowOnHome} error={errors.showOnHome} />
+            {showOnHome && <input type="hidden" name="showOnHome" value="on" />}
+          </div>
+          <p className="text-xs text-muted-foreground sm:col-span-2">Добавление изображений и обложки — следующий этап. Пока без обложки проект опубликовать нельзя.</p>
+        </CardContent>
+      </Card>
       <div className="flex justify-end"><Button disabled={pending} type="submit">{pending ? 'Сохранение…' : 'Сохранить проект'}</Button></div>
     </form>
   )
