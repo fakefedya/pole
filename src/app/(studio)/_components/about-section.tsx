@@ -1,5 +1,6 @@
 import { SiteContainer } from '@/components/layout/site-container'
 import { SiteSection } from '@/components/layout/site-section'
+import Image from 'next/image'
 
 type Description = {
 	title: string
@@ -8,7 +9,7 @@ type Description = {
 }
 
 const sectionDescription: Description = {
-	title: 'POLE — авторская студия дизайна интерьера',
+	title: 'Авторская студия дизайна интерьера',
 	subtitle: 'Работаем в Санкт-Петербурге и онлайн по России.',
 	description:
 		'Разрабатываем индивидуальные проекты, предлагаем готовые решения и создаём понятные инструменты для самостоятельной работы с интерьером.',
@@ -17,15 +18,23 @@ const sectionDescription: Description = {
 export function AboutSection() {
 	return (
 		<SiteSection className='bg-brand-milk'>
-			<SiteContainer className='max-w-7xl py-75 px-10'>
-				<div className='max-w-[80%] mx-auto flex flex-col gap-4 items-center text-center'>
-					<h2 className='uppercase font-display text-5xl text-brand-charcoal'>
+			<SiteContainer className='max-w-7xl py-35 px-10'>
+				<div className='max-w-full mx-auto flex flex-col gap-4 items-center text-center'>
+					<div className='relative w-full h-40 mb-10'>
+						<Image
+							src='/brand/logo-pole.svg'
+							alt='Надпись POLE'
+							objectFit='contain'
+							fill
+						/>
+					</div>
+					<h2 className='font-display text-4xl text-brand-charcoal'>
 						{sectionDescription.title}
 					</h2>
-					<p className='text-3xl font-medium text-brand-terracota'>
+					<p className='text-2xl font-semibold text-brand-terracota'>
 						{sectionDescription.subtitle}
 					</p>
-					<p className='text-xl text-brand-charcoal'>
+					<p className=' max-w-[80%] text-xl text-brand-charcoal'>
 						{sectionDescription.description}
 					</p>
 				</div>

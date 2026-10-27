@@ -46,12 +46,6 @@ export const siteNavigation = [
 				href: '/passport',
 				cover: 'nav-cover-passport.svg',
 			},
-		],
-	},
-	{
-		type: 'dropdown',
-		label: 'Продукты',
-		items: [
 			{
 				label: 'Готовые решения',
 				description: 'Готовые проекты и подборки мебели и декора.',

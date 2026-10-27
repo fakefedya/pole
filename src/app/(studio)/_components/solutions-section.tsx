@@ -1,4 +1,5 @@
 import { SiteContainer } from '@/components/layout/site-container'
+import { SiteSection } from '@/components/layout/site-section'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 
@@ -58,7 +59,7 @@ const solutionThemes = [
 
 export function SolutionsSection() {
 	return (
-		<section aria-label='Решения STUDIO POLE' className='relative isolate'>
+		<SiteSection className='relative isolate'>
 			{solutions.map((solution, index) => (
 				<article
 					key={solution.title}
@@ -71,7 +72,7 @@ export function SolutionsSection() {
 					)}
 				>
 					<SiteContainer>
-						<div className='flex flex-col gap-8'>
+						<div className='flex flex-col gap-8 items-center'>
 							<div className='flex flex-col gap-3'>
 								<span className='text-sm opacity-60'>
 									{String(index + 1).padStart(2, '0')}
@@ -97,7 +98,7 @@ export function SolutionsSection() {
 							</div>
 
 							{/* Описание */}
-							<p className='max-w-2xl text-lg leading-relaxed'>
+							<p className='max-w-2xl text-lg text-center leading-relaxed'>
 								{solution.description}
 							</p>
 
@@ -120,6 +121,6 @@ export function SolutionsSection() {
 					</SiteContainer>
 				</article>
 			))}
-		</section>
+		</SiteSection>
 	)
 }

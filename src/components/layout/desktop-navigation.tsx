@@ -2,7 +2,6 @@
 
 import type { SiteNavigationItem } from '@/config/site-navigation'
 import { useRef } from 'react'
-import Image from 'next/image'
 
 import {
 	NavigationMenu,
@@ -144,7 +143,6 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 											<ul className='grid w-full grid-cols-2 gap-1.5'>
 												{visibleChildren.map((child) => {
 													const isCurrent = isCurrentPath(child.href, pathname)
-													const cover = `/layout/${child.cover}`
 
 													return (
 														<li key={child.href}>
@@ -154,11 +152,11 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 																aria-current={isCurrent ? 'page' : undefined}
 																closeOnClick
 																className={cn(
-																	'relative overflow-hidden w-full h-75 flex flex-col items-start justify-between p-8 bg-brand-milk/5',
+																	'relative overflow-hidden w-full h-40 flex flex-col items-start justify-between p-8 bg-brand-milk/5',
 																	'hover:bg-brand-milk/10 transition-colors duration-300',
 																)}
 															>
-																<div className='flex flex-col gap-1'>
+																<div className='flex flex-col gap-4'>
 																	<span className='font-display font-semibold text-brand-milk text-base'>
 																		{child.label}
 																	</span>
@@ -167,15 +165,7 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 																	</p>
 																</div>
 
-																<div className='absolute -right-1/3 -bottom-1/3 h-full w-full'>
-																	<Image
-																		src={cover}
-																		alt={child.label}
-																		fill
-																		sizes='(max-width: 1024px) 100vw, 66vw'
-																		className={cn('object-contain')}
-																	/>
-																</div>
+																<div className='absolute -right-1/3 -bottom-1/3 h-full w-full'></div>
 															</NavigationMenuLink>
 														</li>
 													)
