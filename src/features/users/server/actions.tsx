@@ -3,6 +3,8 @@
 import { headers } from 'next/headers'
 import { revalidatePath } from 'next/cache'
 import { auth } from '@/lib/auth/auth'
+import { Prisma } from '@/generated/prisma/client'
+import { serializable, lockAdminMutations } from '@/lib/db/transaction-guards'
 import { prisma } from '@/lib/db/prisma'
 import { assertUserManagementPermission } from '@/features/auth/server/access'
 import { ROLE, parseRoles, type Role } from '@/lib/auth/authorization'
@@ -15,33 +17,16 @@ function refresh() {
 	revalidatePath('/dashboard/users')
 }
 
-async function guardTarget(userId: string, actorId: string) {
-	userIdSchema.parse(userId)
-	if (userId === actorId)
-		throw new Error('Изменение своей учётной записи здесь запрещено.')
-	const target = await prisma.user.findUnique({
-		where: { id: userId },
-		select: { id: true, role: true, banned: true, twoFactorEnabled: true },
-	})
-	if (!target) throw new Error('Пользователь не найден.')
-	return target
-}
-
-async function preventLastAdmin(targetId: string, currentRole: string | null) {
-	if (!parseRoles(currentRole).includes(ROLE.ADMIN)) return
-	const otherAdmins = await prisma.user.findMany({
-		where: {
-			id: { not: targetId },
-			banned: { not: true },
-			role: { contains: ROLE.ADMIN },
-		},
-		select: { role: true },
-	})
-	if (!otherAdmins.some((user) => parseRoles(user.role).includes(ROLE.ADMIN))) {
-		throw new Error(
-			'Нельзя удалить, заблокировать или понизить последнего активного администратора.',
-		)
-	}
+/** Must be called while holding lockAdminMutations() inside the same transaction. */
+async function requireAnotherActiveAdmin(tx: Prisma.TransactionClient, targetId: string, currentRole: string | null) {
+  if (!parseRoles(currentRole).includes(ROLE.ADMIN)) return
+  const others = await tx.user.findMany({
+    where: { id: { not: targetId }, banned: { not: true }, role: { contains: ROLE.ADMIN } },
+    select: { role: true },
+  })
+  if (!others.some((user) => parseRoles(user.role).includes(ROLE.ADMIN))) {
+    throw new Error('Нельзя удалить, заблокировать или понизить последнего активного администратора.')
+  }
 }
 
 /** Better Auth hashes this password via its credential-account provider. */
@@ -65,31 +50,37 @@ export async function createUserAction(input: {
 	}
 }
 
-export async function changeUserBanAction(
-	userId: string,
-	shouldBan: boolean,
-): Promise<void> {
-	const actor = await assertUserManagementPermission()
-	const target = await guardTarget(userId, actor.user.id)
-	if (shouldBan) {
-		await preventLastAdmin(userId, target.role)
-		await auth.api.banUser({
-			headers: await headers(),
-			body: { userId, banReason: 'Отключён администратором' },
-		})
-	} else {
-		await auth.api.unbanUser({ headers: await headers(), body: { userId } })
-	}
-	refresh()
+export async function changeUserBanAction(userId: string, shouldBan: boolean): Promise<void> {
+  const actor = await assertUserManagementPermission()
+  userIdSchema.parse(userId)
+  if (userId === actor.user.id) throw new Error('Нельзя заблокировать свой аккаунт.')
+  await serializable(async (tx) => {
+    await lockAdminMutations(tx)
+    const target = await tx.user.findUnique({ where: { id: userId }, select: { role: true } })
+    if (!target) throw new Error('Пользователь не найден.')
+    if (shouldBan) await requireAnotherActiveAdmin(tx, userId, target.role)
+    await tx.user.update({ where: { id: userId }, data: {
+      banned: shouldBan, banReason: shouldBan ? 'Отключён администратором' : null,
+      banExpires: null,
+    } })
+    await tx.session.deleteMany({ where: { userId } })
+  })
+  refresh()
 }
 
-/** Permanent deletion; relational Better Auth accounts/sessions cascade. */
+/** Transactional deletion; Better Auth relations cascade via foreign keys. */
 export async function deleteUserAction(userId: string): Promise<void> {
-	const actor = await assertUserManagementPermission()
-	const target = await guardTarget(userId, actor.user.id)
-	await preventLastAdmin(userId, target.role)
-	await auth.api.removeUser({ headers: await headers(), body: { userId } })
-	refresh()
+  const actor = await assertUserManagementPermission()
+  userIdSchema.parse(userId)
+  if (userId === actor.user.id) throw new Error('Нельзя удалить собственную запись.')
+  await serializable(async (tx) => {
+    await lockAdminMutations(tx)
+    const target = await tx.user.findUnique({ where: { id: userId }, select: { role: true } })
+    if (!target) throw new Error('Пользователь не найден.')
+    await requireAnotherActiveAdmin(tx, userId, target.role)
+    await tx.user.delete({ where: { id: userId } })
+  })
+  refresh()
 }
 
 /** Single UI save: profile, role and email-OTP setting share a DB transaction.
@@ -117,61 +108,45 @@ export async function saveUserChangesAction(input: {
 	}
 
 	const data = parsed.data
-	const target = await guardTarget(data.userId, actor.user.id)
-	const user = await prisma.user.findUnique({
-		where: { id: data.userId },
-		select: { name: true, email: true, role: true, twoFactorEnabled: true },
-	})
-	if (!user) return { error: 'Пользователь не найден.', profileSaved: false }
-
-	const wasAdmin = parseRoles(user.role).includes(ROLE.ADMIN)
-	const willBeAdmin = data.role === ROLE.ADMIN
-	const final2FA = data.twoFactorEnabled
-	if (wasAdmin && !willBeAdmin) await preventLastAdmin(data.userId, target.role)
-
-	const emailChanged = user.email !== data.email
-	const roleChanged = user.role !== data.role
-	const twoFactorChanged = (user.twoFactorEnabled === true) !== final2FA
-	const profileChanged =
-		user.name !== data.name || emailChanged || roleChanged || twoFactorChanged
-
-	if (emailChanged) {
-		const collision = await prisma.user.findUnique({
-			where: { email: data.email },
-			select: { id: true },
-		})
-		if (collision && collision.id !== data.userId) {
-			return { error: 'Этот email уже используется.', profileSaved: false, fieldErrors: { email: 'Этот email уже используется.' } }
-		}
-	}
-
-	try {
-		if (profileChanged) {
-			await prisma.$transaction(async (tx) => {
-				if (user.twoFactorEnabled && !final2FA) {
-					await tx.twoFactor.deleteMany({ where: { userId: data.userId } })
-				}
-				await tx.user.update({
-					where: { id: data.userId },
-					data: {
-						name: data.name,
-						email: data.email,
-						...(emailChanged ? { emailVerified: false } : {}),
-						role: data.role,
-						twoFactorEnabled: final2FA,
-					},
-				})
-				if (emailChanged || roleChanged || twoFactorChanged) {
-					await tx.session.deleteMany({ where: { userId: data.userId } })
-				}
-			})
-		}
-	} catch {
-		return {
-			error: 'Не удалось сохранить профиль. Проверьте данные и повторите попытку.',
-			profileSaved: false,
-		}
-	}
+	if (data.userId === actor.user.id) return { error: 'Нельзя редактировать свою учётную запись.', profileSaved: false }
+  try {
+    await serializable(async (tx) => {
+      await lockAdminMutations(tx)
+      const user = await tx.user.findUnique({
+        where: { id: data.userId },
+        select: { name: true, email: true, role: true, twoFactorEnabled: true },
+      })
+      if (!user) throw new Error('Пользователь не найден.')
+      const wasAdmin = parseRoles(user.role).includes(ROLE.ADMIN)
+      if (wasAdmin && data.role !== ROLE.ADMIN) {
+        await requireAnotherActiveAdmin(tx, data.userId, user.role)
+      }
+      const emailChanged = user.email !== data.email
+      const roleChanged = user.role !== data.role
+      const twoFactorChanged = (user.twoFactorEnabled === true) !== data.twoFactorEnabled
+      if (emailChanged) {
+        const duplicate = await tx.user.findUnique({ where: { email: data.email }, select: { id: true } })
+        if (duplicate && duplicate.id !== data.userId) throw new Error('EMAIL_TAKEN')
+      }
+      if (user.twoFactorEnabled && !data.twoFactorEnabled) {
+        await tx.twoFactor.deleteMany({ where: { userId: data.userId } })
+      }
+      await tx.user.update({ where: { id: data.userId }, data: {
+        name: data.name, email: data.email,
+        ...(emailChanged ? { emailVerified: false } : {}),
+        role: data.role, twoFactorEnabled: data.twoFactorEnabled,
+      } })
+      if (emailChanged || roleChanged || twoFactorChanged) {
+        await tx.session.deleteMany({ where: { userId: data.userId } })
+      }
+    })
+  } catch (error) {
+    if ((error instanceof Error && error.message === 'EMAIL_TAKEN') ||
+      (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002')) {
+      return { error: 'Email уже используется.', profileSaved: false, fieldErrors: { email: 'Email уже используется.' } }
+    }
+    return { error: error instanceof Error ? error.message : 'Не удалось сохранить профиль.', profileSaved: false }
+  }
 
 	if (data.newPassword) {
 		try {

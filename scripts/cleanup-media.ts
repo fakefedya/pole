@@ -50,6 +50,10 @@ async function main() {
   for (const row of pending) {
     try {
       if (row.bucket === required('S3_PUBLIC_BUCKET')) {
+        const promoting = await prisma.stagedProjectUpload.findFirst({
+          where: { finalKey: row.objectKey, status: 'PROMOTING' }, select: { id: true },
+        })
+        if (promoting) continue
         const live = await prisma.projectImage.findUnique({
           where: { objectKey: row.objectKey }, select: { id: true },
         })

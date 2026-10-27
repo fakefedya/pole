@@ -73,6 +73,20 @@ export const auth = betterAuth({
 					message: '2FA is managed by administrators',
 				})
 			}
+			// These mutations are only permitted via audited Server Actions with row/actor locks.
+			if (
+				[
+					'/admin/ban-user',
+					'/admin/unban-user',
+					'/admin/remove-user',
+					'/admin/set-role',
+					'/admin/update-user',
+				].includes(ctx.path)
+			) {
+				throw new APIError('FORBIDDEN', {
+					message: 'Use dashboard user management',
+				})
+			}
 			if (!ctx.path.startsWith('/admin/')) return
 			if (!ctx.headers) throw new APIError('UNAUTHORIZED')
 			const session = await auth.api.getSession({ headers: ctx.headers })

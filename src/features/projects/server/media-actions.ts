@@ -1,24 +1,18 @@
 'use server'
 
-import { CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3'
-import { revalidatePath, updateTag } from 'next/cache'
+import { CopyObjectCommand } from '@aws-sdk/client-s3'
+import { invalidateProjectViews } from './invalidate'
 import { z } from 'zod'
 import { prisma } from '@/lib/db/prisma'
 import { s3, mediaBuckets } from '@/lib/storage/s3'
 import { PERMISSION } from '@/lib/auth/authorization'
 import { assertMutationPermission } from '@/features/auth/server/access'
 import { drainMediaDeletionJobs } from './media'
+import { serializable, lockProject } from '@/lib/db/transaction-guards'
 
 const idSchema = z.string().min(1).max(128)
 const altSchema = z.string().trim().min(2, 'Укажите описание изображения').max(240)
 
-function refreshMedia() {
-  updateTag('featured-projects')
-  revalidatePath('/projects')
-  revalidatePath('/')
-  revalidatePath('/dashboard')
-  revalidatePath('/dashboard/projects')
-}
 
 const copySource = (bucket: string, key: string) =>
   `${encodeURIComponent(bucket)}/${key.split('/').map(encodeURIComponent).join('/')}`
@@ -37,7 +31,7 @@ export async function commitProjectImageAction(projectId: string, uploadId: stri
   // Atomic claim prevents a double-submit from promoting the same staging object.
   const claim = await prisma.stagedProjectUpload.updateMany({
     where: { id: staged.id, status: 'STAGED', expiresAt: { gt: new Date() } },
-    data: { status: 'PROMOTING' },
+    data: { status: 'PROMOTING', expiresAt: new Date(Date.now() + 30 * 60 * 1000) },
   })
   if (claim.count !== 1) throw new Error('Файл уже обрабатывается.')
 
@@ -53,7 +47,12 @@ export async function commitProjectImageAction(projectId: string, uploadId: stri
     }))
     copied = true
 
-    await prisma.$transaction(async (tx) => {
+    await serializable(async (tx) => {
+      await lockProject(tx, id)
+      const claimed = await tx.stagedProjectUpload.findFirst({
+        where: { id: staged.id, projectId: id, status: 'PROMOTING' }, select: { id: true },
+      })
+      if (!claimed) throw new Error('Загрузка была отменена или удалена.')
       const tail = await tx.projectImage.aggregate({
         where: { projectId: id }, _max: { sortOrder: true }, _count: { _all: true },
       })
@@ -85,29 +84,35 @@ export async function commitProjectImageAction(projectId: string, uploadId: stri
   }
 
   await drainMediaDeletionJobs(10)
-  refreshMedia()
+  invalidateProjectViews()
 }
 
 export async function setProjectCoverAction(projectId: string, imageId: string) {
   await assertMutationPermission(PERMISSION.PROJECT_UPDATE)
   const id = idSchema.parse(projectId)
-  const image = await prisma.projectImage.findFirst({
-    where: { id: idSchema.parse(imageId), projectId: id }, select: { id: true },
+  await serializable(async (tx) => {
+    await lockProject(tx, id)
+    const image = await tx.projectImage.findFirst({
+      where: { id: idSchema.parse(imageId), projectId: id }, select: { id: true },
+    })
+    if (!image) throw new Error('Изображение не принадлежит проекту.')
+    await tx.project.update({ where: { id }, data: { coverImageId: image.id, updatedAt: new Date() } })
   })
-  if (!image) throw new Error('Изображение не принадлежит проекту.')
-  await prisma.project.update({ where: { id }, data: { coverImageId: image.id, updatedAt: new Date() } })
-  refreshMedia()
+  invalidateProjectViews()
 }
 
 export async function changeProjectImageAltAction(projectId: string, imageId: string, alt: string) {
   await assertMutationPermission(PERMISSION.PROJECT_UPDATE)
-  const result = await prisma.projectImage.updateMany({
-    where: { id: idSchema.parse(imageId), projectId: idSchema.parse(projectId) },
-    data: { alt: altSchema.parse(alt) },
+  await serializable(async (tx) => {
+    await lockProject(tx, idSchema.parse(projectId))
+    const result = await tx.projectImage.updateMany({
+      where: { id: idSchema.parse(imageId), projectId: projectId },
+      data: { alt: altSchema.parse(alt) },
+    })
+    if (result.count !== 1) throw new Error('Фото не найдено.')
+    await tx.project.update({ where: { id: projectId }, data: { updatedAt: new Date() } })
   })
-  if (result.count !== 1) throw new Error('Фото не найдено.')
-  await prisma.project.update({ where: { id: projectId }, data: { updatedAt: new Date() } })
-  refreshMedia()
+  invalidateProjectViews()
 }
 
 export async function moveProjectImageAction(projectId: string, orderedIds: string[]) {
@@ -117,7 +122,8 @@ export async function moveProjectImageAction(projectId: string, orderedIds: stri
     throw new Error('Некорректный порядок фотографий.')
   }
   orderedIds.forEach((imageId) => idSchema.parse(imageId))
-  await prisma.$transaction(async (tx) => {
+  await serializable(async (tx) => {
+    await lockProject(tx, id)
     const images = await tx.projectImage.findMany({ where: { projectId: id }, select: { id: true } })
     if (images.length !== orderedIds.length || !images.every((i) => orderedIds.includes(i.id))) {
       throw new Error('Состав галереи изменился. Обновите страницу.')
@@ -127,18 +133,18 @@ export async function moveProjectImageAction(projectId: string, orderedIds: stri
     }
     await tx.project.update({ where: { id }, data: { updatedAt: new Date() } })
   })
-  refreshMedia()
+  invalidateProjectViews()
 }
 
 export async function removeProjectImageAction(projectId: string, imageId: string) {
   await assertMutationPermission(PERMISSION.PROJECT_UPDATE)
   const id = idSchema.parse(projectId)
-  const image = await prisma.projectImage.findFirst({
-    where: { id: idSchema.parse(imageId), projectId: id }, select: { id: true, objectKey: true },
-  })
-  if (!image) throw new Error('Фото не найдено.')
-
-  await prisma.$transaction(async (tx) => {
+  await serializable(async (tx) => {
+    await lockProject(tx, id)
+    const image = await tx.projectImage.findFirst({
+      where: { id: idSchema.parse(imageId), projectId: id }, select: { id: true, objectKey: true },
+    })
+    if (!image) throw new Error('Фото не найдено.')
     const project = await tx.project.findUniqueOrThrow({ where: { id }, select: { coverImageId: true } })
     if (project.coverImageId === image.id) {
       // Published projects must never remain published without an existing cover.
@@ -154,5 +160,5 @@ export async function removeProjectImageAction(projectId: string, imageId: strin
     })
   })
   await drainMediaDeletionJobs(10)
-  refreshMedia()
+  invalidateProjectViews()
 }

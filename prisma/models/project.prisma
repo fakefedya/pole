@@ -37,6 +37,7 @@ model Project {
 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  contentRevision Int @default(0)
   publishedAt DateTime?
 
   @@index([status, publishedAt(sort: Desc)])

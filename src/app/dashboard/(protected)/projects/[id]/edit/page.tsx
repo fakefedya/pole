@@ -54,6 +54,7 @@ async function EditContent({ params }: Props) {
 							showOnHome: project.showOnHome,
 							homeOrder: project.homeOrder,
 							hasCover,
+							contentRevision: project.contentRevision,
 						}}
 					/>
 					<div id='project-gallery' className='scroll-mt-28'>

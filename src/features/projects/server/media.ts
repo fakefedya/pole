@@ -11,6 +11,10 @@ export async function drainMediaDeletionJobs(limit = 50): Promise<void> {
   for (const job of jobs) {
     try {
       if (job.bucket === mediaBuckets.public) {
+        const promoting = await prisma.stagedProjectUpload.findFirst({
+          where: { finalKey: job.objectKey, status: 'PROMOTING' }, select: { id: true },
+        })
+        if (promoting) continue
         const stillUsed = await prisma.projectImage.findUnique({
           where: { objectKey: job.objectKey }, select: { id: true },
         })

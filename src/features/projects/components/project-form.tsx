@@ -5,6 +5,7 @@ import {
 	useActionState,
 	useEffect,
 	useState,
+	useRef,
 	type SubmitEvent,
 } from 'react'
 import Link from 'next/link'
@@ -55,10 +56,12 @@ export type ProjectFormInitial = {
 	showOnHome: boolean
 	homeOrder: number
 	hasCover?: boolean
+	contentRevision?: number
 }
 
 export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
 	const router = useRouter()
+	const revision = useRef(project?.contentRevision ?? 0)
 	const [state, formAction, pending] = useActionState(
 		saveProjectAction,
 		initialProjectActionState,
@@ -72,6 +75,7 @@ export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
 	}, [state.error])
 	useEffect(() => {
 		if (state.savedAt) {
+			if (state.revision !== undefined) revision.current = state.revision
 			toast.success('Изменения проекта сохранены.')
 			router.refresh()
 		}
@@ -82,6 +86,7 @@ export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
 		if (pending) return
 		// Create FormData before scheduling the transition: React clears event.currentTarget.
 		const values = new FormData(event.currentTarget)
+		if (project) values.set('expectedRevision', String(revision.current))
 		// Bypass <form action={...}> to prevent React 19 resetting uncontrolled
 		// input/textarea elements when a Server Action returns validation errors.
 		startTransition(() => {

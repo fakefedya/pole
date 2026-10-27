@@ -5,10 +5,8 @@ import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { Skeleton } from '@/components/ui/skeleton'
 import { DashboardPageHeader } from '@/features/dashboard/components/dashboard-page-header'
-import {
-	ProjectsTable,
-	type ProjectTableRow,
-} from '@/features/projects/components/projects-table'
+import { ProjectsDataTable } from '@/features/projects/components/data-table'
+import type { ProjectTableRow } from '@/features/projects/components/types'
 import { PERMISSION, hasPermission } from '@/lib/auth/authorization'
 import { requirePagePermission } from '@/features/auth/server/access'
 import { listAdminProjects } from '@/features/projects/server/admin-queries'
@@ -19,7 +17,6 @@ async function ProjectsList() {
 	const projects = await listAdminProjects()
 	const canCreate = hasPermission(session.user.role, PERMISSION.PROJECT_CREATE)
 	const canEdit = hasPermission(session.user.role, PERMISSION.PROJECT_UPDATE)
-	const canDelete = hasPermission(session.user.role, PERMISSION.PROJECT_DELETE)
 	const rows: ProjectTableRow[] = projects.map((p) => ({
 		id: p.id,
 		title: p.title,
@@ -52,7 +49,7 @@ async function ProjectsList() {
 					) : undefined
 				}
 			/>
-			<ProjectsTable projects={rows} canEdit={canEdit} canDelete={canDelete} />
+			<ProjectsDataTable projects={rows} canEdit={canEdit} />
 		</main>
 	)
 }
