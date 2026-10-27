@@ -43,7 +43,12 @@ export function DashboardShell({ name, role, children }: Props) {
 	]
 
 	return (
-		<div className='min-h-dvh bg-dashboard-background md:grid md:grid-cols-[124px_minmax(0,1fr)]'>
+		<div
+			className={cn(
+				'min-h-dvh bg-dashboard-background',
+				'md:grid md:grid-cols-[124px_minmax(0,1fr)]',
+			)}
+		>
 			<aside className='h-dvh sticky top-0 flex items-center mx-7.5'>
 				<nav
 					className='relative flex flex-col w-fit rounded-full bg-brand-charcoal p-1.5 backdrop-blur-md'

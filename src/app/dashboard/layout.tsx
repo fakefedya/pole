@@ -9,7 +9,7 @@ export default function DashboardLayout({
 	return (
 		<>
 			{children}
-			<Toaster position='bottom-right' richColors closeButton theme='dark' />
+			<Toaster position='bottom-left' richColors closeButton theme='dark' />
 		</>
 	)
 }

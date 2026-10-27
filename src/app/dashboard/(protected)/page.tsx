@@ -31,20 +31,13 @@ async function Overview() {
 	const count = (status: 'DRAFT' | 'HIDDEN' | 'PUBLISHED') =>
 		counts.find((row) => row.status === status)?._count._all ?? 0
 	return (
-		<main className='mx-auto max-w-6xl space-y-8 bg-red-100'>
+		<main className='mx-auto max-w-6xl space-y-8'>
 			<header className='flex flex-wrap items-center justify-between gap-4'>
 				<div>
-					<p className='mb-2 text-xs font-semibold uppercase tracking-[.25em] text-[#954520]'>
-						STUDIO POLE / Workspace
-					</p>
-					<h1 className='text-3xl font-semibold tracking-tight sm:text-4xl'>
-						Рабочая панель
+					<h1 className='text-3xl text-brand-milk font-semibold tracking-tight sm:text-4xl'>
+						Панель управления
 					</h1>
-					<p className='mt-2 text-sm text-neutral-500'>
-						Добро пожаловать, {session.user.name || session.user.email}.
-					</p>
 				</div>
-				<Badge variant='outline'>Защищённый доступ</Badge>
 			</header>
 
 			{canSeeProjects ? (
@@ -56,33 +49,22 @@ async function Overview() {
 							['Скрыто', count('HIDDEN')],
 						] as const
 					).map(([label, value]) => (
-						<Card key={label}>
+						<Card
+							key={label}
+							className='border border-dashboard-input-border bg-brand-charcoal'
+						>
 							<CardHeader>
-								<CardDescription>{label}</CardDescription>
-								<CardTitle className='text-4xl'>{value}</CardTitle>
+								<CardDescription className='font-semibold text-muted-foreground'>
+									{label}
+								</CardDescription>
+								<CardTitle className='text-4xl text-brand-milk'>
+									{value}
+								</CardTitle>
 							</CardHeader>
 						</Card>
 					))}
 				</div>
 			) : null}
-			{canSeeProjects && (
-				<Card>
-					<CardHeader>
-						<CardTitle>Портфолио</CardTitle>
-						<CardDescription>
-							Управление проектами и публикациями
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<Link
-							href='/dashboard/projects'
-							className='inline-flex rounded-xl bg-neutral-950 px-5 py-3 text-sm font-medium text-white hover:bg-neutral-800'
-						>
-							Перейти к проектам →
-						</Link>
-					</CardContent>
-				</Card>
-			)}
 		</main>
 	)
 }

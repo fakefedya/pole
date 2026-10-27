@@ -41,6 +41,7 @@ import {
 	type Role,
 } from '@/lib/auth/authorization'
 import type { ManagedUser } from './types'
+import { cn } from '@/lib/utils'
 
 const options = [ROLE.EDITOR, ROLE.ADMIN, ROLE.USER].map((value) => ({
 	value,
@@ -216,7 +217,10 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 			<Sheet open={open} onOpenChange={changeOpen}>
 				<SheetContent
 					side='right'
-					className='flex h-dvh max-h-dvh w-full flex-col gap-0 overflow-hidden border-dashboard-border bg-dashboard-background p-0 text-brand-milk shadow-2xl sm:max-w-xl'
+					className={cn(
+						'flex h-dvh max-h-dvh w-full flex-col gap-0 overflow-hidden border-dashboard-border bg-dashboard-background p-0 text-brand-milk shadow-2xl',
+						'sm:max-w-xl',
+					)}
 				>
 					<SheetHeader className='shrink-0 border-b border-dashboard-border px-6 py-7 pr-16'>
 						<SheetTitle className='text-xl text-brand-milk'>
@@ -227,7 +231,7 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 						</SheetDescription>
 					</SheetHeader>
 
-					<div className='min-h-0 flex-1 overflow-y-auto px-6 py-6'>
+					<div className='min-h-0 flex-1 overflow-y-auto px-6 py-6 scrollbar-thin scrollbar-thumb-dashboard-input scrollbar-track-dashboard-background'>
 						{user && (
 							<div className='space-y-6'>
 								<div className='flex flex-wrap gap-2'>
@@ -274,6 +278,7 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 											}}
 											error={errors.email}
 											disabled={pending}
+
 											description='Изменение email завершает текущие сессии и сбрасывает признак подтверждения адреса.'
 										/>
 									</section>
@@ -347,7 +352,7 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 							type='submit'
 							form='edit-user-form'
 							disabled={pending || !changed}
-							className='h-11 w-full bg-brand-milk text-brand-charcoal hover:bg-brand-milk/90'
+							className='h-11 w-full font-medium bg-brand-milk cursor-pointer text-brand-charcoal rounded-lg hover:bg-brand-milk/90'
 						>
 							{pending ? 'Сохраняем…' : 'Сохранить изменения'}
 						</Button>
@@ -357,7 +362,7 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 								variant='outline'
 								disabled={pending || !user}
 								onClick={() => setConfirmation(user?.banned ? 'unban' : 'ban')}
-								className='flex-1 border-dashboard-input-border bg-dashboard-input text-brand-milk'
+								className='flex-1 border-dashboard-input-border bg-dashboard-input text-brand-milk rounded-lg cursor-pointer'
 							>
 								{user?.banned ? 'Разблокировать' : 'Заблокировать'}
 							</Button>
@@ -370,7 +375,7 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 									setDeleteError(undefined)
 									setConfirmation('delete')
 								}}
-								className='flex-1'
+								className='flex-1 rounded-lg cursor-pointer'
 							>
 								<Trash2 className='size-4' /> Удалить
 							</Button>
@@ -390,7 +395,7 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 						<AlertDialogTitle className='text-brand-milk'>
 							Подтвердите действие
 						</AlertDialogTitle>
-						<AlertDialogDescription className='text-muted-foreground'>
+						<AlertDialogDescription className='text-muted-foreground font-medium'>
 							{confirmation === 'delete'
 								? 'Учётная запись будет удалена без возможности восстановления.'
 								: confirmation === 'ban'
@@ -414,10 +419,14 @@ export function EditUserSheet({ user, open, onOpenChange }: Props) {
 						/>
 					)}
 					<AlertDialogFooter>
-						<AlertDialogCancel className='text-black' disabled={pending}>
+						<AlertDialogCancel
+							className='text-black rounded-lg cursor-pointer border-0'
+							disabled={pending}
+						>
 							Отмена
 						</AlertDialogCancel>
 						<Button
+							className='rounded-lg cursor-pointer'
 							type='button'
 							variant={
 								confirmation === 'unban' || confirmation === 'discard'
