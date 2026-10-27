@@ -1,15 +1,17 @@
 import { Suspense } from 'react'
-import { Skeleton } from '@/components/ui/skeleton'
+import { DashboardPageSkeleton } from '@/features/dashboard/components/dashboard-page-skeleton'
 import { PERMISSION } from '@/lib/auth/authorization'
 import { requirePagePermission } from '@/features/auth/server/access'
 import { ProjectForm } from '@/features/projects/components/project-form'
+import { countFeaturedProjects } from '@/features/projects/server/admin-queries'
 async function NewContent() {
 	await requirePagePermission(PERMISSION.PROJECT_CREATE)
-	return <ProjectForm />
+	const featuredCount = await countFeaturedProjects()
+	return <ProjectForm featuredCount={featuredCount} />
 }
 export default function NewProjectPage() {
 	return (
-		<Suspense fallback={<Skeleton className='h-72 rounded-2xl' />}>
+		<Suspense fallback={<DashboardPageSkeleton variant='form' />}>
 			<NewContent />
 		</Suspense>
 	)

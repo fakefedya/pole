@@ -2,6 +2,7 @@ import 'server-only'
 import { cacheLife, cacheTag } from 'next/cache'
 import { prisma } from '@/lib/db/prisma'
 import { getPublicImageUrl } from '@/lib/storage/public-image'
+import { MAX_FEATURED_PROJECTS } from '@/features/projects/config/featured-projects'
 
 export type PublicProjectCard = {
   id: string
@@ -36,7 +37,7 @@ export async function getFeaturedProjects(): Promise<PublicProjectCard[]> {
   const projects = await prisma.project.findMany({
     where: { status: 'PUBLISHED', showOnHome: true, coverImageId: { not: null }, coverImage: { isNot: null } },
     orderBy: [{ homeOrder: 'asc' }, { publishedAt: 'desc' }, { id: 'asc' }],
-    take: 6,
+    take: MAX_FEATURED_PROJECTS,
     select: { id: true, slug: true, title: true, summary: true, location: true, areaSqM: true,
       coverImage: { select: { objectKey: true, alt: true } } },
   })

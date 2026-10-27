@@ -32,6 +32,7 @@ import {
 	type ProjectActionState,
 } from '@/features/projects/server/actions'
 import { cn } from '@/lib/utils'
+import { MAX_FEATURED_PROJECTS } from '@/features/projects/config/featured-projects'
 
 const initialProjectActionState: ProjectActionState = { error: null }
 const statusOptions = [
@@ -59,7 +60,13 @@ export type ProjectFormInitial = {
 	contentRevision?: number
 }
 
-export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
+export function ProjectForm({
+	project,
+	featuredCount = 0,
+}: {
+	project?: ProjectFormInitial
+	featuredCount?: number
+}) {
 	const router = useRouter()
 	const revision = useRef(project?.contentRevision ?? 0)
 	const [state, formAction, pending] = useActionState(
@@ -321,6 +328,14 @@ export function ProjectForm({ project }: { project?: ProjectFormInitial }) {
 								onCheckedChange={setShowOnHome}
 								error={errors.showOnHome}
 							/>
+							<p className='mt-2 text-xs text-muted-foreground'>
+								На главной: {featuredCount} из {MAX_FEATURED_PROJECTS} мест
+								занято.
+								{featuredCount >= MAX_FEATURED_PROJECTS &&
+								!(project?.status === 'PUBLISHED' && project.showOnHome)
+									? ' Для добавления нового проекта сначала уберите другой с главной.'
+									: ''}
+							</p>
 							{showOnHome && (
 								<input type='hidden' name='showOnHome' value='on' />
 							)}

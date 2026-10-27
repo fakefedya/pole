@@ -26,3 +26,7 @@ export async function getAdminProject(id: string) {
     },
   })
 }
+/** Private counter; only call after the Dashboard permission check. */
+export async function countFeaturedProjects(): Promise<number> {
+  return prisma.project.count({ where: { status: 'PUBLISHED', showOnHome: true } })
+}

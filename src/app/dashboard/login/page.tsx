@@ -2,7 +2,7 @@ import { LoginForm } from '@/features/auth/components/login-form'
 
 export function AdminLoginPage() {
 	return (
-		<main className='flex min-h-dvh items-center justify-center px-6'>
+		<main className='flex min-h-dvh items-center justify-center bg-background px-6 text-foreground'>
 			<LoginForm />
 		</main>
 	)

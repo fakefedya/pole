@@ -3,7 +3,7 @@ import { prisma } from '@/lib/db/prisma'
 import { requirePagePermission } from '@/features/auth/server/access'
 import { PERMISSION } from '@/lib/auth/authorization'
 import { UsersManager } from '@/features/users/components/users-manager'
-import { Skeleton } from '@/components/ui/skeleton'
+import { DashboardPageSkeleton } from '@/features/dashboard/components/dashboard-page-skeleton'
 
 async function UsersContent() {
 	const session = await requirePagePermission(PERMISSION.USERS_MANAGE)
@@ -29,7 +29,7 @@ async function UsersContent() {
 
 export default function UsersPage() {
 	return (
-		<Suspense fallback={<Skeleton className='h-80 rounded-2xl' />}>
+		<Suspense fallback={<DashboardPageSkeleton variant='table' />}>
 			<UsersContent />
 		</Suspense>
 	)

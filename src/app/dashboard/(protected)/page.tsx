@@ -10,7 +10,7 @@ import {
 	CardDescription,
 } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import { Skeleton } from '@/components/ui/skeleton'
+import { DashboardPageSkeleton } from '@/features/dashboard/components/dashboard-page-skeleton'
 import { requireDashboardSession } from '@/features/auth/server/access'
 
 async function Overview() {
@@ -70,7 +70,7 @@ async function Overview() {
 }
 export default function DashboardPage() {
 	return (
-		<Suspense fallback={<Skeleton className='h-64 rounded-2xl' />}>
+		<Suspense fallback={<DashboardPageSkeleton variant='overview' />}>
 			<Overview />
 		</Suspense>
 	)

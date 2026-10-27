@@ -10,7 +10,8 @@ import { PERMISSION } from '@/lib/auth/authorization'
 import { assertMutationPermission } from '@/features/auth/server/access'
 import { descriptionToBlocks, parseProjectForm, prepareProject } from '@/features/projects/schemas/project-form'
 import { fieldErrorsFromZod } from '@/features/dashboard/lib/form-errors'
-import { serializable, lockProject } from '@/lib/db/transaction-guards'
+import { serializable, lockProject, lockFeaturedMutations } from '@/lib/db/transaction-guards'
+import { MAX_FEATURED_PROJECTS, FEATURED_PROJECTS_LIMIT_MESSAGE } from '@/features/projects/config/featured-projects'
 
 export type ProjectActionState = {
   error: string | null
@@ -40,6 +41,8 @@ export async function saveProjectAction(
     if (id) {
       // Project row lock coordinates publishing with cover updates and image deletion.
       const saved = await serializable(async (tx) => {
+        // Serialize homepage slot assignments across different projects, not just this row.
+        await lockFeaturedMutations(tx)
         await lockProject(tx, id)
         const existing = await tx.project.findUniqueOrThrow({
           where: { id }, select: { coverImageId: true, publishedAt: true, contentRevision: true },
@@ -51,6 +54,12 @@ export async function saveProjectAction(
             where: { id: existing.coverImageId, projectId: id }, select: { id: true },
           })
           if (!cover) return false
+        }
+        if (data.status === 'PUBLISHED' && data.showOnHome) {
+          const occupiedByOthers = await tx.project.count({
+            where: { status: 'PUBLISHED', showOnHome: true, id: { not: id } },
+          })
+          if (occupiedByOthers >= MAX_FEATURED_PROJECTS) return 'FEATURED_FULL' as const
         }
         const publishedAt = data.status === 'PUBLISHED'
           ? existing.publishedAt ?? new Date()
@@ -75,6 +84,10 @@ export async function saveProjectAction(
         return savedProject.contentRevision
       })
       if (saved === 'STALE') return { error: 'Содержание проекта изменилось в другой вкладке или другим редактором. Обновите страницу и проверьте данные перед повторным сохранением.' }
+      if (saved === 'FEATURED_FULL') return {
+        error: FEATURED_PROJECTS_LIMIT_MESSAGE,
+        fieldErrors: { showOnHome: FEATURED_PROJECTS_LIMIT_MESSAGE },
+      }
       if (!saved) {
         return {
           error: 'Нельзя опубликовать проект без обложки. Выберите её в галерее.',

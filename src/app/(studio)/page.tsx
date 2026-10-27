@@ -5,13 +5,22 @@ import { SolutionsSection } from './_components/solutions-section'
 import { FeaturedProjectsSection } from './_components/featured-projects-section'
 
 export function HomePage() {
-  return <>
-    <HeroSection />
-    <AboutSection />
-    <Suspense fallback={<section className='min-h-80 bg-brand-milk' aria-label='Загрузка проектов' />}>
-      <FeaturedProjectsSection />
-    </Suspense>
-    <SolutionsSection />
-  </>
+	return (
+		<>
+			<HeroSection />
+			<AboutSection />
+			<Suspense
+				fallback={
+					<section
+						className='min-h-80 bg-brand-milk'
+						aria-label='Загрузка проектов'
+					/>
+				}
+			>
+				<FeaturedProjectsSection />
+			</Suspense>
+			<SolutionsSection />
+		</>
+	)
 }
 export { HomePage as default }

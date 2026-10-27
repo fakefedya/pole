@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Plus } from 'lucide-react'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
-import { Skeleton } from '@/components/ui/skeleton'
+import { DashboardPageSkeleton } from '@/features/dashboard/components/dashboard-page-skeleton'
 import { DashboardPageHeader } from '@/features/dashboard/components/dashboard-page-header'
 import { ProjectsDataTable } from '@/features/projects/components/data-table'
 import type { ProjectTableRow } from '@/features/projects/components/types'
@@ -55,7 +55,7 @@ async function ProjectsList() {
 }
 export default function ProjectsPage() {
 	return (
-		<Suspense fallback={<Skeleton className='h-64 rounded-sm' />}>
+		<Suspense fallback={<DashboardPageSkeleton variant='table' />}>
 			<ProjectsList />
 		</Suspense>
 	)

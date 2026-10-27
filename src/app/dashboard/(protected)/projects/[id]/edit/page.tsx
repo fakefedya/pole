@@ -2,12 +2,12 @@ import { Suspense } from 'react'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { ImageOff, Images, ShieldCheck } from 'lucide-react'
-import { Skeleton } from '@/components/ui/skeleton'
+import { DashboardPageSkeleton } from '@/features/dashboard/components/dashboard-page-skeleton'
 import { Badge } from '@/components/ui/badge'
 import { PERMISSION, hasPermission } from '@/lib/auth/authorization'
 import { requirePagePermission } from '@/features/auth/server/access'
 import { blocksToDescription } from '@/features/projects/schemas/project-form'
-import { getAdminProject } from '@/features/projects/server/admin-queries'
+import { getAdminProject, countFeaturedProjects } from '@/features/projects/server/admin-queries'
 import { ProjectForm } from '@/features/projects/components/project-form'
 import { ProjectGallery } from '@/features/projects/components/project-gallery'
 import { DeleteProjectButton } from '@/features/projects/components/delete-project-button'
@@ -26,6 +26,7 @@ async function EditContent({ params }: Props) {
 	const { id } = await params
 	const project = await getAdminProject(id)
 	if (!project) notFound()
+	const featuredCount = await countFeaturedProjects()
 
 	const cover = project.images.find(
 		(image) => image.id === project.coverImageId,
@@ -38,6 +39,7 @@ async function EditContent({ params }: Props) {
 				<div className='min-w-0 space-y-7'>
 					<ProjectForm
 						key={project.id}
+						featuredCount={featuredCount}
 						project={{
 							id: project.id,
 							title: project.title,
@@ -156,7 +158,7 @@ async function EditContent({ params }: Props) {
 
 export default function EditProjectPage(props: Props) {
 	return (
-		<Suspense fallback={<Skeleton className='h-72 rounded-2xl' />}>
+		<Suspense fallback={<DashboardPageSkeleton variant='form' />}>
 			<EditContent {...props} />
 		</Suspense>
 	)
