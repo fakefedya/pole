@@ -60,13 +60,6 @@ const hotspots = [
 		x: 59.4,
 		y: 32,
 	},
-	{
-		id: 'lamp',
-		sceneId: 'lamp',
-		label: 'Включить подсветку потолка',
-		x: 70,
-		y: 26,
-	},
 ] satisfies readonly HeroHotspot[]
 
 export function HeroSection() {
