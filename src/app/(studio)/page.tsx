@@ -1,6 +1,6 @@
 import { Suspense } from 'react'
 import { AboutSection } from './_components/about-section'
-import { HeroSection } from './_components/hero-section'
+import { HeroSection } from './_components/hero/hero-section'
 import { SolutionsSection } from './_components/solutions-section'
 import { FeaturedProjectsSection } from './_components/featured-projects-section'
 

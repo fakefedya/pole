@@ -19,6 +19,8 @@
 	--color-dashboard-input: #181818;
 	--color-dashboard-input-border: #373737;
 
+	--container-site: 100rem;
+
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);
 	--font-sans: var(--font-sans);

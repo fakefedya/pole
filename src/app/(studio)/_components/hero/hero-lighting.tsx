@@ -5,7 +5,7 @@ import Image from 'next/image'
 
 import { cn } from '@/lib/utils'
 
-export type HeroSceneId = 'day' | 'pendants' | 'chandelier' | 'stone' | 'lamp'
+export type HeroSceneId = 'day' | 'pendants' | 'chandelier' | 'stone'
 
 export type HeroScene = {
 	id: HeroSceneId
@@ -27,20 +27,23 @@ type HeroLightingProps = {
 	children: React.ReactNode
 }
 
+const INITIAL_SCENE = 'pendants'
+const INITIAL_HOTSPOT = 'pendant'
+
 export function HeroLighting({
 	scenes,
 	hotspots,
 	children,
 }: HeroLightingProps) {
-	const [selectedScene, setSelectedScene] = useState<HeroSceneId>('day')
-	const [visibleScene, setVisibleScene] = useState<HeroSceneId>('day')
+	const [selectedScene, setSelectedScene] = useState<HeroSceneId>(INITIAL_SCENE)
+	const [visibleScene, setVisibleScene] = useState<HeroSceneId>(INITIAL_SCENE)
 	const [selectedHotspot, setSelectedHotspot] = useState<string | null>(
-		'window',
+		INITIAL_HOTSPOT,
 	)
 	const [loadAlternates, setLoadAlternates] = useState(false)
 	const [failedScene, setFailedScene] = useState<HeroSceneId | null>(null)
 
-	const requestedScene = useRef<HeroSceneId>('day')
+	const requestedScene = useRef<HeroSceneId>(INITIAL_SCENE)
 	const loadedScenes = useRef(new Set<HeroSceneId>())
 
 	const selectScene = (sceneId: HeroSceneId, hotspotId: string | null) => {
@@ -58,7 +61,7 @@ export function HeroLighting({
 	const handleImageLoad = (sceneId: HeroSceneId) => {
 		loadedScenes.current.add(sceneId)
 
-		if (sceneId === 'day') {
+		if (sceneId === INITIAL_SCENE) {
 			setLoadAlternates(true)
 		}
 

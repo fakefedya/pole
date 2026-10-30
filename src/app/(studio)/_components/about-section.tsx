@@ -18,13 +18,13 @@ const sectionDescription: Description = {
 export function AboutSection() {
 	return (
 		<SiteSection className='bg-brand-milk'>
-			<SiteContainer className='max-w-7xl py-35 px-10'>
+			<SiteContainer className='py-35 px-10'>
 				<div className='max-w-full mx-auto flex flex-col gap-4 items-center text-center'>
-					<div className='relative w-full h-40 mb-10'>
+					<div className='relative w-full h-80 mb-10'>
 						<Image
 							src='/brand/logo-pole.svg'
 							alt='Надпись POLE'
-							objectFit='contain'
+							className='object-cover'
 							fill
 						/>
 					</div>

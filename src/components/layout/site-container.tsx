@@ -7,7 +7,7 @@ type Props = {
 
 export function SiteContainer({ children, className }: Props) {
 	return (
-		<div className={cn('flex flex-col max-w-7xl w-full', className)}>
+		<div className={cn('flex flex-col w-full max-w-site', className)}>
 			{children}
 		</div>
 	)
