@@ -1,8 +1,9 @@
 import { Suspense } from 'react'
 import { AboutSection } from './_components/about-section'
 import { HeroSection } from './_components/hero/hero-section'
-import { SolutionsSection } from './_components/solutions-section'
+import { SolutionsSection } from './_components/solutions/solutions-section'
 import { FeaturedProjectsSection } from './_components/featured-projects-section'
+import { BeforeAfterSection } from './_components/before-after/before-after-section'
 
 export function HomePage() {
 	return (
@@ -20,6 +21,7 @@ export function HomePage() {
 				<FeaturedProjectsSection />
 			</Suspense>
 			<SolutionsSection />
+			<BeforeAfterSection />
 		</>
 	)
 }

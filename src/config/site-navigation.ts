@@ -1,4 +1,4 @@
-type InternalHref = `/${string}`
+export type InternalHref = `/${string}`
 
 type NavigationLink = {
 	type: 'link'

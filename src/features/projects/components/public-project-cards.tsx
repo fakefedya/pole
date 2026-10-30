@@ -25,7 +25,7 @@ export function PublicProjectCards({
 	return (
 		<div
 			className={cn(
-				'gap-x-1.5 gap-y-12',
+				'gap-x-4 gap-y-12',
 				isExpandable
 					? 'grid grid-cols-1 md:grid-cols-2 lg:flex lg:items-start'
 					: 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3',
@@ -79,7 +79,7 @@ export function PublicProjectCards({
 						</h3>
 					</div>
 					<div className='absolute bottom-4 left-4'>
-						<div className='flex gap-1.5'>
+						<div className='flex gap-4'>
 							{project.location && (
 								<span
 									className={cn(

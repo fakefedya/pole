@@ -3,6 +3,8 @@ import { SiteContainer } from '@/components/layout/site-container'
 import { getFeaturedProjects } from '@/features/projects/server/public-queries'
 import { PublicProjectCards } from '@/features/projects/components/public-project-cards'
 import { SiteSection } from '@/components/layout/site-section'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
 export async function FeaturedProjectsSection() {
 	const projects = await getFeaturedProjects()
@@ -12,7 +14,7 @@ export async function FeaturedProjectsSection() {
 			className='bg-brand-charcoal min-h-dvh'
 			aria-labelledby='featured-projects-title'
 		>
-			<SiteContainer className='max-w-7xl p-10 gap-20'>
+			<SiteContainer className='p-10 gap-20'>
 				<h2
 					id='featured-projects-title'
 					className='font-display text-brand-milk text-center text-4xl md:text-6xl'
@@ -21,12 +23,14 @@ export async function FeaturedProjectsSection() {
 				</h2>
 				<PublicProjectCards projects={projects} layout='expandable' />
 				<div className='flex justify-center'>
-					<Link
-						href='/projects'
-						className='rounded-full px-10 py-5 bg-brand-milk w-fit'
-					>
-						Смотреть все проекты
-					</Link>
+					<Button
+						className={cn(
+							'w-fit text-base px-5 h-12 cursor-pointer bg-brand-terracota-accent',
+							'transition-colors duration-300 hover:bg-brand-terracota',
+						)}
+						render={<Link href='/projects'>Смотреть все проекты</Link>}
+						nativeButton={false}
+					/>
 				</div>
 			</SiteContainer>
 		</SiteSection>
