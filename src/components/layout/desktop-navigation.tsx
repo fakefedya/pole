@@ -20,6 +20,7 @@ import { usePathname } from 'next/navigation'
 
 type DesktopNavigationProps = {
 	siteNavigation: readonly SiteNavigationItem[]
+	onMenuOpenChange?: (open: boolean) => void
 }
 
 const navigationItemClassName = cn(
@@ -55,7 +56,10 @@ function ActivePill() {
 	)
 }
 
-export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
+export function DesktopNavigation({
+	siteNavigation,
+	onMenuOpenChange,
+}: DesktopNavigationProps) {
 	const pathname = usePathname()
 	const menuAnchorRef = useRef<HTMLDivElement>(null)
 
@@ -92,6 +96,7 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 						align='center'
 						sideOffset={4}
 						matchAnchorWidth
+						onValueChange={(value) => onMenuOpenChange?.(value !== null)}
 					>
 						<NavigationMenuList>
 							{visibleItems.map((item, index) => {
