@@ -13,6 +13,7 @@
 	--color-brand-cacao: #5b2f26;
 	--color-brand-olive: #94895b;
 	--color-brand-olive-accent: #797049;
+	--color-brand-black: lab(0% 0 0);
 
 	--color-dashboard-background: #0a0a0a;
 	--color-dashboard-border: #222222;

@@ -84,7 +84,7 @@ export function DesktopNavigation({ siteNavigation }: DesktopNavigationProps) {
 			<LayoutGroup id='studio-pole-desktop-navigation'>
 				<div
 					ref={menuAnchorRef}
-					className='relative flex w-fit rounded-full bg-black/80 p-1.5 backdrop-blur-md'
+					className='relative flex w-fit rounded-full bg-neutral-900 p-1.5 backdrop-blur-md'
 				>
 					<NavigationMenu
 						aria-label='Основная навигация'

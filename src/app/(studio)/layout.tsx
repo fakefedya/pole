@@ -10,7 +10,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
 				<SiteHeader />
 			</Suspense>
 
-			<main className='min-h-full bg-brand-charcoal'>{children}</main>
+			<main className='min-h-full bg-brand-black'>{children}</main>
 
 			<SiteFooter />
 		</>

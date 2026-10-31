@@ -4,6 +4,7 @@ import { HeroSection } from './_components/hero/hero-section'
 import { SolutionsSection } from './_components/solutions/solutions-section'
 import { FeaturedProjectsSection } from './_components/featured-projects-section'
 import { BeforeAfterSection } from './_components/before-after/before-after-section'
+import { AuthorSection } from './_components/author-section'
 
 export function HomePage() {
 	return (
@@ -22,6 +23,7 @@ export function HomePage() {
 			</Suspense>
 			<SolutionsSection />
 			<BeforeAfterSection />
+			<AuthorSection />
 		</>
 	)
 }

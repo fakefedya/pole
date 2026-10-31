@@ -67,11 +67,17 @@ export function PublicProjectCards({
 									'transition-transform duration-1000 group-hover:scale-105 motion-reduce:transition-none',
 							)}
 						/>
+						<div
+							className={cn(
+								'absolute pointer-events-none top-0 left-0 w-full h-full bg-black/5 z-0',
+								'group-hover:bg-black/50 transition-colors duration-300',
+							)}
+						></div>
 					</div>
 					<div className='absolute top-4 left-4'>
 						<h3
 							className={cn(
-								' font-display text-xl leading-tight text-brand-milk/0',
+								' font-display text-2xl leading-tight text-brand-milk/0',
 								'duration-300 transition-colors group-hover:text-brand-milk',
 							)}
 						>
@@ -79,11 +85,11 @@ export function PublicProjectCards({
 						</h3>
 					</div>
 					<div className='absolute bottom-4 left-4'>
-						<div className='flex gap-4'>
+						<div className='flex gap-2'>
 							{project.location && (
 								<span
 									className={cn(
-										'text-sm text-brand-milk font-medium  px-2 py-1 rounded-full bg-black/5 backdrop-blur-md border border-brand-milk/5 opacity-0',
+										'text-base text-brand-milk font-medium  px-2 py-1 rounded-full bg-black/5 backdrop-blur-md border border-brand-milk/5 opacity-0',
 										'duration-300 transition-all group-hover:opacity-100',
 									)}
 								>
@@ -93,7 +99,7 @@ export function PublicProjectCards({
 							{project.areaSqM && (
 								<span
 									className={cn(
-										'text-sm text-brand-milk font-medium  px-2 py-1 rounded-full bg-black/5 backdrop-blur-md border border-brand-milk/5 opacity-0',
+										'text-base text-brand-milk font-medium  px-2 py-1 rounded-full bg-black/5 backdrop-blur-md border border-brand-milk/5 opacity-0',
 										'duration-300 transition-all group-hover:opacity-100',
 									)}
 								>

@@ -3,7 +3,7 @@ import { SiteContainer } from '@/components/layout/site-container'
 import { getFeaturedProjects } from '@/features/projects/server/public-queries'
 import { PublicProjectCards } from '@/features/projects/components/public-project-cards'
 import { SiteSection } from '@/components/layout/site-section'
-import { Button } from '@/components/ui/button'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 
 export async function FeaturedProjectsSection() {
@@ -23,14 +23,17 @@ export async function FeaturedProjectsSection() {
 				</h2>
 				<PublicProjectCards projects={projects} layout='expandable' />
 				<div className='flex justify-center'>
-					<Button
+					<Link
+						href='/projects'
 						className={cn(
-							'w-fit text-base px-5 h-12 cursor-pointer bg-brand-terracota-accent',
+							buttonVariants({ variant: 'default', size: 'lg' }),
+							'h-12 w-fit px-5 text-base',
+							'bg-brand-terracota-accent',
 							'transition-colors duration-300 hover:bg-brand-terracota',
 						)}
-						render={<Link href='/projects'>Смотреть все проекты</Link>}
-						nativeButton={false}
-					/>
+					>
+						Смотреть все проекты
+					</Link>
 				</div>
 			</SiteContainer>
 		</SiteSection>

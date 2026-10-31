@@ -1,7 +1,18 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
-import { ReactCompareSlider } from 'react-compare-slider'
+
+const ReactCompareSlider = dynamic(
+	() =>
+		import('react-compare-slider').then((module) => module.ReactCompareSlider),
+	{
+		ssr: false,
+		loading: () => (
+			<div className='h-full w-full bg-brand-charcoal' aria-hidden='true' />
+		),
+	},
+)
 
 type BeforeAfterCompareProps = {
 	beforeSrc: string
@@ -15,7 +26,7 @@ export function BeforeAfterCompare({
 	afterSrc,
 }: BeforeAfterCompareProps) {
 	return (
-		<div className='relative aspect-4/5 w-full overflow-hidden rounded-2xl bg-brand-espresso sm:aspect-5/4 lg:aspect-video'>
+		<div className='relative aspect-4/5 w-full overflow-hidden rounded-2xl bg-brand-charcoal sm:aspect-5/4 lg:aspect-video'>
 			<ReactCompareSlider
 				aria-label='Сравнение интерьера до и после'
 				defaultPosition={50}
@@ -46,15 +57,15 @@ export function BeforeAfterCompare({
 				}
 			/>
 
-			{/* Labels are decorative: the images and slider already have accessible names. */}
 			<div
 				aria-hidden='true'
 				className='pointer-events-none absolute inset-x-4 top-4 z-10 flex justify-between sm:inset-x-6 sm:top-6'
 			>
-				<span className='rounded-full border border-white/20 bg-black/35 px-4 py-2 text-sm font-medium text-white backdrop-blur-md'>
+				<span className='rounded-full border border-brand-milk/20 bg-black/35 px-4 py-2 text-lg font-medium text-brand-milk backdrop-blur-md'>
 					Визуализация
 				</span>
-				<span className='rounded-full border border-white/20 bg-black/35 px-4 py-2 text-sm font-medium text-white backdrop-blur-md'>
+
+				<span className='rounded-full border border-brand-milk/20 bg-black/35 px-4 py-2 text-lg font-medium text-brand-milk backdrop-blur-md'>
 					Реализация
 				</span>
 			</div>
