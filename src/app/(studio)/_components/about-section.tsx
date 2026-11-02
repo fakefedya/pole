@@ -1,6 +1,7 @@
 import { SiteContainer } from '@/components/layout/site-container'
 import { SiteSection } from '@/components/layout/site-section'
 import { Button } from '@/components/ui/button'
+import { getPublicImageUrl } from '@/lib/storage/public-image'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 
@@ -17,39 +18,47 @@ const sectionDescription: Description = {
 		'Разрабатываем индивидуальные проекты, предлагаем готовые решения и создаём понятные инструменты для самостоятельной работы с интерьером.',
 }
 
+const SignboardSrc = getPublicImageUrl('site/home/about/pole-signboard.png')
+
 export function AboutSection() {
 	return (
-		<SiteSection className='bg-brand-milk'>
-			<SiteContainer className='py-35 px-10'>
-				<div className='max-w-full mx-auto flex flex-col gap-8 items-center text-center'>
-					<div className='relative h-48 w-full max-w-3xl mb-10'>
+		<SiteSection>
+			<SiteContainer className='pt-70 pb-35 px-10'>
+				<div className='flex flex-col gap-8'>
+					<div className='flex flex-col gap-4 max-w-2/3'>
+						<h2 className='font-display text-6xl text-brand-milk leading-[1.2]'>
+							{sectionDescription.title}
+						</h2>
+						<p className='text-2xl text-brand-milk/80'>
+							{sectionDescription.subtitle}
+						</p>
+					</div>
+					<div className='flex gap-2 item-center'>
+						<Button
+							className={cn(
+								'w-fit text-sm px-5 h-12 cursor-pointer bg-brand-terracota-accent',
+								'transition-colors duration-300 hover:bg-brand-terracota',
+							)}
+							render={<a href={'#solutions'}>Выбрать направление</a>}
+							nativeButton={false}
+						/>
+						<Button
+							className={cn(
+								'w-fit text-sm px-5 h-12 cursor-pointer bg-brand-terracota-accent',
+								'transition-colors duration-300 hover:bg-brand-terracota',
+							)}
+							render={<a href={'#featured-projects'}>Последние проекты</a>}
+							nativeButton={false}
+						/>
+					</div>
+					<div className='relative aspect-video w-full overflow-hidden rounded-2xl'>
 						<Image
-							src='/brand/logo-pole.svg'
+							src={SignboardSrc}
 							alt='Надпись POLE'
 							className='object-cover'
 							fill
 						/>
 					</div>
-					<div className='flex flex-col gap-4 items-center'>
-						<h2 className='font-display text-4xl text-brand-charcoal'>
-							{sectionDescription.title}
-						</h2>
-						<p className='text-2xl font-semibold text-brand-terracota'>
-							{sectionDescription.subtitle}
-						</p>
-						<p className=' max-w-[80%] text-xl text-brand-charcoal'>
-							{sectionDescription.description}
-						</p>
-					</div>
-
-					<Button
-						className={cn(
-							'w-fit text-base px-5 h-12 cursor-pointer bg-brand-terracota-accent',
-							'transition-colors duration-300 hover:bg-brand-terracota',
-						)}
-						render={<a href={'#solutions'}>Выбрать направление</a>}
-						nativeButton={false}
-					/>
 				</div>
 			</SiteContainer>
 		</SiteSection>

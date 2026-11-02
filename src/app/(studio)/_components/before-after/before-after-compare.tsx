@@ -62,7 +62,7 @@ export function BeforeAfterCompare({
 				className='pointer-events-none absolute inset-x-4 top-4 z-10 flex justify-between sm:inset-x-6 sm:top-6'
 			>
 				<span className='rounded-full border border-brand-milk/20 bg-black/35 px-4 py-2 text-lg font-medium text-brand-milk backdrop-blur-md'>
-					Визуализация
+					Идея
 				</span>
 
 				<span className='rounded-full border border-brand-milk/20 bg-black/35 px-4 py-2 text-lg font-medium text-brand-milk backdrop-blur-md'>

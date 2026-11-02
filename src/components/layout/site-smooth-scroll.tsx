@@ -6,33 +6,32 @@ import { cancelFrame, frame } from 'motion/react'
 
 type Props = { children: ReactNode }
 
-/** One frame loop for Lenis and Motion, on public pages only. */
 export function SiteSmoothScroll({ children }: Props) {
-  const lenisRef = useRef<LenisRef>(null)
+	const lenisRef = useRef<LenisRef>(null)
 
-  useEffect(() => {
-    const update = ({ timestamp }: { timestamp: number }) => {
-      lenisRef.current?.lenis?.raf(timestamp)
-    }
+	useEffect(() => {
+		const update = ({ timestamp }: { timestamp: number }) => {
+			lenisRef.current?.lenis?.raf(timestamp)
+		}
 
-    frame.setup(update, true)
-    return () => cancelFrame(update)
-  }, [])
+		frame.setup(update, true)
+		return () => cancelFrame(update)
+	}, [])
 
-  return (
-    <ReactLenis
-      root
-      ref={lenisRef}
-      options={{
-        autoRaf: false,
-        // Lower than 0.1: smoother, with slightly longer wheel-scroll inertia.
-        lerp: 0.075,
-        smoothWheel: true,
-        syncTouch: false,
-        anchors: true,
-      }}
-    >
-      {children}
-    </ReactLenis>
-  )
+	return (
+		<ReactLenis
+			root
+			ref={lenisRef}
+			options={{
+				autoRaf: false,
+				// При значении < 1 скролл будет более плавный
+				lerp: 0.075,
+				smoothWheel: true,
+				syncTouch: false,
+				anchors: true,
+			}}
+		>
+			{children}
+		</ReactLenis>
+	)
 }

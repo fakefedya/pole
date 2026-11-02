@@ -13,10 +13,7 @@ export function HomePage() {
 			<AboutSection />
 			<Suspense
 				fallback={
-					<section
-						className='min-h-80 bg-brand-milk'
-						aria-label='Загрузка проектов'
-					/>
+					<section className='min-h-80' aria-label='Загрузка проектов' />
 				}
 			>
 				<FeaturedProjectsSection />

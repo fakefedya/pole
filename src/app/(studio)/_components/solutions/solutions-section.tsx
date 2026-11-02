@@ -20,8 +20,8 @@ export function SolutionsSection() {
 				>
 					<SiteContainer className='h-full p-10'>
 						<div className='flex h-full flex-col justify-between'>
-							<div className='flex flex-col gap-8 '>
-								<h2 className='font-display text-4xl md:text-6xl'>
+							<div className='flex flex-col gap-4 max-w-2/3'>
+								<h2 className='leading-[1.2] font-display text-6xl md:text-6xl'>
 									{solution.title}
 								</h2>
 
@@ -38,9 +38,7 @@ export function SolutionsSection() {
 								</div>
 
 								{/* Описание */}
-								<p className='max-w-2xl text-lg leading-relaxed'>
-									{solution.description}
-								</p>
+								<p className='text-2xl'>{solution.description}</p>
 
 								{/* CTA */}
 								<div>
@@ -49,7 +47,7 @@ export function SolutionsSection() {
 										className={cn(
 											'inline-flex items-center justify-center',
 											'rounded-full px-6 py-3',
-											'font-medium text-base',
+											'font-medium text-sm',
 											'transition-opacity hover:opacity-80',
 											solution.action.bgColor,
 											solution.action.textColor,
