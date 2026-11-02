@@ -69,7 +69,7 @@ export function PublicProjectCards({
 						/>
 						<div
 							className={cn(
-								'absolute pointer-events-none top-0 left-0 w-full h-full bg-black/5 z-0',
+								'absolute pointer-events-none top-0 left-0 w-full h-full bg-black/25 z-0',
 								'group-hover:bg-black/50 transition-colors duration-300',
 							)}
 						></div>
@@ -77,8 +77,7 @@ export function PublicProjectCards({
 					<div className='absolute top-4 left-4'>
 						<h3
 							className={cn(
-								' font-display text-2xl leading-tight text-brand-milk/0',
-								'duration-300 transition-colors group-hover:text-brand-milk',
+								'font-display text-2xl leading-tight text-brand-milk',
 							)}
 						>
 							{project.title}

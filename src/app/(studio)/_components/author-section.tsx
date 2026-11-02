@@ -16,13 +16,12 @@ export function AuthorSection() {
 						<h2 className='font-display text-6xl text-brand-milk leading-[1.2]'>
 							Продуманность, заметная в каждой детали
 						</h2>
-						<p className='text-2xl text-brand-milk/80'></p>
 					</div>
 
-					<div className='flex gap-10'>
-						<div className='w-full max-w-1/3  flex flex-col gap-4'>
-							<div className='relative min-h-150 overflow-hidden rounded-2xl'>
-								<div className='absolute inset-0 flex items-center justify-center'>
+					<div className='grid grid-cols-12 gap-x-4 gap-y-8 md:gap-y-16'>
+						<div className='gap-x-1 flex w-full items-stretch relative aspect-3/2 overflow-hidden rounded-md col-span-12 h-auto md:col-span-4 lg:col-span-6'>
+							<div className='relative flex items-center overflow-hidden rounded-md size-full'>
+								<div className='flex flex-col items-center justify-center overflow-hidden absolute inset-0 size-full object-cover'>
 									<Image
 										src={getPublicImageUrl(
 											'site/home/author/polina-working.png',
@@ -33,54 +32,53 @@ export function AuthorSection() {
 									/>
 								</div>
 							</div>
-							<div className='flex flex-col gap-1'>
-								<p className='text-xl font-base text-brand-milk'>
-									Полина Полевая,{' '}
-									<span className='text-brand-milk/80'>
-										основатель студии POLE
-									</span>
-								</p>
-							</div>
 						</div>
-						<div className='w-fill flex flex-col gap-10'>
+						<div className='flex flex-col gap-4 col-span-12 h-full md:col-span-8 md:pl-14 lg:col-span-6'>
 							<p className='text-2xl text-brand-milk/80'>
 								Соединяю архитектурный подход с вниманием к повседневной жизни:
 								как вы двигаетесь по дому, где храните вещи и какой свет нужен
 								вечером.
 							</p>
-
-							<div className='flex gap-4 w-full'>
-								<div className='w-fit flex gap-5 items-center rounded-md bg-neutral-900 p-1 py-2 pr-5'>
-									<GraduationCap size={20} className='ml-4 text-brand-milk' />
-									<div className='text-sm flex flex-col'>
-										<span className='font-bold text-brand-milk'>
-											Высшее образование
-										</span>
-										<span className='text-brand-milk/50'>СПбГАСУ</span>
-									</div>
-								</div>
-								<div className='w-fit flex gap-5 items-center rounded-md bg-neutral-900 p-1 py-2 pr-5'>
-									<Certificate size={20} className='ml-4 text-brand-milk' />
-									<div className='text-sm flex flex-col'>
-										<span className='font-bold text-brand-milk'>
-											Курсы повышения квалификации
-										</span>
-										<span className='text-brand-milk/50'>marso.academy</span>
-									</div>
-								</div>
+							<div className='flex flex-col gap-1'>
+								<p className='text-xl font-base text-brand-milk'>
+									Полина Полевая, основатель студии POLE
+								</p>
 							</div>
 
-							<Link
-								href='/about'
-								className={cn(
-									buttonVariants({ variant: 'default', size: 'lg' }),
-									'h-12 w-fit px-5 text-sm',
-									'bg-brand-terracota-accent text-brand-milk',
-									'transition-colors duration-300 hover:bg-brand-terracota',
-								)}
-							>
-								О подходе студии
-							</Link>
+							<div className='flex flex-col gap-8 mt-4'>
+								<div className='flex flex-col gap-4 w-full'>
+									<div className='w-full max-w-sm flex gap-5 items-center rounded-md bg-neutral-900 p-1 py-2 pr-5'>
+										<GraduationCap size={20} className='ml-4 text-brand-milk' />
+										<div className='text-sm flex flex-col'>
+											<span className='font-bold text-brand-milk'>
+												Высшее образование
+											</span>
+											<span className='text-brand-milk/50'>СПбГАСУ</span>
+										</div>
+									</div>
+									<div className='w-full max-w-sm  flex gap-5 items-center rounded-md bg-neutral-900 p-1 py-2 pr-5'>
+										<Certificate size={20} className='ml-4 text-brand-milk' />
+										<div className='text-sm flex flex-col'>
+											<span className='font-bold text-brand-milk'>
+												Курсы повышения квалификации
+											</span>
+											<span className='text-brand-milk/50'>marso.academy</span>
+										</div>
+									</div>
+								</div>
+
+								<Link
+									href='/about'
+									className={cn(
+										buttonVariants({ variant: 'default', size: 'lg' }),
+										'h-12 w-fit px-5 text-sm',
+										'bg-brand-terracota-accent text-brand-milk',
+										'transition-colors duration-300 hover:bg-brand-terracota',
+									)}
+								>
+									О подходе студии
+								</Link>
+							</div>
 						</div>
 					</div>
 				</div>
