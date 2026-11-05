@@ -9,9 +9,8 @@ type NavigationLink = {
 
 type NavigationDropdownItem = {
 	label: string
-	description: string
+	description?: string
 	href: InternalHref
-	cover: string
 	isVisible?: boolean
 }
 
@@ -38,25 +37,21 @@ export const siteNavigation = [
 				label: 'Индивидуальные услуги',
 				description: 'Проектирование и сопровождение вашего интерьера.',
 				href: '/individual',
-				cover: 'nav-cover-individual.svg',
 			},
 			{
 				label: 'Паспорт интерьерного стиля',
 				description: 'Ваши предпочтения — в инструкции по обустройству дома.',
 				href: '/passport',
-				cover: 'nav-cover-passport.svg',
 			},
 			{
 				label: 'Готовые решения',
 				description: 'Готовые проекты и подборки мебели и декора.',
 				href: '/ready',
-				cover: 'nav-cover-ready.svg',
 			},
 			{
 				label: 'Полезные материалы',
 				description: 'Чек-листы, таблицы и инструкции для дома.',
 				href: '/materials',
-				cover: 'nav-cover-materials.svg',
 			},
 		],
 	},
@@ -80,4 +75,26 @@ export const siteNavigation = [
 		label: 'Контакты',
 		href: '/contacts',
 	},
-] as const satisfies readonly SiteNavigationItem[]
+	{
+		type: 'dropdown',
+		label: 'Политики',
+		items: [
+			{
+				label: 'Политика конфиденциальности',
+				href: '/policies/privacy',
+			},
+			{
+				label: 'Согласие на обработку персональных данных',
+				href: '/policies/consent',
+			},
+			{
+				label: 'Пользовательское соглашение',
+				href: '/policies/terms',
+			},
+			{
+				label: 'Реквизиты',
+				href: '/policies/requisites',
+			},
+		],
+	},
+] as readonly SiteNavigationItem[]

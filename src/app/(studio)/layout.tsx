@@ -12,7 +12,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
 				<SiteHeader />
 			</Suspense>
 
-			<main className='min-h-full bg-brand-black'>{children}</main>
+			<main className='min-h-full bg-brand-black z-2'>{children}</main>
 
 			<SiteFooter />
 		</SiteSmoothScroll>

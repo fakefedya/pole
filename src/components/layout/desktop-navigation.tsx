@@ -66,6 +66,7 @@ export function DesktopNavigation({
 	const visibleItems = siteNavigation.filter(
 		(item) =>
 			item.isVisible !== false &&
+			item.label.toLowerCase() !== 'политики' &&
 			(item.type === 'link' ||
 				item.items.some((child) => child.isVisible !== false)),
 	)
@@ -161,16 +162,14 @@ export function DesktopNavigation({
 																	'hover:bg-brand-milk/10 transition-colors duration-300',
 																)}
 															>
-																<div className='flex flex-col gap-4'>
-																	<span className='font-display font-semibold text-brand-milk text-base'>
+																<div className='flex flex-col gap-4 text-brand-milk'>
+																	<span className='font-display font-semibold  text-base'>
 																		{child.label}
 																	</span>
-																	<p className='text-sm text-brand-milk/80'>
-																		{child.description}
+																	<p className='text-sm opacity-60'>
+																		{child.description ?? child.description}
 																	</p>
 																</div>
-
-																<div className='absolute -right-1/3 -bottom-1/3 h-full w-full'></div>
 															</NavigationMenuLink>
 														</li>
 													)
