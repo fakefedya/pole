@@ -23,6 +23,11 @@ type NavigationDropdown = {
 
 export type SiteNavigationItem = NavigationLink | NavigationDropdown
 
+export function isCurrentPath(href: string, pathname: string): boolean {
+	if (href === '/') return pathname === '/'
+	return pathname === href || pathname.startsWith(`${href}/`)
+}
+
 export const siteNavigation = [
 	{
 		type: 'link',

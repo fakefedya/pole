@@ -8,9 +8,12 @@ import { usePathname } from 'next/navigation'
 import { siteNavigation } from '@/config/site-navigation'
 import { cn } from '@/lib/utils'
 import { DesktopNavigation } from './desktop-navigation'
+import { MobileNavigation } from './mobile-navigation'
 
 const ALWAYS_VISIBLE_UNTIL = 80
-const DIRECTION_DISTANCE = 14
+const ALWAYS_VISIBLE_NEAR_BOTTOM = 40
+const HIDE_DISTANCE = 24
+const SHOW_DISTANCE = 6
 
 type Direction = -1 | 0 | 1
 
@@ -18,7 +21,8 @@ export function SiteHeader() {
 	const pathname = usePathname()
 	const reducedMotion = useReducedMotion()
 	const [hidden, setHidden] = useState(false)
-	const [menuOpen, setMenuOpen] = useState(false)
+	const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+	const [desktopMenuOpen, setDesktopMenuOpen] = useState(false)
 	const [keyboardFocus, setKeyboardFocus] = useState(false)
 
 	const previousScroll = useRef<number | null>(null)
@@ -32,14 +36,17 @@ export function SiteHeader() {
 			const previous = previousScroll.current
 			previousScroll.current = current
 
-			if (current <= ALWAYS_VISIBLE_UNTIL) {
+			if (
+				current <= ALWAYS_VISIBLE_UNTIL ||
+				current >= lenis.limit - ALWAYS_VISIBLE_NEAR_BOTTOM
+			) {
 				direction.current = 0
 				distance.current = 0
 				setHidden(false)
 				return
 			}
 
-			if (menuOpen || keyboardFocus || previous === null) {
+			if (mobileMenuOpen || desktopMenuOpen || keyboardFocus || previous === null) {
 				direction.current = 0
 				distance.current = 0
 				return
@@ -55,23 +62,46 @@ export function SiteHeader() {
 			}
 
 			distance.current += Math.abs(delta)
-			if (distance.current < DIRECTION_DISTANCE) return
+			const threshold = nextDirection === 1 ? HIDE_DISTANCE : SHOW_DISTANCE
+			if (distance.current < threshold) return
 
 			setHidden(nextDirection === 1)
 			distance.current = 0
 		},
-		[menuOpen, keyboardFocus],
+		[mobileMenuOpen, desktopMenuOpen, keyboardFocus],
 	)
 
 	useEffect(() => {
 		previousScroll.current = null
 		direction.current = 0
 		distance.current = 0
-		const frameId = requestAnimationFrame(() => setHidden(false))
+		const frameId = requestAnimationFrame(() => {
+			setHidden(false)
+			setMobileMenuOpen(false)
+			setDesktopMenuOpen(false)
+		})
 		return () => cancelAnimationFrame(frameId)
 	}, [pathname])
 
-	const isHidden = hidden && !menuOpen && !keyboardFocus
+	// CSS handles visibility at lg. A portal-based Sheet, however, requires
+	// React state to close when crossing the breakpoint in either direction.
+	useEffect(() => {
+		const desktop = window.matchMedia('(min-width: 1024px)')
+		const resetOnBreakpointChange = () => {
+			previousScroll.current = null
+			direction.current = 0
+			distance.current = 0
+			setHidden(false)
+			setKeyboardFocus(false)
+			setMobileMenuOpen(false)
+			setDesktopMenuOpen(false)
+		}
+
+		desktop.addEventListener('change', resetOnBreakpointChange)
+		return () => desktop.removeEventListener('change', resetOnBreakpointChange)
+	}, [])
+
+	const isHidden = hidden && !mobileMenuOpen && !desktopMenuOpen && !keyboardFocus
 
 	return (
 		<motion.header
@@ -91,7 +121,7 @@ export function SiteHeader() {
 			}
 			style={{ x: '-50%' }}
 			className={cn(
-				'fixed bottom-0 left-1/2 z-50 w-fit pb-7.5',
+				'fixed bottom-0 left-1/2 z-50 w-fit pb-[calc(1rem+env(safe-area-inset-bottom))] lg:pb-7.5',
 				isHidden && 'pointer-events-none',
 			)}
 			onFocusCapture={(event) => {
@@ -109,13 +139,25 @@ export function SiteHeader() {
 				}
 			}}
 		>
-			<DesktopNavigation
-				siteNavigation={siteNavigation}
-				onMenuOpenChange={(open) => {
-					setMenuOpen(open)
-					if (open) setHidden(false)
-				}}
-			/>
+			<div className='hidden lg:block'>
+				<DesktopNavigation
+					siteNavigation={siteNavigation}
+					onMenuOpenChange={(open) => {
+						setDesktopMenuOpen(open)
+						if (open) setHidden(false)
+					}}
+				/>
+			</div>
+			<div className='lg:hidden'>
+				<MobileNavigation
+					siteNavigation={siteNavigation}
+					open={mobileMenuOpen}
+					onOpenChange={(open) => {
+						setMobileMenuOpen(open)
+						if (open) setHidden(false)
+					}}
+				/>
+			</div>
 		</motion.header>
 	)
 }

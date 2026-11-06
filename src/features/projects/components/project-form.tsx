@@ -31,7 +31,6 @@ import {
 	saveProjectAction,
 	type ProjectActionState,
 } from '@/features/projects/server/actions'
-import { cn } from '@/lib/utils'
 import { MAX_FEATURED_PROJECTS } from '@/features/projects/config/featured-projects'
 
 const initialProjectActionState: ProjectActionState = { error: null }

@@ -1,6 +1,6 @@
 'use client'
 
-import type { SiteNavigationItem } from '@/config/site-navigation'
+import { isCurrentPath, type SiteNavigationItem } from '@/config/site-navigation'
 import { useRef } from 'react'
 
 import {
@@ -30,12 +30,6 @@ const navigationItemClassName = cn(
 	'transition-colors duration-300 hover:text-brand-milk/70 data-popup-open:hover:text-brand-milk/70 data-popup-open:text-brand-milk/70 data-open:text-brand-milk/70',
 	'[&_svg]:relative [&_svg]:size-3.5 [&_svg]:z-10',
 )
-
-const isCurrentPath = (href: string, pathname: string) => {
-	if (href === '/') return pathname === '/'
-
-	return pathname === href || pathname.startsWith(`${href}/`)
-}
 
 function ActivePill() {
 	return (
@@ -163,11 +157,11 @@ export function DesktopNavigation({
 																)}
 															>
 																<div className='flex flex-col gap-4 text-brand-milk'>
-																	<span className='font-medium text-base'>
+																	<span className='font-display font-semibold  text-base'>
 																		{child.label}
 																	</span>
 																	<p className='text-sm opacity-60'>
-																		{child.description ?? child.description}
+																		{child.description}
 																	</p>
 																</div>
 															</NavigationMenuLink>

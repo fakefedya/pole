@@ -1,15 +1,14 @@
 import { Suspense } from 'react'
-import Link from 'next/link'
+
 import { prisma } from '@/lib/db/prisma'
 import { PERMISSION, hasPermission } from '@/lib/auth/authorization'
 import {
 	Card,
-	CardContent,
 	CardHeader,
 	CardTitle,
 	CardDescription,
 } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+
 import { DashboardPageSkeleton } from '@/features/dashboard/components/dashboard-page-skeleton'
 import { requireDashboardSession } from '@/features/auth/server/access'
 
