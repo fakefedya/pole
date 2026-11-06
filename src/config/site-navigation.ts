@@ -84,7 +84,7 @@ export const siteNavigation = [
 				href: '/policies/privacy',
 			},
 			{
-				label: 'Согласие на обработку персональных данных',
+				label: 'Обработка персональных данных',
 				href: '/policies/consent',
 			},
 			{

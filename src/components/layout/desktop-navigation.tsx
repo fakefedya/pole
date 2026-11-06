@@ -163,7 +163,7 @@ export function DesktopNavigation({
 																)}
 															>
 																<div className='flex flex-col gap-4 text-brand-milk'>
-																	<span className='font-display font-semibold  text-base'>
+																	<span className='font-medium text-base'>
 																		{child.label}
 																	</span>
 																	<p className='text-sm opacity-60'>

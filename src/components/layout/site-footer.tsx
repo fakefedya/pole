@@ -5,6 +5,7 @@ import Link from 'next/link'
 
 const footerNavigation = siteNavigation.filter((el) => el.type === 'link')
 const footerDropdown = siteNavigation.filter((el) => el.type === 'dropdown')
+const currentYear = new Date().getFullYear()
 
 export function SiteFooter() {
 	return (
@@ -12,8 +13,11 @@ export function SiteFooter() {
 			<SiteContainer className='h-full mx-auto p-10 flex flex-col gap-y-8'>
 				<div className='grid grid-cols-12 gap-x-8 gap-y-12'>
 					<div className={cn('col-span-12', 'lg:col-span-6')}>
+						{/* Услуги */}
 						<div className='shrink-0 flex flex-col gap-y-4'>
-							<span className='text-brand-milk/60'>Услуги</span>
+							<span className='text-brand-milk/60 text-sm font-medium'>
+								Услуги
+							</span>
 							<nav className={cn('grid grid-cols-2 gap-4')}>
 								{footerDropdown
 									.filter((el) => el.label.toLowerCase() === 'услуги')
@@ -22,12 +26,15 @@ export function SiteFooter() {
 											<Link
 												href={item.href}
 												key={item.label}
-												className='flex flex-col gap-y-8 p-4 bg-brand-milk/5 rounded-lg'
+												className={cn(
+													'flex flex-col gap-y-8 p-4 bg-[#753214] rounded-lg',
+													'hover:bg-[#753214]/80 transition-colors duration-300',
+												)}
 											>
-												<span className='font-display font-semibold text-brand-milk text-base'>
+												<span className='font-medium text-brand-milk text-sm'>
 													{item.label}
 												</span>
-												<p className='text-sm text-brand-milk/80'>
+												<p className='text-sm text-brand-milk/60'>
 													{item.description ?? item.description}
 												</p>
 											</Link>
@@ -43,13 +50,16 @@ export function SiteFooter() {
 							'lg:col-span-5 lg:col-start-8',
 						)}
 					>
+						{/* Навигация */}
 						<div className='col-span-6 flex shrink-0 flex-col gap-y-4'>
-							<span className='text-brand-milk/60'>Навигация</span>
+							<span className='text-brand-milk/60 text-sm font-medium'>
+								Навигация
+							</span>
 							<nav className='flex flex-col gap-y-4 col-span-12'>
 								{footerNavigation.map((link) => (
 									<div
 										key={link.label}
-										className='relative flex items-center gap-x-2 text-brand-milk'
+										className='relative flex items-center gap-x-2 text-brand-milk font-medium text-sm'
 									>
 										<Link
 											href={link.href}
@@ -60,15 +70,18 @@ export function SiteFooter() {
 												className='absolute -bottom-1 left-0 h-px w-full bg-current/20'
 												aria-hidden='true'
 											>
-												<span className='group-hover:bg-red-100 scale-x-0 group-hover:scale-x-100 transition-all duration-300 block size-full origin-left bg-current'></span>
+												<span className='group-hover:bg-brand-milk scale-x-0 group-hover:scale-x-100 transition-all duration-300 block size-full origin-left bg-current'></span>
 											</span>
 										</Link>
 									</div>
 								))}
 							</nav>
 						</div>
+						{/* Политики */}
 						<div className='col-span-6 flex shrink-0 flex-col gap-y-4'>
-							<span className='text-brand-milk/60'>Политики</span>
+							<span className='text-brand-milk/60 text-sm font-medium'>
+								Политики
+							</span>
 							<nav className={cn('flex flex-col gap-y-4 col-span-12')}>
 								{footerDropdown
 									.filter((el) => el.label.toLowerCase() === 'политики')
@@ -76,7 +89,7 @@ export function SiteFooter() {
 										el.items.map((item) => (
 											<div
 												key={item.label}
-												className='relative flex items-center gap-x-2 text-brand-milk'
+												className='relative flex items-center gap-x-2 text-brand-milk font-medium text-sm'
 											>
 												<Link
 													href={item.href}
@@ -97,6 +110,7 @@ export function SiteFooter() {
 						</div>
 					</div>
 				</div>
+				{/* Лого */}
 				<div className='mt-auto flex flex-col gap-y-8 fill-brand-milk'>
 					<svg
 						width='456'
@@ -112,9 +126,9 @@ export function SiteFooter() {
 						<path d='M344.87 91.29H280.37C279.545 91.29 278.754 90.9623 278.171 90.3791C277.588 89.7959 277.26 89.0048 277.26 88.18V6.56002C277.266 6.06421 277.153 5.57424 276.931 5.1307C276.71 4.68715 276.385 4.30281 275.986 4.00954C275.586 3.71628 275.122 3.52253 274.632 3.44436C274.142 3.36618 273.641 3.40583 273.17 3.56002L256.51 9.08004C255.879 9.28535 255.331 9.68751 254.946 10.2275C254.561 10.7675 254.359 11.4168 254.37 12.08V108.48C254.37 109.305 254.698 110.096 255.281 110.679C255.864 111.262 256.655 111.59 257.48 111.59H340.23C340.892 111.6 341.539 111.399 342.079 111.016C342.618 110.633 343.022 110.088 343.23 109.46L347.88 95.41C348.043 94.9362 348.089 94.43 348.014 93.9346C347.939 93.4392 347.746 92.9692 347.45 92.5646C347.154 92.16 346.766 91.8328 346.316 91.6109C345.867 91.389 345.371 91.2789 344.87 91.29Z' />
 					</svg>
 				</div>
-				<div className='flex flex-col items-end text-brand-milk/60 text-sm'>
-					<span className=''>Все права защищены</span>
-					<span>©2026 POLE</span>
+				<div className='flex justify-between text-brand-milk/40 text-sm'>
+					<span>© {currentYear} POLE</span>
+					<span>Все права защищены</span>
 				</div>
 			</SiteContainer>
 		</footer>
