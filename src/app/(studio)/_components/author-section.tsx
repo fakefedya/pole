@@ -3,7 +3,7 @@ import { SiteSection } from "@/components/layout/site-section";
 import { buttonVariants } from "@/components/ui/button";
 import { getPublicImageUrl } from "@/lib/storage/public-image";
 import { cn } from "@/lib/utils";
-import { Certificate, GraduationCap } from "lucide-react";
+import { Certificate, GraduationCap, Quote } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,6 +34,10 @@ export function AuthorSection() {
               </div>
             </div>
             <div className="col-span-12 flex h-full flex-col gap-4 md:col-span-8 md:pl-14 lg:col-span-6">
+              <Quote
+                size={48}
+                className="text-brand-neutral fill-brand-neutral"
+              />
               <p className="text-brand-neutral text-2xl">
                 Соединяю архитектурный подход с вниманием к повседневной жизни:
                 как вы двигаетесь по дому, где храните вещи и какой свет нужен
@@ -41,7 +45,7 @@ export function AuthorSection() {
               </p>
               <div className="flex flex-col gap-1">
                 <p className="font-base text-brand-milk text-xl">
-                  Полина Полевая, основатель студии POLE
+                  — Полина Полевая, основатель студии POLE
                 </p>
               </div>
 
