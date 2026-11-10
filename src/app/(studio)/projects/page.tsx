@@ -2,6 +2,7 @@ import { Suspense } from "react";
 
 import { ProjectSnapGallery } from "@/features/projects/components/project-snap-gallery";
 import { getPublishedProjects } from "@/features/projects/server/public-queries";
+import { HidePageScrollbar } from "@/components/layout/hide-page-scrollbar";
 
 async function ProjectIndex() {
   const projects = await getPublishedProjects();
@@ -13,11 +14,12 @@ export default function ProjectsPage() {
     <Suspense
       fallback={
         <div
-          className="bg-brand-charcoal min-h-dvh w-full"
+          className="bg-brand-black min-h-dvh w-full"
           aria-label="Загрузка проектов"
         />
       }
     >
+      <HidePageScrollbar />
       <ProjectIndex />
     </Suspense>
   );

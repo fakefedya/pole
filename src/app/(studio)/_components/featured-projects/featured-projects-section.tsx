@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { SiteContainer } from "@/components/layout/site-container";
 import { getFeaturedProjects } from "@/features/projects/server/public-queries";
-import { PublicProjectCards } from "@/features/projects/components/public-project-cards";
+import { PublicProjectCards } from "@/app/(studio)/_components/featured-projects/public-project-cards";
 import { SiteSection } from "@/components/layout/site-section";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";

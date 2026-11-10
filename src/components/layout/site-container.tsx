@@ -1,14 +1,21 @@
-import { cn } from '@/lib/utils'
+import { cn } from "@/lib/utils";
 
 type Props = {
-	children: React.ReactNode
-	className?: string
-}
+  isWide?: boolean;
+  children: React.ReactNode;
+  className?: string;
+};
 
-export function SiteContainer({ children, className }: Props) {
-	return (
-		<div className={cn('flex flex-col w-full max-w-site', className)}>
-			{children}
-		</div>
-	)
+export function SiteContainer({ children, isWide = false, className }: Props) {
+  return (
+    <div
+      className={cn(
+        "flex w-full flex-col",
+        isWide ? "max-w-full" : "max-w-site",
+        className,
+      )}
+    >
+      {children}
+    </div>
+  );
 }

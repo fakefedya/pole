@@ -151,3 +151,11 @@ body {
     @apply font-sans;
   }
 }
+
+html.hide-page-scrollbar {
+  scrollbar-width: none;
+}
+
+html.hide-page-scrollbar::-webkit-scrollbar {
+  display: none;
+}
