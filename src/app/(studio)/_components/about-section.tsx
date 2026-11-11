@@ -23,13 +23,19 @@ const SignboardSrc = getPublicImageUrl("site/home/about/pole-signboard.png");
 export function AboutSection() {
   return (
     <SiteSection>
-      <SiteContainer className="px-10 pt-70 pb-35">
+      <SiteContainer className={cn("px-5 pt-35 pb-35", "lg:px-10 lg:pt-70")}>
         <div className="flex flex-col gap-8">
-          <div className="flex max-w-2/3 flex-col gap-4">
-            <h2 className="font-display text-brand-milk text-6xl leading-[1.2] font-semibold uppercase">
+          <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
+            <h2
+              className={cn(
+                "font-display text-brand-milk text-3xl leading-[1.2] font-semibold uppercase",
+                "lg:text-4xl",
+                "xl:text-6xl",
+              )}
+            >
               {sectionDescription.title}
             </h2>
-            <p className="text-brand-neutral text-2xl">
+            <p className={cn("text-brand-neutral text-xl", "lg:text-2xl")}>
               {sectionDescription.subtitle}
             </p>
           </div>
@@ -51,7 +57,12 @@ export function AboutSection() {
               nativeButton={false}
             />
           </div>
-          <div className="relative aspect-video w-full overflow-hidden rounded-2xl">
+          <div
+            className={cn(
+              "relative aspect-2/3 w-full overflow-hidden rounded-2xl",
+              "lg:aspect-video",
+            )}
+          >
             <Image
               src={SignboardSrc}
               alt="Надпись POLE"

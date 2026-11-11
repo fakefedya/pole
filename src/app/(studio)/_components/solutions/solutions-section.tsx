@@ -18,10 +18,18 @@ export function SolutionsSection() {
             solutionThemes[index % solutionThemes.length],
           )}
         >
-          <SiteContainer className="h-full p-10">
+          <SiteContainer className={cn("h-full p-5", "lg:p-10")}>
             <div className="flex h-full flex-col justify-between">
-              <div className="flex max-w-2/3 flex-col gap-4">
-                <h2 className="font-display text-6xl leading-[1.2] font-semibold uppercase md:text-6xl">
+              <div
+                className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}
+              >
+                <h2
+                  className={cn(
+                    "font-display text-3xl leading-[1.2] font-semibold uppercase",
+                    "lg:text-4xl",
+                    "xl:text-6xl",
+                  )}
+                >
                   {solution.title}
                 </h2>
 
@@ -38,7 +46,9 @@ export function SolutionsSection() {
                 </div>
 
                 {/* Описание */}
-                <p className="text-2xl">{solution.description}</p>
+                <p className={cn("text-xl", "lg:text-2xl")}>
+                  {solution.description}
+                </p>
 
                 {/* CTA */}
                 <div>

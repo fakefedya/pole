@@ -10,10 +10,16 @@ import Link from "next/link";
 export function AuthorSection() {
   return (
     <SiteSection>
-      <SiteContainer className="px-10 py-35">
+      <SiteContainer className={cn("px-5 py-35", "lg:px-10")}>
         <div className="flex flex-col gap-8">
-          <div className="flex max-w-2/3 flex-col gap-2">
-            <h2 className="font-display text-brand-milk text-6xl leading-[1.2] font-semibold uppercase">
+          <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
+            <h2
+              className={cn(
+                "font-display text-brand-milk text-3xl leading-[1.2] font-semibold uppercase",
+                "lg:text-4xl",
+                "xl:text-6xl",
+              )}
+            >
               Продуманность в каждой детали
             </h2>
           </div>
@@ -38,7 +44,7 @@ export function AuthorSection() {
                 size={48}
                 className="text-brand-neutral fill-brand-neutral"
               />
-              <p className="text-brand-neutral text-2xl">
+              <p className={cn("text-brand-neutral text-xl", "lg:text-2xl")}>
                 Соединяю архитектурный подход с вниманием к повседневной жизни:
                 как вы двигаетесь по дому, где храните вещи и какой свет нужен
                 вечером.

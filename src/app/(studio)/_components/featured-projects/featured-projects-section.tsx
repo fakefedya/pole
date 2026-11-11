@@ -11,15 +11,19 @@ export async function FeaturedProjectsSection() {
   if (!projects.length) return null;
   return (
     <SiteSection id="featured-projects" className="min-h-dvh">
-      <SiteContainer className="gap-8 p-10">
-        <div className="flex max-w-2/3 flex-col gap-4">
+      <SiteContainer className={cn("gap-8 p-5", "lg:p-10")}>
+        <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
           <h2
             id="featured-projects-title"
-            className="font-display text-brand-milk text-4xl leading-[1.2] font-semibold uppercase md:text-6xl"
+            className={cn(
+              "font-display text-brand-milk text-3xl leading-[1.2] font-semibold uppercase",
+              "lg:text-4xl",
+              "xl:text-6xl",
+            )}
           >
             Последние проекты
           </h2>
-          <p className="text-brand-neutral text-2xl">
+          <p className={cn("text-brand-neutral text-xl", "lg:text-2xl")}>
             Разрабатываем индивидуальные проекты, предлагаем готовые решения и
             создаём понятные инструменты для самостоятельной работы с
             интерьером.
