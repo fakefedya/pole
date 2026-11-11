@@ -13,13 +13,18 @@ export function SolutionsSection() {
           key={solution.title}
           style={{ zIndex: index + 1 }}
           className={cn(
-            "relative flex min-h-dvh w-full flex-col items-center",
-            "md:sticky md:top-0 md:h-dvh",
+            "sticky top-0 flex h-dvh w-full flex-col items-center",
+            index < solutions.length - 1 && "mb-[50dvh]",
             solutionThemes[index % solutionThemes.length],
           )}
         >
-          <SiteContainer className={cn("h-full p-5", "lg:p-10")}>
-            <div className="flex h-full flex-col justify-between">
+          <SiteContainer
+            className={cn(
+              "h-full min-h-0 px-5 pt-5 pb-[calc(6rem+env(safe-area-inset-bottom))]",
+              "md:p-5 lg:p-10",
+            )}
+          >
+            <div className="flex h-full min-h-0 flex-col justify-between gap-4 md:gap-0">
               <div
                 className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}
               >
@@ -67,16 +72,30 @@ export function SolutionsSection() {
                   </Link>
                 </div>
               </div>
-              <div className="grid grid-cols-4 gap-4">
+              <div
+                role="region"
+                aria-label={`Примеры интерьеров: ${solution.title}`}
+                tabIndex={0}
+                className={cn(
+                  "-mx-5 flex shrink-0 gap-3 overflow-x-auto px-5",
+                  "snap-x snap-mandatory scroll-px-5 overscroll-x-contain",
+                  "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+                  "md:mx-0 md:grid md:w-full md:snap-none md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0",
+                )}
+              >
                 {solution.images.map((image) => (
                   <div
                     key={image.alt}
-                    className="relative flex aspect-4/5 items-center justify-center overflow-hidden rounded-2xl"
+                    className={cn(
+                      "relative h-[clamp(8rem,22dvh,14rem)] w-[78vw] max-w-[22rem] shrink-0 snap-start overflow-hidden rounded-2xl",
+                      "md:aspect-4/5 md:h-auto md:w-auto md:max-w-none",
+                    )}
                   >
                     <Image
                       src={image.src}
                       alt={image.alt}
                       fill
+                      sizes="(max-width: 767px) 78vw, 25vw"
                       className="object-cover"
                     />
                   </div>
