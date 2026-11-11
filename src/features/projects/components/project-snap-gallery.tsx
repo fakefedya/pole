@@ -17,6 +17,7 @@ import type { PublicProjectCard } from "@/features/projects/server/public-querie
 import { cn } from "@/lib/utils";
 import { SiteSection } from "@/components/layout/site-section";
 import { SiteContainer } from "@/components/layout/site-container";
+import { ProjectHoverLink } from "./project-hover-link";
 
 type Props = { projects: PublicProjectCard[] };
 
@@ -124,6 +125,9 @@ const ProjectSlide = ({
         className="pointer-events-none absolute inset-0 bg-linear-to-b from-black/55 via-black/35 to-black/65"
       />
 
+      {/* Кликабельная ссылка для удобства по всей видимой части изображения */}
+      <ProjectHoverLink slug={project.slug} title={project.title} />
+
       <div className="absolute inset-x-0 top-0 z-10 px-5 pt-[max(2.75rem,env(safe-area-inset-top))] sm:px-9 sm:pt-10 lg:px-12">
         <motion.div
           style={reduceMotion ? undefined : { y: headingY }}
@@ -135,18 +139,6 @@ const ProjectSlide = ({
           >
             {project.title}
           </motion.h2>
-          <Link
-            href={`/projects/${project.slug}`}
-            className={cn(
-              "bg-brand-black/50 flex h-12 w-fit items-center gap-x-2 rounded-full px-5 backdrop-blur-lg",
-              "text-brand-milk text-sm font-medium",
-              "hover:bg-brand-terracota-accent transition-colors duration-300",
-              "focus-visible:outline-brand-milk focus-visible:outline-2 focus-visible:outline-offset-4",
-            )}
-          >
-            Посмотреть проект
-            <ArrowUpRight aria-hidden="true" size={16} />
-          </Link>
         </motion.div>
       </div>
 
