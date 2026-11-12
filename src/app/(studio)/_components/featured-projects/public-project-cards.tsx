@@ -25,7 +25,7 @@ export function PublicProjectCards({
   return (
     <div
       className={cn(
-        "gap-x-4 gap-y-12",
+        "gap-4",
         isExpandable
           ? "grid grid-cols-1 md:grid-cols-2 lg:flex lg:items-start"
           : "grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3",
@@ -88,7 +88,8 @@ export function PublicProjectCards({
               {project.location && (
                 <span
                   className={cn(
-                    "text-brand-milk border-brand-milk/5 rounded-full border bg-black/5 px-2 py-1 text-base font-medium opacity-0 backdrop-blur-md",
+                    "text-brand-milk border-brand-milk/5 rounded-full border bg-black/5 px-2 py-1 text-base font-medium opacity-100 backdrop-blur-md",
+                    "xl:opacity-0",
                     "transition-all duration-300 group-hover:opacity-100",
                   )}
                 >
@@ -98,7 +99,8 @@ export function PublicProjectCards({
               {project.areaSqM && (
                 <span
                   className={cn(
-                    "text-brand-milk border-brand-milk/5 rounded-full border bg-black/5 px-2 py-1 text-base font-medium opacity-0 backdrop-blur-md",
+                    "text-brand-milk border-brand-milk/5 rounded-full border bg-black/5 px-2 py-1 text-base font-medium opacity-100 backdrop-blur-md",
+                    "xl:opacity-0",
                     "transition-all duration-300 group-hover:opacity-100",
                   )}
                 >

@@ -134,7 +134,10 @@ const ProjectSlide = ({
         >
           <motion.h2
             style={reduceMotion ? undefined : { opacity: headingOpacity }}
-            className="font-display text-brand-milk text-8xl font-bold uppercase"
+            className={cn(
+              "font-display text-brand-milk text-4xl font-bold uppercase",
+              "lg:text-8xl",
+            )}
           >
             {project.title}
           </motion.h2>
@@ -145,14 +148,20 @@ const ProjectSlide = ({
       {details.length > 0 && (
         <motion.div
           style={reduceMotion ? undefined : { y: detailsY }}
-          className="pointer-events-none absolute inset-x-10 top-[50%] z-10 flex -translate-y-1/2 flex-wrap justify-center gap-1.5 sm:inset-x-20"
+          className={cn(
+            "pointer-events-none absolute inset-x-10 top-[50%] z-10 mx-auto flex max-w-2/3 -translate-y-1/2 flex-wrap justify-center gap-1.5 sm:inset-x-20",
+            "lg:max-w-full",
+          )}
           role="group"
           aria-label="Характеристики проекта"
         >
           {details.map((detail, detailIndex) => (
             <span
               key={`${detail}-${detailIndex}`}
-              className="text-brand-milk border-brand-milk/5 bg-brand-milk/20 rounded-full border px-3 py-1 text-sm font-medium uppercase backdrop-blur-md"
+              className={cn(
+                "text-brand-milk border-brand-milk/5 bg-brand-milk/20 rounded-full border px-3 py-1 text-xs font-medium uppercase backdrop-blur-md",
+                "lg:text-sm",
+              )}
             >
               {detail}
             </span>
@@ -367,7 +376,8 @@ export function ProjectSnapGallery({ projects }: Props) {
           {/* Переключение проектов */}
           <div
             className={cn(
-              "absolute right-5 bottom-[calc(7.5rem+env(safe-area-inset-bottom))] flex gap-2 sm:right-10 lg:bottom-14",
+              "absolute right-5 bottom-[calc(3rem+env(safe-area-inset-bottom))] flex flex-col gap-1 sm:right-8",
+              "lg:bottom-[calc(5rem+env(safe-area-inset-bottom))]",
               galleryVisible ? "pointer-events-auto" : "pointer-events-none",
             )}
           >
@@ -376,7 +386,7 @@ export function ProjectSnapGallery({ projects }: Props) {
               disabled={!galleryVisible || activeIndex === 0}
               onClick={() => goTo(activeIndex - 1)}
               aria-label="Предыдущий проект"
-              className="bg-brand-black/50 hover:bg-brand-terracota-accent focus-visible:outline-brand-milk grid size-11 cursor-pointer place-items-center rounded-full backdrop-blur-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+              className="bg-brand-black/50 hover:bg-brand-terracota-accent focus-visible:outline-brand-milk grid size-10 cursor-pointer place-items-center rounded-full backdrop-blur-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ArrowUp aria-hidden="true" className="size-4" />
             </button>
@@ -389,7 +399,7 @@ export function ProjectSnapGallery({ projects }: Props) {
                   ? "Перейти к подвалу сайта"
                   : "Следующий проект"
               }
-              className="bg-brand-black/50 hover:bg-brand-terracota-accent focus-visible:outline-brand-milk grid size-11 cursor-pointer place-items-center rounded-full backdrop-blur-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+              className="bg-brand-black/50 hover:bg-brand-terracota-accent focus-visible:outline-brand-milk grid size-10 cursor-pointer place-items-center rounded-full backdrop-blur-lg transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <ArrowDown aria-hidden="true" className="size-4" />
             </button>
