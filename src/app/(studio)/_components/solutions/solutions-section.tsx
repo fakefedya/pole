@@ -79,7 +79,7 @@ export function SolutionsSection() {
                 className={cn(
                   "-mx-5 flex shrink-0 gap-3 overflow-x-auto px-5",
                   "snap-x snap-mandatory scroll-px-5 overscroll-x-contain",
-                  "[scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+                  "scrollbar-none [&::-webkit-scrollbar]:hidden",
                   "md:mx-0 md:grid md:w-full md:snap-none md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0",
                 )}
               >
@@ -87,7 +87,7 @@ export function SolutionsSection() {
                   <div
                     key={image.alt}
                     className={cn(
-                      "relative h-[clamp(8rem,22dvh,14rem)] w-[78vw] max-w-[22rem] shrink-0 snap-start overflow-hidden rounded-2xl",
+                      "relative h-[clamp(8rem,22dvh,14rem)] w-[78vw] max-w-88 shrink-0 snap-start overflow-hidden rounded-lg",
                       "md:aspect-4/5 md:h-auto md:w-auto md:max-w-none",
                     )}
                   >

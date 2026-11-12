@@ -26,7 +26,7 @@ export function AuthorSection() {
 
           <div className="grid grid-cols-12 gap-x-4 gap-y-8 md:gap-y-16">
             <div className="relative col-span-12 flex aspect-3/2 h-auto w-full items-stretch gap-x-1 overflow-hidden rounded-md md:col-span-4 lg:col-span-6">
-              <div className="relative flex size-full items-center overflow-hidden rounded-md">
+              <div className="relative flex size-full items-center overflow-hidden rounded-lg">
                 <div className="absolute inset-0 flex size-full flex-col items-center justify-center overflow-hidden object-cover">
                   <Image
                     src={getPublicImageUrl(

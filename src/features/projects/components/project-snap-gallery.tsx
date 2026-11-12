@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { ArrowDown, ArrowUp, ArrowUpRight } from "lucide-react";
 import { useLenis } from "lenis/react";
 import Snap from "lenis/snap";

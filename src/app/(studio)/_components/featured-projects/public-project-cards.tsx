@@ -46,7 +46,7 @@ export function PublicProjectCards({
         >
           <div
             className={cn(
-              "bg-brand-espresso relative overflow-hidden rounded-2xl",
+              "bg-brand-espresso relative overflow-hidden rounded-lg",
               isExpandable
                 ? "aspect-4/5 lg:aspect-auto lg:h-[60dvh]"
                 : "aspect-4/5",

@@ -59,7 +59,7 @@ export function AboutSection() {
           </div>
           <div
             className={cn(
-              "relative aspect-2/3 w-full overflow-hidden rounded-2xl",
+              "relative aspect-2/3 w-full overflow-hidden rounded-lg",
               "lg:aspect-video",
             )}
           >

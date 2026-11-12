@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 const boundedSans = localFont({
   src: "./fonts/bounded-variable.ttf",
@@ -33,7 +30,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         boundedSans.variable,
         velaSans.variable,
         "font-sans",
-        inter.variable,
       )}
     >
       <body className="flex min-h-full flex-col">{children}</body>
