@@ -136,7 +136,7 @@ const ProjectSlide = ({
             style={reduceMotion ? undefined : { opacity: headingOpacity }}
             className={cn(
               "font-display text-brand-milk text-4xl font-bold uppercase",
-              "lg:text-8xl",
+              "lg:text-7xl",
             )}
           >
             {project.title}

@@ -77,7 +77,8 @@ export function PublicProjectCards({
           <div className="absolute top-4 left-4">
             <h3
               className={cn(
-                "font-display text-brand-milk text-2xl leading-tight",
+                "font-display text-brand-milk text-xl leading-tight",
+                "lg:text-2xl",
               )}
             >
               {project.title}

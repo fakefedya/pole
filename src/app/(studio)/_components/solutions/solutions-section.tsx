@@ -19,10 +19,7 @@ export function SolutionsSection() {
             )}
           >
             <SiteContainer
-              className={cn(
-                "h-full min-h-0 px-5 pt-5 pb-[calc(6rem+env(safe-area-inset-bottom))]",
-                "md:p-5 lg:p-10",
-              )}
+              className={cn("h-full min-h-0 p-5", "md:p-5 lg:p-10")}
             >
               <div className="flex h-full min-h-0 flex-col justify-between gap-4 md:gap-0">
                 <div
@@ -33,7 +30,7 @@ export function SolutionsSection() {
                 >
                   <h2
                     className={cn(
-                      "font-display text-3xl leading-[1.2] font-semibold uppercase",
+                      "font-display text-2xl leading-[1.2] font-semibold uppercase",
                       "lg:text-4xl",
                       "xl:text-6xl",
                     )}
@@ -46,7 +43,10 @@ export function SolutionsSection() {
                     {solution.options.map((option) => (
                       <span
                         key={option}
-                        className="rounded-full border border-current/25 px-4 py-1 text-sm"
+                        className={cn(
+                          "rounded-full border border-current/25 px-2 py-1 text-sm",
+                          "lg:px-4",
+                        )}
                       >
                         {option}
                       </span>

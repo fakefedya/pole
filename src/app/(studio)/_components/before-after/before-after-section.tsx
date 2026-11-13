@@ -15,7 +15,7 @@ export function BeforeAfterSection() {
           <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
             <h2
               className={cn(
-                "font-display text-brand-milk text-3xl leading-[1.2] font-semibold uppercase",
+                "font-display text-brand-milk text-2xl leading-[1.2] font-semibold uppercase",
                 "lg:text-4xl",
                 "xl:text-6xl",
               )}
