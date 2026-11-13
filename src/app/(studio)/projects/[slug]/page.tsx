@@ -57,7 +57,7 @@ async function PublishedProject({ params }: Props) {
           <div className={cn("flex min-w-0 flex-col gap-3", "sm:gap-4")}>
             <h1
               className={cn(
-                "font-display text-3xl leading-[1.15] font-semibold wrap-break-word uppercase",
+                "font-display text-3xl leading-[1.15] font-bold wrap-break-word uppercase",
                 "sm:text-4xl",
                 "lg:text-5xl",
                 "xl:text-6xl",
@@ -183,8 +183,8 @@ async function PublishedProject({ params }: Props) {
               <h2
                 id="project-description-title"
                 className={cn(
-                  "font-display text-2xl font-semibold",
-                  "lg:text-4xl",
+                  "font-display text-2xl font-semibold uppercase",
+                  "lg:text-3xl",
                 )}
               >
                 Описание проекта
@@ -234,9 +234,8 @@ async function PublishedProject({ params }: Props) {
             <h2
               id="project-gallery-title"
               className={cn(
-                "font-display text-2xl font-semibold",
-                "sm:text-3xl",
-                "lg:text-4xl",
+                "font-display text-2xl font-semibold uppercase",
+                "lg:text-3xl",
               )}
             >
               Галерея проекта
