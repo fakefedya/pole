@@ -67,7 +67,12 @@ async function PublishedProject({ params }: Props) {
             </h1>
 
             {project.summary && (
-              <p className={cn("text-brand-muted text-xl", "lg:text-2xl")}>
+              <p
+                className={cn(
+                  "text-brand-muted max-w-full text-xl",
+                  "lg:max-w-2/3 lg:text-2xl",
+                )}
+              >
                 {project.summary}
               </p>
             )}
@@ -183,7 +188,7 @@ async function PublishedProject({ params }: Props) {
               <h2
                 id="project-description-title"
                 className={cn(
-                  "font-display text-2xl font-semibold uppercase",
+                  "font-display text-2xl font-semibold",
                   "lg:text-3xl",
                 )}
               >
@@ -234,7 +239,7 @@ async function PublishedProject({ params }: Props) {
             <h2
               id="project-gallery-title"
               className={cn(
-                "font-display text-2xl font-semibold uppercase",
+                "font-display text-2xl font-semibold",
                 "lg:text-3xl",
               )}
             >
