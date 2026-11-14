@@ -7,7 +7,9 @@ import Image from "next/image";
 export function StatementSection() {
   return (
     <SiteSection>
-      <SiteContainer className={cn("px-5 pt-10 pb-10", "lg:px-10 lg:pt-20")}>
+      <SiteContainer
+        className={cn("z-2 px-5 pt-10 pb-10", "lg:px-10 lg:pt-20")}
+      >
         <div className="flex flex-col gap-y-8">
           <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
             <h2

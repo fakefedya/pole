@@ -24,7 +24,7 @@ export function ApproachSection() {
   return (
     <SiteSection>
       <SiteContainer
-        className={cn("px-5 pt-10 pb-10", "lg:px-10 lg:pt-20 lg:pb-64")}
+        className={cn("z-2 px-5 pt-10 pb-10", "lg:px-10 lg:pt-20 lg:pb-64")}
       >
         <div className="grid grid-cols-12">
           <div className={cn("col-span-12", "lg:col-span-6")}>
