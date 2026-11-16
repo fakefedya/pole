@@ -23,10 +23,8 @@ const approachDescription = [
 export function ApproachSection() {
   return (
     <SiteSection>
-      <SiteContainer
-        className={cn("z-2 px-5 pt-10 pb-10", "lg:px-10 lg:pt-20 lg:pb-64")}
-      >
-        <div className="grid grid-cols-12">
+      <SiteContainer className={cn("z-2 px-5 py-10", "lg:px-10 lg:py-20")}>
+        <div className="grid grid-cols-12 gap-y-8">
           <div className={cn("col-span-12", "lg:col-span-6")}>
             <h3
               className={cn(
@@ -39,8 +37,8 @@ export function ApproachSection() {
           </div>
           <div
             className={cn(
-              "col-span-12 flex flex-col gap-y-16 pl-20",
-              "lg:col-span-6",
+              "col-span-12 flex flex-col gap-y-16",
+              "lg:col-span-6 lg:pl-20",
             )}
           >
             {approachDescription.map((el) => (

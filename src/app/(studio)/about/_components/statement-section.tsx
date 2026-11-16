@@ -4,6 +4,10 @@ import { getPublicImageUrl } from "@/lib/storage/public-image";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
+const INTERIOR_IMAGE = getPublicImageUrl(
+  "site/about/statement/statement-interior.jpg",
+);
+
 export function StatementSection() {
   return (
     <SiteSection>
@@ -29,7 +33,7 @@ export function StatementSection() {
             )}
           >
             <Image
-              src={getPublicImageUrl("site/about/statement/kitchen-itogi.jpg")}
+              src={INTERIOR_IMAGE}
               alt="Изображение интерьера"
               fill
               priority

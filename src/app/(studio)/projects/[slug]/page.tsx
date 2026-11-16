@@ -8,6 +8,7 @@ import { SiteContainer } from "@/components/layout/site-container";
 import { Button } from "@/components/ui/button";
 import { getPublishedProjectBySlug } from "@/features/projects/server/public-queries";
 import { cn } from "@/lib/utils";
+import { CTA } from "@/components/layout/site-cta";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -49,7 +50,7 @@ async function PublishedProject({ params }: Props) {
     <article
       className={cn(
         "bg-brand-milk text-brand-charcoal px-5 pt-35 pb-[calc(8rem+env(safe-area-inset-bottom))]",
-        "lg:px-10 lg:pt-40 lg:pb-40",
+        "lg:px-10 lg:pt-40 lg:pb-10",
       )}
     >
       <SiteContainer className={cn("mx-auto gap-12", "lg:gap-20", "xl:gap-24")}>
@@ -290,6 +291,15 @@ export default function ProjectPage({ params }: Props) {
   return (
     <Suspense fallback={<div className="bg-brand-milk min-h-dvh" />}>
       <PublishedProject params={params} />
+      <CTA
+        title={"Начнём со знакомства"}
+        subtitle={
+          "Расскажите о своём пространстве и о том, что хочется изменить. Вместе определим, какой формат работы вам подойдёт."
+        }
+        buttonText={"Связаться со студией"}
+        ctaBg="bg-brand-charcoal"
+        sectionBg="bg-brand-milk"
+      />
     </Suspense>
   );
 }

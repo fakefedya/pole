@@ -15,7 +15,7 @@ export function AboutPage() {
           "Расскажите о своём пространстве и о том, что хочется изменить. Вместе определим, какой формат работы вам подойдёт."
         }
         buttonText={"Связаться со студией"}
-        className="bg-brand-olive-accent"
+        ctaBg="bg-brand-olive-accent"
       />
     </>
   );
