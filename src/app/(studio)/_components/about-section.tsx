@@ -43,7 +43,7 @@ export function AboutSection() {
             <Button
               className={cn(
                 "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
-                "hover:bg-brand-terracota transition-colors duration-300",
+                "hover:bg-brand-terracota-accent transition-colors duration-300",
               )}
               render={<a href={"#solutions"}>Выбрать направление</a>}
               nativeButton={false}

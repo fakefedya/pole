@@ -55,7 +55,12 @@ export function HeroSection() {
                 </p>
               ))}
               <div className="mt-8 flex w-full flex-col gap-4">
-                <div className="flex w-full max-w-sm items-center gap-5 rounded-md bg-neutral-900 p-1 py-2 pr-5">
+                <div
+                  className={cn(
+                    "flex w-full items-center gap-5 rounded-md bg-neutral-900 p-1 py-2 pr-5",
+                    "lg:max-w-sm",
+                  )}
+                >
                   <GraduationCap size={20} className="text-brand-milk ml-4" />
                   <div className="flex flex-col text-sm">
                     <span className="text-brand-milk font-bold">
@@ -64,7 +69,12 @@ export function HeroSection() {
                     <span className="text-brand-muted">СПбГАСУ</span>
                   </div>
                 </div>
-                <div className="flex w-full max-w-sm items-center gap-5 rounded-md bg-neutral-900 p-1 py-2 pr-5">
+                <div
+                  className={cn(
+                    "flex w-full items-center gap-5 rounded-md bg-neutral-900 p-1 py-2 pr-5",
+                    "lg:max-w-sm",
+                  )}
+                >
                   <Certificate size={20} className="text-brand-milk ml-4" />
                   <div className="flex flex-col text-sm">
                     <span className="text-brand-milk font-bold">
@@ -76,7 +86,12 @@ export function HeroSection() {
               </div>
             </div>
             <div className={cn("col-span-12", "lg:col-span-6 lg:pl-20")}>
-              <div className="relative flex aspect-square items-center overflow-hidden rounded-lg">
+              <div
+                className={cn(
+                  "relative flex aspect-2/3 items-center overflow-hidden rounded-lg",
+                  "lg:aspect-square",
+                )}
+              >
                 <div className="absolute inset-0 flex size-full flex-col items-center justify-center overflow-hidden object-cover">
                   <Image
                     src={POLINA_IMAGE}

@@ -60,8 +60,8 @@ export function HeroSection() {
               <Button
                 key={el.label}
                 className={cn(
-                  "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
-                  "hover:bg-brand-terracota transition-colors duration-300",
+                  "border-brand-milk/50 h-12 w-fit cursor-pointer border px-5 text-sm",
+                  "hover:border-brand-terracota-accent transition-colors duration-300",
                 )}
                 render={<a href={el.href}>{el.label}</a>}
                 nativeButton={false}
