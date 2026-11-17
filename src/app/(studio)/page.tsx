@@ -5,7 +5,15 @@ import { SolutionsSection } from "./_components/solutions/solutions-section";
 import { FeaturedProjectsSection } from "./_components/featured-projects/featured-projects-section";
 import { BeforeAfterSection } from "./_components/before-after/before-after-section";
 import { AuthorSection } from "./_components/author-section";
-import { CTA } from "@/components/layout/site-cta";
+import { CTASection } from "@/components/layout/site-cta";
+
+const ctaInformation = {
+  title: "Начнём с вашего дома",
+  subtitle:
+    "Расскажите, что хотите изменить, — поможем выбрать подходящий формат.",
+  buttonText: "Обсудить задачу",
+  ctaBg: "bg-brand-cacao",
+};
 
 export function HomePage() {
   return (
@@ -23,13 +31,11 @@ export function HomePage() {
       <BeforeAfterSection />
       <AuthorSection />
 
-      <CTA
-        title={"Начнём со знакомства"}
-        subtitle={
-          "Расскажите о своём пространстве и о том, что хочется изменить. Вместе определим, какой формат работы вам подойдёт."
-        }
-        buttonText={"Связаться со студией"}
-        ctaBg="bg-brand-espresso"
+      <CTASection
+        title={ctaInformation.title}
+        subtitle={ctaInformation.subtitle}
+        buttonText={ctaInformation.buttonText}
+        ctaBg={ctaInformation.ctaBg}
       />
     </>
   );

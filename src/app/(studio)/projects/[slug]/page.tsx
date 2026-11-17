@@ -8,9 +8,18 @@ import { SiteContainer } from "@/components/layout/site-container";
 import { Button } from "@/components/ui/button";
 import { getPublishedProjectBySlug } from "@/features/projects/server/public-queries";
 import { cn } from "@/lib/utils";
-import { CTA } from "@/components/layout/site-cta";
+import { CTASection } from "@/components/layout/site-cta";
 
 type Props = { params: Promise<{ slug: string }> };
+
+const ctaInformation = {
+  title: "Обсудим ваш будущий интерьер?",
+  subtitle:
+    "Покажите, какие проекты вам близки, и расскажите о своём пространстве.",
+  buttonText: "Обсудить проект",
+  ctaBg: "bg-brand-charcoal",
+  sectionBg: "bg-brand-milk",
+};
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -291,14 +300,13 @@ export default function ProjectPage({ params }: Props) {
   return (
     <Suspense fallback={<div className="bg-brand-milk min-h-dvh" />}>
       <PublishedProject params={params} />
-      <CTA
-        title={"Начнём со знакомства"}
-        subtitle={
-          "Расскажите о своём пространстве и о том, что хочется изменить. Вместе определим, какой формат работы вам подойдёт."
-        }
-        buttonText={"Связаться со студией"}
-        ctaBg="bg-brand-charcoal"
-        sectionBg="bg-brand-milk"
+
+      <CTASection
+        title={ctaInformation.title}
+        subtitle={ctaInformation.subtitle}
+        buttonText={ctaInformation.buttonText}
+        ctaBg={ctaInformation.ctaBg}
+        sectionBg={ctaInformation.sectionBg}
       />
     </Suspense>
   );

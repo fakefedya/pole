@@ -12,7 +12,13 @@ type Props = {
   sectionBg?: string;
 };
 
-export function CTA({ title, subtitle, buttonText, ctaBg, sectionBg }: Props) {
+export function CTASection({
+  title,
+  subtitle,
+  buttonText,
+  ctaBg,
+  sectionBg,
+}: Props) {
   return (
     <SiteSection className={sectionBg}>
       <SiteContainer className={cn("z-2", "lg:px-10 lg:py-64")}>

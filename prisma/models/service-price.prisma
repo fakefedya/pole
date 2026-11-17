@@ -1,0 +1,27 @@
+/** Fixed public price points. Service metadata and display units live in code. */
+model ServicePrice {
+  code        String   @id @db.VarChar(64)
+  amount      Int
+  isPublished Boolean  @default(false)
+  revision    Int      @default(0)
+  updatedAt   DateTime @updatedAt
+  updatedById String?  @db.VarChar(256)
+
+  changes ServicePriceChange[]
+}
+
+/** Append-only application audit for commercially important price changes. */
+model ServicePriceChange {
+  id                String   @id @default(cuid())
+  code              String   @db.VarChar(64)
+  actorId           String   @db.VarChar(256)
+  previousAmount    Int
+  nextAmount        Int
+  previousPublished Boolean
+  nextPublished     Boolean
+  createdAt         DateTime @default(now())
+
+  price ServicePrice @relation(fields: [code], references: [code], onDelete: Restrict)
+
+  @@index([code, createdAt(sort: Desc)])
+}

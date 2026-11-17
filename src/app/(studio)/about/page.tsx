@@ -1,7 +1,14 @@
-import { CTA } from "@/components/layout/site-cta";
+import { CTASection } from "@/components/layout/site-cta";
 import { ApproachSection } from "./_components/approach-section";
 import { HeroSection } from "./_components/hero-section";
 import { StatementSection } from "./_components/statement-section";
+
+const ctaInformation = {
+  title: "Давайте познакомимся",
+  subtitle: "Расскажите о вашем пространстве и ожиданиях от работы с нами.",
+  buttonText: "Написать нам",
+  ctaBg: "bg-brand-olive-accent",
+};
 
 export function AboutPage() {
   return (
@@ -9,13 +16,11 @@ export function AboutPage() {
       <HeroSection />
       <StatementSection />
       <ApproachSection />
-      <CTA
-        title={"Начнём со знакомства"}
-        subtitle={
-          "Расскажите о своём пространстве и о том, что хочется изменить. Вместе определим, какой формат работы вам подойдёт."
-        }
-        buttonText={"Связаться со студией"}
-        ctaBg="bg-brand-olive-accent"
+      <CTASection
+        title={ctaInformation.title}
+        subtitle={ctaInformation.subtitle}
+        buttonText={ctaInformation.buttonText}
+        ctaBg={ctaInformation.ctaBg}
       />
     </>
   );
