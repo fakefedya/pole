@@ -1,3 +1,4 @@
+import { InternalHref } from "@/config/site-navigation";
 import type { PriceCode } from "@/features/prices/config/price-catalog";
 
 type PriceRow = {
@@ -6,10 +7,16 @@ type PriceRow = {
   heading?: string;
 };
 
+type Link = {
+  label: string;
+  href: InternalHref;
+};
+
 type PriceSection = {
   id: "individual" | "passport" | "interiors" | "capsules" | "materials";
   label: string;
   description: string;
+  link?: Link;
   result?: string;
   rows: readonly PriceRow[];
   isList?: boolean;
@@ -21,6 +28,10 @@ export const pricesInformation = [
     label: "Индивидуальные услуги",
     description:
       "Разрабатываем интерьер под ваши задачи, привычки и особенности помещения. Можно заказать отдельную услугу или сопровождение проекта.",
+    link: {
+      label: "Обсудить задачу",
+      href: "/contact",
+    },
     isList: true,
     rows: [
       { code: "full-design" },
@@ -40,6 +51,10 @@ export const pricesInformation = [
     label: "Паспорт интерьерного стиля",
     description:
       "Собираем ваши предпочтения в понятную инструкцию для дальнейшей работы с интерьером.",
+    link: {
+      label: "Как устроен паспорт",
+      href: "/contact",
+    },
     result:
       "Персональный PDF: разбор предпочтений, визуальная концепция, палитра, материалы, формы и правила сочетаний. Одна общая стилевая концепция дома и один раунд уточнений.",
     rows: [
@@ -53,6 +68,10 @@ export const pricesInformation = [
     id: "interiors",
     label: "Готовые интерьеры",
     description: "Выберите уже разработанное интерьерное решение.",
+    link: {
+      label: "Выбрать интерьер",
+      href: "/contact",
+    },
     result:
       "Комплект для квартиры: визуализации, план расстановки мебели с размерами, рабочая документация для исходной планировки и спецификация мебели и отделочных материалов.",
     rows: [
@@ -72,6 +91,10 @@ export const pricesInformation = [
     label: "Шопинг-капсулы",
     description:
       "Выберите готовое сочетание мебели и декора для комнаты или законченной зоны.",
+    link: {
+      label: "Выбрать капсулу",
+      href: "/contact",
+    },
     result:
       "Визуальное превью и список покупок: предметы, размеры, количество, цены на дату составления и ссылки на магазины. Без рабочих чертежей и индивидуальной адаптации.",
     rows: [
@@ -85,6 +108,10 @@ export const pricesInformation = [
     id: "materials",
     label: "Полезные материалы",
     description: "Небольшие продукты для самостоятельной работы с интерьером.",
+    link: {
+      label: "Посмотреть материалы",
+      href: "/contact",
+    },
     rows: [],
   },
-] as const satisfies readonly PriceSection[];
+] as readonly PriceSection[];

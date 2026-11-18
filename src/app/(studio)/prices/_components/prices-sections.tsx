@@ -8,6 +8,9 @@ import {
 } from "@/features/prices/config/price-catalog";
 import { getPublishedPrices } from "@/features/prices/server/queries";
 import { pricesInformation } from "./prices-description";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { SquareText } from "lucide-react";
 
 const byDefinition = new Map(PRICE_CATALOG.map((entry) => [entry.code, entry]));
 
@@ -18,79 +21,140 @@ export async function PricesSections() {
   return (
     <>
       {pricesInformation.map((section) => (
-        <SiteSection id={section.id} key={section.id} className="scroll-mt-8">
+        <SiteSection id={section.id} key={section.id}>
           <SiteContainer
-            className={cn(
-              "grid grid-cols-1 gap-8 px-5 py-12",
-              "lg:grid-cols-2 lg:gap-16 lg:px-10 lg:py-20",
-            )}
+            className={cn("z-2 px-5 pb-20", "lg:px-10 lg:pt-20 lg:pb-10")}
           >
-            <div className="max-w-2xl space-y-5">
-              <h2
+            <div className="grid grid-cols-12 gap-x-8 gap-y-8">
+              <div
                 className={cn(
-                  "font-display text-brand-milk text-2xl leading-tight font-semibold uppercase",
-                  "md:text-3xl xl:text-4xl",
+                  "col-span-12 flex flex-col gap-y-4",
+                  "lg:col-span-6",
                 )}
               >
-                {section.label}
-              </h2>
-              <p className="text-brand-neutral text-lg leading-relaxed">
-                {section.description}
-              </p>
-              {"result" in section && section.result && (
-                <p className="border-brand-terracota-accent text-brand-neutral border-l-2 pl-5 text-base leading-relaxed">
-                  {section.result}
+                <h2
+                  className={cn(
+                    "text-brand-milk font-display text-2xl font-semibold",
+                    "lg:text-3xl",
+                  )}
+                >
+                  {section.label}
+                </h2>
+                <p className="text-brand-neutral text-lg leading-relaxed">
+                  {section.description}
                 </p>
-              )}
-            </div>
-            <div className="min-w-0 self-start rounded-3xl border border-white/10 bg-[#191a1a] p-6 md:p-8">
-              {section.rows.length === 0 ? (
-                <>
-                  <p className="text-brand-milk text-xl font-medium">
-                    Цена в карточке
+                {"result" in section && section.result && (
+                  <p className="border-brand-terracota-accent text-brand-neutral mt-4 border-l-2 pl-5 text-base">
+                    {section.result}
                   </p>
-                  <p className="text-brand-neutral mt-3 text-base leading-relaxed">
-                    Стоимость зависит от выбранного материала. Превью и состав —
-                    в каталоге.
-                  </p>
-                </>
-              ) : (
-                <div className="divide-y divide-white/15">
-                  {section.rows.map((row) => {
-                    const code = row.code as PriceCode;
-                    const definition = byDefinition.get(code);
-                    if (!definition) return null;
-                    const amount = byCode.get(code);
-                    return (
-                      <div key={code} className="py-5 first:pt-0 last:pb-0">
-                        <h3 className="text-brand-milk text-lg font-medium">
-                          {"heading" in row && row.heading
-                            ? row.heading
-                            : definition.title}
-                        </h3>
-                        <p
+                )}
+                {section.link && (
+                  <Link
+                    href={section.link.href}
+                    className={cn(
+                      buttonVariants({ variant: "default", size: "lg" }),
+                      "mt-4 h-12 w-fit px-5 text-sm",
+                      "bg-brand-terracota-accent text-brand-milk",
+                      "hover:bg-brand-terracota transition-colors duration-300",
+                    )}
+                  >
+                    {section.link.label}
+                  </Link>
+                )}
+              </div>
+              <div
+                className={cn("col-span-12", "lg:col-span-6 lg:col-start-7")}
+              >
+                {section.rows.length === 0 ? (
+                  <div
+                    className={cn(
+                      "flex flex-col gap-y-8 rounded-lg bg-neutral-900 p-5",
+                      "lg:p-10",
+                    )}
+                  >
+                    <p className="text-brand-milk text-xl font-medium">
+                      Цена в карточке
+                    </p>
+                    <div className="mt-4 flex items-center gap-5 rounded-md bg-neutral-800 p-1 py-4 pr-5">
+                      <SquareText
+                        size={24}
+                        strokeWidth={1.4}
+                        className="text-brand-neutral ml-4 shrink-0"
+                      />
+                      <p
+                        className={cn(
+                          "text-brand-neutral text-sm",
+                          "lg:text-base",
+                        )}
+                      >
+                        Стоимость зависит от выбранного материала. Превью и
+                        состав — в каталоге.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div
+                    className={cn(
+                      "flex flex-col gap-y-8 divide-y divide-white/15 rounded-lg bg-neutral-900 p-5",
+                      "lg:p-10",
+                    )}
+                  >
+                    {section.rows.map((row) => {
+                      const code = row.code as PriceCode;
+                      const definition = byDefinition.get(code);
+
+                      if (!definition) return null;
+                      const amount = byCode.get(code);
+
+                      return (
+                        <div
+                          key={code}
                           className={cn(
-                            "mt-3 text-2xl leading-tight font-semibold",
-                            "sm:text-3xl",
-                            amount === undefined
-                              ? "text-brand-neutral"
-                              : "text-[#ff9b50]",
+                            "flex flex-col gap-y-2 pb-8",
+                            "last:pb-0",
                           )}
                         >
-                          {amount === undefined
-                            ? "Стоимость уточняется"
-                            : formatPrice(amount, definition.unit)}
-                        </p>
-                        {"note" in row && row.note && (
-                          <p className="text-brand-neutral mt-3 text-sm leading-relaxed">
-                            {row.note}
+                          <h3 className="text-brand-milk text-xl font-medium">
+                            {"heading" in row && row.heading
+                              ? row.heading
+                              : definition.title}
+                          </h3>
+                          <p
+                            className={cn(
+                              "text-2xl font-semibold",
+                              "sm:text-3xl",
+                              amount === undefined
+                                ? "text-brand-neutral"
+                                : "text-orange-500",
+                            )}
+                          >
+                            {amount === undefined
+                              ? "Стоимость уточняется"
+                              : formatPrice(amount, definition.unit)}
                           </p>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+                          {"note" in row && row.note && (
+                            <div className="mt-4 flex items-center gap-5 rounded-md bg-neutral-800 p-1 py-4 pr-5">
+                              <SquareText
+                                size={24}
+                                strokeWidth={1.4}
+                                className="text-brand-neutral ml-4 shrink-0"
+                              />
+                              <p
+                                className={cn(
+                                  "text-brand-neutral text-sm",
+                                  "lg:text-base",
+                                )}
+                              >
+                                {row.note}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
             </div>
           </SiteContainer>
         </SiteSection>

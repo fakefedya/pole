@@ -28,7 +28,7 @@ export function HeroSection() {
               Сравните состав и стоимость — и выберите то, что нужно вам.
             </p>
           </div>
-          <div className="flex flex-wrap items-center gap-2">
+          <div className={cn("flex flex-wrap items-center gap-2")}>
             {pricesInformation.map((el) => {
               const anchorLink = `#${el.id}`;
 
@@ -36,7 +36,7 @@ export function HeroSection() {
                 <Button
                   key={el.label}
                   className={cn(
-                    "border-brand-milk/50 h-12 w-fit cursor-pointer border px-5 text-sm",
+                    "border-brand-milk/15 h-12 w-fit cursor-pointer border px-5 text-sm",
                     "hover:border-brand-terracota-accent transition-colors duration-300",
                   )}
                   render={<a href={anchorLink}>{el.label}</a>}
@@ -45,6 +45,7 @@ export function HeroSection() {
               );
             })}
           </div>
+          <div className="bg-brand-milk/15 mt-20 block h-px w-full"></div>
         </div>
       </SiteContainer>
     </SiteSection>
