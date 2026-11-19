@@ -8,6 +8,7 @@ type ContactsInfo = {
   header: string;
   link: Link;
   isVisible?: boolean;
+  icon?: string;
 };
 
 export const contacts = [
@@ -15,7 +16,7 @@ export const contacts = [
     type: "contact",
     header: "Телеграм",
     link: {
-      label: "@polinaindesign",
+      label: "@studio_pole",
       href: "https://t.me/polinaindesign",
     },
   },
@@ -24,7 +25,7 @@ export const contacts = [
     header: "Телефон",
     link: {
       label: "+7 995 607-54-11",
-      href: "+79956075411",
+      href: "tel:+79956075411",
     },
   },
   {
@@ -32,7 +33,7 @@ export const contacts = [
     header: "Почта студии",
     link: {
       label: "contacts@studiopole.ru",
-      href: "contacts@studiopole.ru",
+      href: "mailto:contacts@studiopole.ru",
     },
   },
   {
@@ -40,31 +41,25 @@ export const contacts = [
     header: "Для сотрудничества и предложений",
     link: {
       label: "polevaya@studiopole.ru",
-      href: "cpolevaya@studiopole.ru",
-    },
-  },
-  {
-    type: "contact",
-    header: "Для сотрудничества и предложений",
-    link: {
-      label: "polevaya@studiopole.ru",
-      href: "cpolevaya@studiopole.ru",
+      href: "mailto:cpolevaya@studiopole.ru",
     },
   },
   {
     type: "social",
-    header: "Следить за студией",
+    header: "Pinterest",
     link: {
-      label: "Pinterest",
-      href: "https://ru.pinterest.com/POLEinteriordesign/",
+      label: "Следить за студией",
+      href: "https://ru.pinterest.com/poleinteriordesign/",
     },
+    icon: "brand-pinterest.svg",
   },
   {
     type: "social",
-    header: "Следить за студией",
+    header: "VK",
     link: {
-      label: "VK",
+      label: "Группа студии",
       href: "https://vk.ru/studiopole",
     },
+    icon: "brand-vk.svg",
   },
 ] as readonly ContactsInfo[];
