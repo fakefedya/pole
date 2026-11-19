@@ -5,6 +5,7 @@ import {
   ArrowUpRight,
   UsersRound,
   Tags,
+  Inbox,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { LogoutButton } from "@/features/auth/components/logout-button";
@@ -42,6 +43,12 @@ export function DashboardShell({ name, role, children }: Props) {
       allowed: hasPermission(role, PERMISSION.PRICES_READ),
     },
     {
+      href: "/dashboard/leads",
+      label: "Заявки",
+      icon: Inbox,
+      allowed: hasPermission(role, PERMISSION.LEADS_READ),
+    },
+    {
       href: "/dashboard/users",
       label: "Пользователи",
       icon: UsersRound,
@@ -73,6 +80,7 @@ export function DashboardShell({ name, role, children }: Props) {
                   "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-800",
                 )}
               >
+                <span className="sr-only">{items.find((item) => item.href === href)?.label}</span>
                 <Icon size={20} aria-hidden="true" />
               </Link>
             ))}

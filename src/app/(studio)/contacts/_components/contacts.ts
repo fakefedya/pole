@@ -16,7 +16,7 @@ export const contacts = [
     type: "contact",
     header: "Телеграм",
     link: {
-      label: "@studio_pole",
+      label: "@polinaindesign",
       href: "https://t.me/polinaindesign",
     },
   },
@@ -41,7 +41,7 @@ export const contacts = [
     header: "Для сотрудничества и предложений",
     link: {
       label: "polevaya@studiopole.ru",
-      href: "mailto:cpolevaya@studiopole.ru",
+      href: "mailto:polevaya@studiopole.ru",
     },
   },
   {
@@ -49,7 +49,7 @@ export const contacts = [
     header: "Pinterest",
     link: {
       label: "Следить за студией",
-      href: "https://ru.pinterest.com/poleinteriordesign/",
+      href: "https://ru.pinterest.com/POLEinteriordesign/",
     },
     icon: "brand-pinterest.svg",
   },

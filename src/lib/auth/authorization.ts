@@ -22,6 +22,8 @@ export const PERMISSION = {
   USERS_MANAGE: "users.manage",
   PRICES_READ: "prices.read",
   PRICES_UPDATE: "prices.update",
+  LEADS_UPDATE: "leads.update",
+  LEADS_READ: "leads.read",
 } as const;
 export type Permission = (typeof PERMISSION)[keyof typeof PERMISSION];
 

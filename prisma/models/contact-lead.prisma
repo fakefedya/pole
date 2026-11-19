@@ -1,0 +1,92 @@
+/** Public taxonomy, stored in DB and presented on the /contacts form. */
+model ContactServiceCategory {
+  code      String @id @db.VarChar(40)
+  name      String @db.VarChar(120)
+  sortOrder Int    @default(0)
+  isActive  Boolean @default(true)
+
+  leads ContactLead[]
+}
+
+enum ContactMethod {
+  MAX
+  TELEGRAM
+  EMAIL
+}
+
+enum ContactLeadStatus {
+  NEW
+  IN_PROGRESS
+  CLOSED
+}
+
+enum ContactMailRecipient {
+  STUDIO
+  CLIENT
+}
+
+enum ContactMailStatus {
+  PENDING
+  SENDING
+  SENT
+  FAILED
+}
+
+model ContactLead {
+  id           String @id @default(cuid())
+  shortCode    String @unique @db.VarChar(4)
+  name         String @db.VarChar(100)
+  categoryCode String @db.VarChar(40)
+  category     ContactServiceCategory @relation(fields: [categoryCode], references: [code], onDelete: Restrict)
+  message      String @db.Text
+  contactMethod ContactMethod
+  email        String @db.VarChar(254)
+  phone        String @db.VarChar(32)
+  status       ContactLeadStatus @default(NEW)
+  revision     Int @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  mailJobs      ContactMailJob[]
+  statusChanges ContactLeadStatusChange[]
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([categoryCode, createdAt(sort: Desc)])
+  @@index([createdAt(sort: Desc)])
+}
+
+model ContactMailJob {
+  id            String @id @default(cuid())
+  leadId        String
+  lead          ContactLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  recipient     ContactMailRecipient
+  status        ContactMailStatus @default(PENDING)
+  attempts      Int @default(0)
+  nextAttemptAt DateTime @default(now())
+  lockedUntil   DateTime?
+  lastError     String? @db.VarChar(120)
+  sentAt        DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@unique([leadId, recipient])
+  @@index([status, nextAttemptAt])
+}
+
+model ContactLeadStatusChange {
+  id           String @id @default(cuid())
+  leadId       String
+  lead         ContactLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  actorId      String @db.VarChar(256)
+  previous     ContactLeadStatus
+  next         ContactLeadStatus
+  createdAt    DateTime @default(now())
+
+  @@index([leadId, createdAt(sort: Desc)])
+}
+
+model ContactLeadThrottle {
+  key         String @id @db.VarChar(64)
+  windowStart DateTime @default(now())
+  count       Int @default(0)
+}
