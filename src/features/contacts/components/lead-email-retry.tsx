@@ -11,7 +11,8 @@ export function LeadEmailRetry({ jobId }: { jobId: string }) {
   return (
     <span className="inline-flex flex-wrap items-center gap-2">
       <button
-        type="button" disabled={pending}
+        type="button"
+        disabled={pending}
         onClick={() => {
           setError(null);
           startTransition(async () => {
@@ -20,11 +21,15 @@ export function LeadEmailRetry({ jobId }: { jobId: string }) {
             else setError(result.error ?? "Не удалось отправить.");
           });
         }}
-        className="rounded-lg border border-dashboard-input-border bg-dashboard-input px-3 py-2 text-sm text-brand-milk disabled:opacity-50"
+        className="border-dashboard-input-border bg-dashboard-input text-brand-milk rounded-lg border px-3 py-2 text-sm disabled:opacity-50"
       >
         {pending ? "Отправка…" : "Повторить отправку"}
       </button>
-      {error && <span role="alert" className="text-sm text-red-400">{error}</span>}
+      {error && (
+        <span role="alert" className="text-destructive text-sm">
+          {error}
+        </span>
+      )}
     </span>
   );
 }

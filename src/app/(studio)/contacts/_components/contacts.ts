@@ -16,8 +16,8 @@ export const contacts = [
     type: "contact",
     header: "Телеграм",
     link: {
-      label: "@polinaindesign",
-      href: "https://t.me/polinaindesign",
+      label: "@studio_pole",
+      href: "https://t.me/@studio_pole",
     },
   },
   {

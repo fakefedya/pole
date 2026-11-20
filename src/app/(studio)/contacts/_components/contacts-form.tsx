@@ -17,22 +17,31 @@ type Props = { categories: readonly { code: string; name: string }[] };
 
 const rowClass =
   "flex flex-col gap-2 md:flex-row md:flex-wrap md:items-baseline md:gap-x-4";
+
 const inputClass = cn(
-  "min-w-0 flex-1 border-b border-white/25 bg-transparent px-0 py-2 text-base text-brand-milk",
-  "placeholder:text-brand-muted outline-none transition-colors focus:border-brand-milk",
-  "aria-invalid:border-red-400 focus-visible:outline-0",
-  "sm:text-lg",
+  "min-w-0 flex-1 caret-brand-green bg-transparent px-0 font-medium text-brand-green tracking-wide",
+  "placeholder:text-brand-muted placeholder:font-medium outline-none transition-colors focus:border-brand-milk placeholder:font-medium",
+  "aria-invalid:border-destructive focus-visible:outline-0",
+  "autofill:shadow-[inset_0_0_0px_1000px_#000000] autofill:[-webkit-text-fill-color:#40b873]",
 );
+
+const fieldLabels = {
+  name: "Меня зовут ",
+  category: "Меня интересует... ",
+  contact: "Я хочу обсудить... ",
+  contactMethod: "Связаться со мной ",
+  mail: "Моя почта ",
+  phone: "Мой телефон ",
+};
 
 function FieldError({ message }: { message?: string }) {
   return message ? (
-    <p role="alert" className="mt-1 text-sm text-red-400">
+    <p role="alert" className="text-destructive mt-1 text-sm">
       {message}
     </p>
   ) : null;
 }
 
-/** A native-radio variant styled as selectable chips; dashboard UI is untouched. */
 function ContactRadioChips<T extends string>({
   label,
   name,
@@ -53,10 +62,13 @@ function ContactRadioChips<T extends string>({
       <legend
         className={cn(
           "text-base font-medium sm:text-lg",
-          error ? "text-red-400" : "text-brand-milk",
+          error ? "text-destructive" : "text-brand-milk",
         )}
       >
-        {label} <span aria-hidden="true">*</span>
+        {label}{" "}
+        <span className="text-destructive" aria-hidden="true">
+          *
+        </span>
       </legend>
       <div className="flex flex-wrap gap-2">
         {options.map((item) => (
@@ -69,12 +81,11 @@ function ContactRadioChips<T extends string>({
             />
             <span
               className={cn(
-                "flex min-h-11 items-center justify-center rounded-lg border px-4 py-2 text-center text-sm font-medium",
-                "transition-colors duration-150 sm:text-base",
-                "text-brand-milk border-white/10 bg-[#1b1b1c] hover:border-white/40",
+                "text-brand-milk flex min-h-11 items-center justify-center rounded-lg border border-none bg-neutral-900 px-5 py-2.5 text-center text-sm font-semibold tracking-wide",
+                "transition-colors duration-150 hover:bg-neutral-800",
                 "peer-checked:border-brand-milk peer-checked:bg-brand-milk peer-checked:text-brand-black",
                 "peer-focus-visible:outline-brand-milk peer-focus-visible:outline-2 peer-focus-visible:outline-offset-3",
-                selected === item.value && "shadow-sm",
+                selected === item.value && "hover:bg-brand-milk/80 shadow-sm",
               )}
             >
               {item.label}
@@ -176,20 +187,23 @@ export function ContactsForm({ categories }: Props) {
 
   return (
     <form
-      className="text-brand-milk w-full max-w-2xl space-y-8 sm:space-y-10"
+      className="text-brand-milk flex w-full max-w-2xl flex-col gap-y-8"
       onSubmit={submit}
       noValidate
     >
-      <div className="space-y-1">
+      <div>
         <div className={rowClass}>
           <label
             htmlFor="contact-name"
             className={cn(
               "text-base font-medium sm:text-lg",
-              errors.name ? "text-red-400" : "text-brand-milk",
+              errors.name ? "text-destructive" : "text-brand-milk",
             )}
           >
-            Меня зовут <span aria-hidden="true">*</span>
+            {fieldLabels.name}
+            <span className="text-destructive" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="contact-name"
@@ -209,7 +223,7 @@ export function ContactsForm({ categories }: Props) {
       </div>
 
       <ContactRadioChips
-        label="Меня интересует"
+        label={fieldLabels.category}
         name="categoryCode"
         options={categories.map(({ code, name }) => ({
           value: code,
@@ -225,25 +239,26 @@ export function ContactsForm({ categories }: Props) {
           htmlFor="contact-message"
           className={cn(
             "block text-base font-medium sm:text-lg",
-            errors.message ? "text-red-400" : "text-brand-milk",
+            errors.message ? "text-destructive" : "text-brand-milk",
           )}
         >
-          Расскажите о задаче <span aria-hidden="true">*</span>
+          {fieldLabels.contact}
+          <span className="text-destructive" aria-hidden="true">
+            *
+          </span>
         </label>
         <textarea
           id="contact-message"
           rows={5}
           maxLength={3000}
+
           placeholder="Ваша идея, вопрос или описание проекта…"
           {...register("message")}
           aria-invalid={!!errors.message}
           aria-describedby={
             errors.message ? "contact-message-error" : undefined
           }
-          className={cn(
-            inputClass,
-            "block min-h-40 w-full resize-y rounded-lg border border-white/25 p-4",
-          )}
+          className={cn(inputClass, "block min-h-40 w-full resize-none")}
         />
         <div id="contact-message-error">
           <FieldError message={errors.message?.message} />
@@ -251,7 +266,7 @@ export function ContactsForm({ categories }: Props) {
       </div>
 
       <ContactRadioChips
-        label="Как с вами связаться"
+        label={fieldLabels.contactMethod}
         name="contactMethod"
         options={CONTACT_METHODS}
         selected={watch("contactMethod")}
@@ -265,10 +280,13 @@ export function ContactsForm({ categories }: Props) {
             htmlFor="contact-email"
             className={cn(
               "text-base font-medium sm:text-lg",
-              errors.email ? "text-red-400" : "text-brand-milk",
+              errors.email ? "text-destructive" : "text-brand-milk",
             )}
           >
-            Почта <span aria-hidden="true">*</span>
+            {fieldLabels.mail}
+            <span className="text-destructive" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="contact-email"
@@ -293,10 +311,13 @@ export function ContactsForm({ categories }: Props) {
             htmlFor="contact-phone"
             className={cn(
               "text-base font-medium sm:text-lg",
-              errors.phone ? "text-red-400" : "text-brand-milk",
+              errors.phone ? "text-destructive" : "text-brand-milk",
             )}
           >
-            Телефон <span aria-hidden="true">*</span>
+            {fieldLabels.phone}
+            <span className="text-destructive" aria-hidden="true">
+              *
+            </span>
           </label>
           <input
             id="contact-phone"
@@ -334,7 +355,7 @@ export function ContactsForm({ categories }: Props) {
         <label
           className={cn(
             "flex items-start gap-3 text-sm leading-relaxed",
-            errors.consent ? "text-red-400" : "text-brand-neutral",
+            errors.consent ? "text-destructive" : "text-brand-neutral",
           )}
         >
           <input
@@ -342,12 +363,12 @@ export function ContactsForm({ categories }: Props) {
             {...register("consent")}
             className="accent-brand-terracota-accent mt-1 size-4 shrink-0"
           />
-          <span>
+          <span className="text-brand-muted leading-tight font-medium">
             Согласен(на) на обработку персональных данных для ответа на
             обращение.{" "}
             <Link
               href="/policies/privacy"
-              className="hover:text-brand-milk underline underline-offset-4"
+              className="hover:text-brand-milk/80 text-brand-milk"
             >
               Политика конфиденциальности
             </Link>
@@ -358,7 +379,7 @@ export function ContactsForm({ categories }: Props) {
       </div>
 
       {submitError && (
-        <p role="alert" className="text-sm text-red-400">
+        <p role="alert" className="text-destructive text-sm">
           {submitError}
         </p>
       )}
@@ -366,16 +387,17 @@ export function ContactsForm({ categories }: Props) {
         type="submit"
         disabled={isSubmitting || !categories.length}
         className={cn(
-          "inline-flex min-h-12 items-center justify-center rounded-lg px-7 py-3 text-base font-semibold",
+          "inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg px-7 py-3 text-base font-semibold",
           "bg-brand-milk text-brand-black transition-opacity hover:opacity-90",
           "focus-visible:outline-brand-milk focus-visible:outline-2 focus-visible:outline-offset-4",
           "disabled:cursor-not-allowed disabled:opacity-50",
+          "lg:w-fit",
         )}
       >
-        {isSubmitting ? "Отправляем…" : "Отправить заявку"}
+        {isSubmitting ? "Отправляем…" : "Отправить сообщение"}
       </button>
       {!categories.length && (
-        <p className="text-red-400">
+        <p className="text-destructive">
           Отправка временно недоступна. Попробуйте позже.
         </p>
       )}
