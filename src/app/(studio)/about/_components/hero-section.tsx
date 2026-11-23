@@ -24,14 +24,19 @@ const sectionDescription: Description = {
 export function HeroSection() {
   return (
     <SiteSection>
-      <SiteContainer>
-        <div className="flex flex-col gap-y-8">
+      <SiteContainer
+        className={cn("z-2 px-5 pt-35 pb-20", "lg:px-10 lg:pt-40")}
+      >
+        <div className="flex flex-col gap-y-4">
           <div
-            className={cn("grid grid-cols-12 gap-x-4 gap-y-8", "lg:gap-x-8")}
+            className={cn(
+              "grid grid-cols-12 gap-x-4 gap-y-8",
+              "lg:gap-x-8 lg:gap-y-4",
+            )}
           >
             <div
               className={cn(
-                "col-span-12 flex flex-col gap-y-8",
+                "col-span-12 flex flex-col gap-y-4",
                 "lg:col-span-6",
               )}
             >
@@ -87,6 +92,7 @@ export function HeroSection() {
               <div
                 className={cn(
                   "relative flex aspect-2/3 items-center overflow-hidden rounded-lg",
+                  "md:aspect-square",
                   "lg:aspect-square",
                 )}
               >

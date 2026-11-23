@@ -1,5 +1,6 @@
 import { InternalHref } from "@/config/site-navigation";
 import type { PriceCode } from "@/features/prices/config/price-catalog";
+import { ArrowUpRight, LucideIcon, Send } from "lucide-react";
 
 type PriceRow = {
   code: PriceCode;
@@ -10,6 +11,7 @@ type PriceRow = {
 type Link = {
   label: string;
   href: InternalHref;
+  icon: LucideIcon;
 };
 
 type PriceSection = {
@@ -30,7 +32,8 @@ export const pricesInformation = [
       "Разрабатываем интерьер под ваши задачи, привычки и особенности помещения. Можно заказать отдельную услугу или сопровождение проекта.",
     link: {
       label: "Обсудить задачу",
-      href: "/contact",
+      href: "/contacts",
+      icon: Send,
     },
     isList: true,
     rows: [
@@ -54,6 +57,7 @@ export const pricesInformation = [
     link: {
       label: "Как устроен паспорт",
       href: "/contact",
+      icon: ArrowUpRight,
     },
     result:
       "Персональный PDF: разбор предпочтений, визуальная концепция, палитра, материалы, формы и правила сочетаний. Одна общая стилевая концепция дома и один раунд уточнений.",
@@ -71,6 +75,7 @@ export const pricesInformation = [
     link: {
       label: "Выбрать интерьер",
       href: "/contact",
+      icon: ArrowUpRight,
     },
     result:
       "Комплект для квартиры: визуализации, план расстановки мебели с размерами, рабочая документация для исходной планировки и спецификация мебели и отделочных материалов.",
@@ -94,6 +99,7 @@ export const pricesInformation = [
     link: {
       label: "Выбрать капсулу",
       href: "/contact",
+      icon: ArrowUpRight,
     },
     result:
       "Визуальное превью и список покупок: предметы, размеры, количество, цены на дату составления и ссылки на магазины. Без рабочих чертежей и индивидуальной адаптации.",
@@ -111,6 +117,7 @@ export const pricesInformation = [
     link: {
       label: "Посмотреть материалы",
       href: "/contact",
+      icon: ArrowUpRight,
     },
     rows: [],
   },

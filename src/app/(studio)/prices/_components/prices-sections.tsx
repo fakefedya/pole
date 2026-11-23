@@ -51,12 +51,13 @@ export async function PricesSections() {
                     href={section.link.href}
                     className={cn(
                       buttonVariants({ variant: "default", size: "lg" }),
-                      "mt-4 h-12 w-fit px-5 text-sm",
+                      "flex h-12 w-fit items-center gap-2 px-5 text-sm",
                       "bg-brand-terracota-accent text-brand-milk",
                       "hover:bg-brand-terracota transition-colors duration-300",
                     )}
                   >
                     {section.link.label}
+                    <section.link.icon size={16} />
                   </Link>
                 )}
               </div>

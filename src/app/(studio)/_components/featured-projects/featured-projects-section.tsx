@@ -5,6 +5,7 @@ import { PublicProjectCards } from "@/app/(studio)/_components/featured-projects
 import { SiteSection } from "@/components/layout/site-section";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { ArrowUpRight } from "lucide-react";
 
 export async function FeaturedProjectsSection() {
   const projects = await getFeaturedProjects();
@@ -17,7 +18,7 @@ export async function FeaturedProjectsSection() {
             <h2
               id="featured-projects-title"
               className={cn(
-                "font-display text-brand-milk text-3xl leading-[1.2] font-semibold uppercase",
+                "font-display text-brand-milk text-3xl leading-[1.2] font-semibold whitespace-pre-line uppercase",
                 "lg:text-4xl",
                 "xl:text-6xl",
               )}
@@ -33,12 +34,13 @@ export async function FeaturedProjectsSection() {
               href="/projects"
               className={cn(
                 buttonVariants({ variant: "default", size: "lg" }),
-                "h-12 w-fit px-5 text-sm",
+                "flex h-12 w-fit items-center gap-2 px-5 text-sm",
                 "bg-brand-terracota-accent",
                 "hover:bg-brand-terracota transition-colors duration-300",
               )}
             >
               Смотреть все проекты
+              <ArrowUpRight size={16} />
             </Link>
           </div>
           <PublicProjectCards projects={projects} layout="expandable" />

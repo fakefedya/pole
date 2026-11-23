@@ -12,6 +12,7 @@ import {
   type ContactLeadInput,
 } from "@/features/contacts/schemas/contact-lead";
 import { createContactLeadAction } from "@/features/contacts/server/actions";
+import { Loader, Send } from "lucide-react";
 
 type Props = { categories: readonly { code: string; name: string }[] };
 
@@ -177,9 +178,13 @@ export function ContactsForm({ categories }: Props) {
             setSent(false);
             setSentCode(null);
           }}
-          className="bg-brand-milk text-brand-black rounded-lg px-5 py-3 text-sm font-semibold"
+          className={cn(
+            "bg-brand-milk text-brand-black flex h-12 cursor-pointer items-center gap-2 rounded-full px-5 text-sm font-medium",
+            "hover:bg-brand-milk/90 transition-colors duration-300",
+          )}
         >
           Отправить ещё одну заявку
+          <Send size={16} />
         </button>
       </div>
     );
@@ -339,7 +344,7 @@ export function ContactsForm({ categories }: Props) {
 
       <div
         aria-hidden="true"
-        className="absolute -left-[9999px] h-0 w-0 overflow-hidden"
+        className="absolute left-[-9999px] h-0 w-0 overflow-hidden"
       >
         <label htmlFor="contact-website">Сайт компании</label>
         <input
@@ -387,7 +392,7 @@ export function ContactsForm({ categories }: Props) {
         type="submit"
         disabled={isSubmitting || !categories.length}
         className={cn(
-          "inline-flex min-h-12 w-full cursor-pointer items-center justify-center rounded-lg px-7 py-3 text-base font-semibold",
+          "inline-flex h-12 w-full cursor-pointer items-center justify-center gap-2 rounded-full px-5 text-sm font-medium",
           "bg-brand-milk text-brand-black transition-opacity hover:opacity-90",
           "focus-visible:outline-brand-milk focus-visible:outline-2 focus-visible:outline-offset-4",
           "disabled:cursor-not-allowed disabled:opacity-50",
@@ -395,6 +400,7 @@ export function ContactsForm({ categories }: Props) {
         )}
       >
         {isSubmitting ? "Отправляем…" : "Отправить сообщение"}
+        {isSubmitting ? <Loader size={16} /> : <Send size={16} />}
       </button>
       {!categories.length && (
         <p className="text-destructive">

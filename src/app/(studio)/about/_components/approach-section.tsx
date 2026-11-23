@@ -23,7 +23,7 @@ const approachDescription = [
 export function ApproachSection() {
   return (
     <SiteSection>
-      <SiteContainer>
+      <SiteContainer className={cn("pb-24", "lg:pb-10")}>
         <div className="grid grid-cols-12 gap-x-8 gap-y-8">
           <div className={cn("col-span-12", "lg:col-span-6")}>
             <h3

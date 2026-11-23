@@ -58,11 +58,11 @@ async function PublishedProject({ params }: Props) {
   return (
     <article className={cn("bg-brand-milk text-brand-charcoal")}>
       <SiteContainer className={cn("mx-auto gap-12", "lg:gap-20", "xl:gap-24")}>
-        <header className={cn("flex flex-col gap-6", "sm:gap-8", "lg:gap-10")}>
+        <header className={cn("flex flex-col gap-8")}>
           <div className={cn("flex min-w-0 flex-col gap-3", "sm:gap-4")}>
             <h1
               className={cn(
-                "font-display text-3xl leading-[1.15] font-bold wrap-break-word uppercase",
+                "font-display text-3xl leading-[1.15] font-bold wrap-break-word whitespace-pre-line uppercase",
                 "sm:text-4xl",
                 "lg:text-5xl",
                 "xl:text-6xl",
@@ -129,9 +129,12 @@ async function PublishedProject({ params }: Props) {
                 <Button
                   nativeButton={false}
                   render={
-                    <a href="#project-description">
+                    <a
+                      href="#project-description"
+                      className="flex items-center gap-2"
+                    >
                       Описание проекта
-                      <SquareText size={18} aria-hidden="true" />
+                      <SquareText size={16} aria-hidden="true" />
                     </a>
                   }
                   className={cn(
@@ -145,9 +148,12 @@ async function PublishedProject({ params }: Props) {
                 <Button
                   nativeButton={false}
                   render={
-                    <a href="#project-gallery">
+                    <a
+                      href="#project-gallery"
+                      className="flex items-center gap-2"
+                    >
                       Галерея проекта
-                      <Images size={18} aria-hidden="true" />
+                      <Images size={16} aria-hidden="true" />
                     </a>
                   }
                   className={cn(
@@ -218,7 +224,7 @@ async function PublishedProject({ params }: Props) {
                     <p
                       key={block.id}
                       className={cn(
-                        "text-brand-muted text-lg leading-relaxed wrap-break-word whitespace-pre-line",
+                        "text-brand-muted text-xl leading-relaxed wrap-break-word whitespace-pre-line",
                         "lg:text-2xl",
                       )}
                     >
@@ -236,8 +242,7 @@ async function PublishedProject({ params }: Props) {
             id="project-gallery"
             aria-labelledby="project-gallery-title"
             className={cn(
-              "flex scroll-mt-24 flex-col gap-6",
-              "sm:gap-8",
+              "flex scroll-mt-24 flex-col gap-8",
               "lg:scroll-mt-32",
             )}
           >
@@ -251,14 +256,7 @@ async function PublishedProject({ params }: Props) {
               Галерея проекта
             </h2>
 
-            <div
-              className={cn(
-                "grid grid-cols-1 gap-3",
-                "sm:gap-4",
-                "md:grid-cols-2",
-                "lg:gap-6",
-              )}
-            >
+            <div className={cn("grid grid-cols-1 gap-4", "md:grid-cols-2")}>
               {galleryImages.map((image) => (
                 <figure
                   key={image.id}

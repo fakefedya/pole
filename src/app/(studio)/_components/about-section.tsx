@@ -29,7 +29,7 @@ export function AboutSection() {
           <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
             <h2
               className={cn(
-                "font-display text-brand-milk text-2xl leading-[1.2] font-semibold uppercase",
+                "font-display text-brand-milk text-2xl leading-[1.2] font-semibold whitespace-pre-line uppercase",
                 "lg:text-4xl",
                 "xl:text-6xl",
               )}
@@ -39,41 +39,45 @@ export function AboutSection() {
             <p className={cn("text-brand-neutral text-xl", "lg:text-2xl")}>
               {sectionDescription.subtitle}
             </p>
+            <div
+              className={cn("item-center flex flex-col gap-2", "sm:flex-row")}
+            >
+              <Button
+                className={cn(
+                  "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
+                  "hover:bg-brand-terracota transition-colors duration-300",
+                )}
+                render={
+                  <a className="flex items-center gap-2" href={"#solutions"}>
+                    Выбрать направление
+                    <ArrowDown size={16} />
+                  </a>
+                }
+                nativeButton={false}
+              />
+              <Button
+                className={cn(
+                  "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
+                  "hover:bg-brand-terracota transition-colors duration-300",
+                )}
+                render={
+                  <a
+                    className="flex items-center gap-2"
+                    href={"#featured-projects"}
+                  >
+                    Последние проекты
+                    <ArrowDown size={16} />
+                  </a>
+                }
+                nativeButton={false}
+              />
+            </div>
           </div>
-          <div className="item-center flex gap-2">
-            <Button
-              className={cn(
-                "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
-                "hover:bg-brand-terracota transition-colors duration-300",
-              )}
-              render={
-                <a className="flex items-center gap-1" href={"#solutions"}>
-                  Выбрать направление
-                  <ArrowDown size={16} />
-                </a>
-              }
-              nativeButton={false}
-            />
-            <Button
-              className={cn(
-                "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
-                "hover:bg-brand-terracota transition-colors duration-300",
-              )}
-              render={
-                <a
-                  className="flex items-center gap-1"
-                  href={"#featured-projects"}
-                >
-                  Последние проекты
-                  <ArrowDown size={16} />
-                </a>
-              }
-              nativeButton={false}
-            />
-          </div>
+
           <div
             className={cn(
               "relative aspect-2/3 w-full overflow-hidden rounded-lg",
+              "md:aspect-square",
               "lg:aspect-video",
             )}
           >

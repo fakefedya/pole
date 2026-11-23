@@ -5,6 +5,7 @@ import Link from "next/link";
 import { solutions, solutionThemes } from "./solutions";
 import Image from "next/image";
 import { Fragment } from "react";
+import { ArrowUpRight } from "lucide-react";
 
 export function SolutionsSection() {
   return (
@@ -30,7 +31,7 @@ export function SolutionsSection() {
                 >
                   <h2
                     className={cn(
-                      "font-display text-2xl leading-[1.2] font-semibold uppercase",
+                      "font-display text-2xl leading-[1.2] font-semibold whitespace-pre-line uppercase",
                       "lg:text-4xl",
                       "xl:text-6xl",
                     )}
@@ -63,7 +64,7 @@ export function SolutionsSection() {
                     <Link
                       href={solution.action.href}
                       className={cn(
-                        "inline-flex items-center justify-center",
+                        "inline-flex items-center justify-center gap-2",
                         "rounded-full px-6 py-3",
                         "text-sm font-medium",
                         "transition-opacity hover:opacity-80",
@@ -72,6 +73,7 @@ export function SolutionsSection() {
                       )}
                     >
                       {solution.action.label}
+                      <ArrowUpRight size={16} />
                     </Link>
                   </div>
                 </div>
@@ -83,7 +85,7 @@ export function SolutionsSection() {
                     "-mx-5 flex shrink-0 gap-3 overflow-x-auto px-5",
                     "snap-x snap-mandatory scroll-px-5 overscroll-x-contain",
                     "scrollbar-none [&::-webkit-scrollbar]:hidden",
-                    "md:mx-0 md:grid md:w-full md:snap-none md:grid-cols-4 md:gap-4 md:overflow-visible md:px-0",
+                    "lg:mx-0 lg:grid lg:w-full lg:snap-none lg:grid-cols-4 lg:gap-4 lg:overflow-visible lg:px-0",
                   )}
                 >
                   {solution.images.map((image) => (
@@ -91,7 +93,7 @@ export function SolutionsSection() {
                       key={image.alt}
                       className={cn(
                         "relative h-[clamp(24rem,45dvh,28rem)] w-[78vw] max-w-88 shrink-0 snap-start overflow-hidden rounded-lg",
-                        "md:aspect-4/5 md:h-auto md:w-auto md:max-w-none",
+                        "lg:aspect-4/5 lg:h-auto lg:w-auto lg:max-w-none",
                       )}
                     >
                       <Image
