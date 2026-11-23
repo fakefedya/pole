@@ -21,7 +21,7 @@ export function CTASection({
 }: Props) {
   return (
     <SiteSection className={sectionBg}>
-      <SiteContainer className={cn("z-2", "lg:px-10 lg:py-64")}>
+      <SiteContainer className={cn("z-2 p-0", "lg:px-10 lg:py-48")}>
         <div
           className={cn(
             "flex w-full flex-col items-center gap-y-8 px-5 py-32",

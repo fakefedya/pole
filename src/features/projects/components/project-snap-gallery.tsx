@@ -200,7 +200,6 @@ export function ProjectSnapGallery({ projects }: Props) {
           type: "lock",
           distanceThreshold: "100%",
           debounce: 0,
-          // With lerp: 0, Lenis uses duration + easing for a predictable transition.
           lerp: 0,
           duration: 1.1,
           easing: snapEasing,
@@ -305,7 +304,7 @@ export function ProjectSnapGallery({ projects }: Props) {
 
   return (
     <SiteSection>
-      <SiteContainer isWide>
+      <SiteContainer isWide className={cn("p-0", "lg:p-0")}>
         <div ref={galleryRef} className="bg-brand-black relative w-full">
           <h1 className="sr-only">Проекты STUDIO POLE</h1>
           {projects.map((project, index) => (

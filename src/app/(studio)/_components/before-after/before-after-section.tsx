@@ -10,7 +10,7 @@ const afterSrc = getPublicImageUrl("site/home/before-after/after.jpg");
 export function BeforeAfterSection() {
   return (
     <SiteSection>
-      <SiteContainer className={cn("px-5 pt-35 pb-5", "pb-10 lg:px-10")}>
+      <SiteContainer>
         <div className="flex flex-col gap-8">
           <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
             <h2

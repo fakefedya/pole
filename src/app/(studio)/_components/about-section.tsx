@@ -3,6 +3,7 @@ import { SiteSection } from "@/components/layout/site-section";
 import { Button } from "@/components/ui/button";
 import { getPublicImageUrl } from "@/lib/storage/public-image";
 import { cn } from "@/lib/utils";
+import { ArrowDown } from "lucide-react";
 import Image from "next/image";
 
 type Description = {
@@ -23,7 +24,7 @@ const SignboardSrc = getPublicImageUrl("site/home/about/pole-signboard.png");
 export function AboutSection() {
   return (
     <SiteSection>
-      <SiteContainer className={cn("px-5 pt-35 pb-35", "lg:px-10 lg:pt-70")}>
+      <SiteContainer>
         <div className="flex flex-col gap-8">
           <div className={cn("flex max-w-full flex-col gap-4", "lg:max-w-2/3")}>
             <h2
@@ -43,9 +44,14 @@ export function AboutSection() {
             <Button
               className={cn(
                 "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
-                "hover:bg-brand-terracota-accent transition-colors duration-300",
+                "hover:bg-brand-terracota transition-colors duration-300",
               )}
-              render={<a href={"#solutions"}>Выбрать направление</a>}
+              render={
+                <a className="flex items-center gap-1" href={"#solutions"}>
+                  Выбрать направление
+                  <ArrowDown size={16} />
+                </a>
+              }
               nativeButton={false}
             />
             <Button
@@ -53,7 +59,15 @@ export function AboutSection() {
                 "bg-brand-terracota-accent h-12 w-fit cursor-pointer px-5 text-sm",
                 "hover:bg-brand-terracota transition-colors duration-300",
               )}
-              render={<a href={"#featured-projects"}>Последние проекты</a>}
+              render={
+                <a
+                  className="flex items-center gap-1"
+                  href={"#featured-projects"}
+                >
+                  Последние проекты
+                  <ArrowDown size={16} />
+                </a>
+              }
               nativeButton={false}
             />
           </div>

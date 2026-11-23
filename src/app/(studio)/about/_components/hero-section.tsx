@@ -24,9 +24,7 @@ const sectionDescription: Description = {
 export function HeroSection() {
   return (
     <SiteSection>
-      <SiteContainer
-        className={cn("z-2 px-5 pt-35 pb-20", "lg:px-10 lg:pt-40")}
-      >
+      <SiteContainer>
         <div className="flex flex-col gap-y-8">
           <div
             className={cn("grid grid-cols-12 gap-x-4 gap-y-8", "lg:gap-x-8")}

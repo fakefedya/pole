@@ -56,12 +56,7 @@ async function PublishedProject({ params }: Props) {
   const hasGallery = galleryImages.length > 0;
 
   return (
-    <article
-      className={cn(
-        "bg-brand-milk text-brand-charcoal px-5 pt-35 pb-[calc(8rem+env(safe-area-inset-bottom))]",
-        "lg:px-10 lg:pt-40 lg:pb-10",
-      )}
-    >
+    <article className={cn("bg-brand-milk text-brand-charcoal")}>
       <SiteContainer className={cn("mx-auto gap-12", "lg:gap-20", "xl:gap-24")}>
         <header className={cn("flex flex-col gap-6", "sm:gap-8", "lg:gap-10")}>
           <div className={cn("flex min-w-0 flex-col gap-3", "sm:gap-4")}>

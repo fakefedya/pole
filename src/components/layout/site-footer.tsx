@@ -22,7 +22,7 @@ const currentYear = new Date().getFullYear();
 export function SiteFooter() {
   return (
     <footer className="bg-brand-terracota relative z-0 min-h-dvh lg:sticky lg:bottom-0">
-      <SiteContainer className="mx-auto min-h-dvh gap-y-10 px-5 py-10 sm:px-8 lg:px-10 lg:py-12">
+      <SiteContainer className="mx-auto min-h-dvh gap-y-10 pt-5 lg:pt-10">
         <div className="grid grid-cols-1 gap-x-8 gap-y-12 lg:grid-cols-12">
           <div className="lg:col-span-6">
             {/* Услуги */}

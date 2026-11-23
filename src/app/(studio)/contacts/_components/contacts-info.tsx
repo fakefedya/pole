@@ -12,7 +12,7 @@ export async function ContactsInfoSection() {
 
   return (
     <SiteSection>
-      <SiteContainer className={cn("px-5 pb-20", "lg:p-10")}>
+      <SiteContainer className={cn("py-24", "lg:py-32")}>
         <div className={cn("grid w-full grid-cols-12")}>
           <div
             className={cn(
