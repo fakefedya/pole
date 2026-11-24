@@ -54,18 +54,12 @@ export function IndividualProcess() {
                     {step.image && (
                       <div className="relative m-2 aspect-square items-center overflow-hidden rounded-md">
                         <div className="absolute inset-0 flex size-full items-center justify-center overflow-hidden">
-                          <a
-                            href={step.image.src}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            <Image
-                              src={getPublicImageUrl(step.image.src)}
-                              alt={step.image.alt}
-                              className="object-cover"
-                              fill
-                            />
-                          </a>
+                          <Image
+                            src={getPublicImageUrl(step.image.src)}
+                            alt={step.image.alt}
+                            className="object-cover"
+                            fill
+                          />
                         </div>
                       </div>
                     )}

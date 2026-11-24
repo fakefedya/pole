@@ -142,7 +142,7 @@ export const individualInformation: IndividualDescription = {
       {
         number: "01",
         image: {
-          src: "site/individual/process/01-layout.svg",
+          src: "site/individual/process/01-layout.png",
           alt: "Изображение шага №1",
         },
         title: "Обмеры, задание и планировка",
@@ -152,7 +152,7 @@ export const individualInformation: IndividualDescription = {
       {
         number: "02",
         image: {
-          src: "site/individual/process/02-concept.svg",
+          src: "site/individual/process/02-concept.png",
           alt: "Изображение шага №2",
         },
         title: "Создание 2D-концепций",
@@ -162,7 +162,7 @@ export const individualInformation: IndividualDescription = {
       {
         number: "03",
         image: {
-          src: "site/individual/process/03-visualization.svg",
+          src: "site/individual/process/03-visualization.png",
           alt: "Изображение шага №3",
         },
         title: "Создание визуализаций",
@@ -172,7 +172,7 @@ export const individualInformation: IndividualDescription = {
       {
         number: "04",
         image: {
-          src: "site/individual/process/04-drawings.svg",
+          src: "site/individual/process/04-drawings.png",
           alt: "Изображение шага №4",
         },
         title: "Чертежи и спецификации",

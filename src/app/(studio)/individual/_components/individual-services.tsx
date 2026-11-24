@@ -27,7 +27,7 @@ export function IndividualServices({ prices }: Props) {
                 "col-span-12 p-5",
                 "lg:col-span-6",
                 "odd:border-brand-milk/15 odd:border-r odd:pr-10",
-                "even:pl-10",
+                "even:pl-6",
                 "lg:p-10",
               )}
               id={service.id}
