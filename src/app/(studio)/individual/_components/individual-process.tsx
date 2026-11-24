@@ -4,6 +4,7 @@ import { individualInformation } from "./individual-description";
 import { SiteSection } from "@/components/layout/site-section";
 import { SiteContainer } from "@/components/layout/site-container";
 import { cn } from "@/lib/utils";
+import { getPublicImageUrl } from "@/lib/storage/public-image";
 
 export function IndividualProcess() {
   const { process } = individualInformation;
@@ -49,27 +50,33 @@ export function IndividualProcess() {
                       {step.number}
                     </span>
                   </div>
-                  <div className="flex h-full flex-col gap-y-8 rounded-lg bg-neutral-900 p-5">
+                  <div className="flex h-full flex-col gap-y-8 rounded-lg bg-neutral-900">
                     {step.image && (
-                      <a
-                        href={step.image.src}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <Image
-                          src={step.image.src}
-                          alt={step.image.alt}
-                          width={step.image.width}
-                          height={step.image.height}
-                        />
-                      </a>
+                      <div className="relative m-2 aspect-square items-center overflow-hidden rounded-md">
+                        <div className="absolute inset-0 flex size-full items-center justify-center overflow-hidden">
+                          <a
+                            href={step.image.src}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            <Image
+                              src={getPublicImageUrl(step.image.src)}
+                              alt={step.image.alt}
+                              className="object-cover"
+                              fill
+                            />
+                          </a>
+                        </div>
+                      </div>
                     )}
-                    <h3 className="text-brand-milk text-xl font-medium">
-                      {step.title}
-                    </h3>
-                    <p className="text-brand-neutral text-sm lg:text-base">
-                      {step.description}
-                    </p>
+                    <div className="flex flex-col gap-y-4 px-5 pt-0 pb-5">
+                      <h3 className="text-brand-milk text-xl font-medium">
+                        {step.title}
+                      </h3>
+                      <p className="text-brand-neutral text-sm lg:text-base">
+                        {step.description}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </li>

@@ -31,8 +31,8 @@ type IndividualProcessStep = {
   image?: {
     src: string;
     alt: string;
-    width: number;
-    height: number;
+    width?: number;
+    height?: number;
   };
 };
 
@@ -141,24 +141,40 @@ export const individualInformation: IndividualDescription = {
     steps: [
       {
         number: "01",
+        image: {
+          src: "site/individual/process/01-layout.svg",
+          alt: "Изображение шага №1",
+        },
         title: "Обмеры, задание и планировка",
         description:
           "Изучаем пространство и ваши пожелания, составляем техническое задание и разрабатываем 3 варианта планировочного решения.",
       },
       {
         number: "02",
+        image: {
+          src: "site/individual/process/02-concept.svg",
+          alt: "Изображение шага №2",
+        },
         title: "Создание 2D-концепций",
         description:
           "Определяем стилистику, палитру, материалы и сочетания мебели в двухмерных концепциях интерьера.",
       },
       {
         number: "03",
+        image: {
+          src: "site/individual/process/03-visualization.svg",
+          alt: "Изображение шага №3",
+        },
         title: "Создание визуализаций",
         description:
           "Показываем будущий интерьер в фотореалистичных 3D-визуализациях: объём, фактуры и освещение.",
       },
       {
         number: "04",
+        image: {
+          src: "site/individual/process/04-drawings.svg",
+          alt: "Изображение шага №4",
+        },
         title: "Чертежи и спецификации",
         description:
           "Готовим рабочую документацию, спецификации материалов, мебели и освещения для реализации проекта.",
