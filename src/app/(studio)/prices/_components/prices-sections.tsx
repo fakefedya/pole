@@ -17,7 +17,7 @@ const byDefinition = new Map(PRICE_CATALOG.map((entry) => [entry.code, entry]));
 export async function PricesSections() {
   const prices = await getPublishedPrices();
   const byCode = new Map(prices.map((entry) => [entry.code, entry.amount]));
-
+  console.log(byCode);
   return (
     <>
       {pricesInformation.map((section) => (
@@ -103,6 +103,7 @@ export async function PricesSections() {
                       const definition = byDefinition.get(code);
 
                       if (!definition) return null;
+
                       const amount = byCode.get(code);
 
                       return (

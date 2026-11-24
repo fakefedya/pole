@@ -54,7 +54,7 @@ export async function ContactsInfoSection() {
                 <h3 className="text-brand-milk font-medium">
                   Следить за студией
                 </h3>
-                <div className="mt-5 flex flex-col gap-3">
+                <div className="flex flex-col gap-3">
                   {contacts
                     .filter((item) => item.type === "social")
                     .map((item) => (
