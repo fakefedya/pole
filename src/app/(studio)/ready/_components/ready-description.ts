@@ -154,7 +154,7 @@ export const readyInformation = {
     },
   },
   upcoming: {
-    title: "Скоро станет доступно",
+    title: "Услуга скоро станет доступна",
   },
   adaptation: {
     title: "Нужны чертежи под вашу квартиру?",

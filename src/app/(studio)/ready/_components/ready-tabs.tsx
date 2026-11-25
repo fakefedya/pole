@@ -27,10 +27,11 @@ export function ReadyTabs({ interiors, capsules }: Props) {
           >
             <TabsTrigger
               className={cn(
-                "text-brand-milk/60 cursor-pointer px-10 py-5 text-xl font-medium",
+                "text-brand-milk/60 cursor-pointer p-4 text-base font-medium",
                 "data-active:bg-brand-terracota-accent data-active:text-brand-milk",
                 "hover:data-active:text-brand-milk transition-colors duration-300",
                 "hover:text-brand-milk",
+                "lg:px-10lg:py-5 lg:text-xl",
               )}
               value="interiors"
             >
@@ -38,10 +39,11 @@ export function ReadyTabs({ interiors, capsules }: Props) {
             </TabsTrigger>
             <TabsTrigger
               className={cn(
-                "text-brand-milk/60 cursor-pointer px-10 py-5 text-xl font-medium",
+                "text-brand-milk/60 cursor-pointer p-4 text-base font-medium",
                 "data-active:bg-brand-terracota-accent data-active:text-brand-milk",
                 "hover:data-active:text-brand-milk transition-colors duration-300",
                 "hover:text-brand-milk",
+                "lg:px-10lg:py-5 lg:text-xl",
               )}
               value="capsules"
             >

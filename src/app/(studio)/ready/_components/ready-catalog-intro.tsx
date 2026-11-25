@@ -23,8 +23,8 @@ export function ReadyCatalogIntro({ format, amount, titleId }: Props) {
 
   return (
     <section aria-labelledby={titleId}>
-      <div className="flex flex-col gap-y-8">
-        <div className={cn("grid grid-cols-12 gap-x-4")}>
+      <div className="flex flex-col gap-y-32">
+        <div className={cn("grid grid-cols-12 gap-x-4 gap-y-8")}>
           <div
             className={cn("col-span-12 flex flex-col gap-y-4", "lg:col-span-6")}
           >
@@ -86,13 +86,14 @@ export function ReadyCatalogIntro({ format, amount, titleId }: Props) {
             </div>
           </div>
         </div>
-        <div className={cn("grid grid-cols-12 gap-x-4")}>
+        <div className={cn("grid grid-cols-12 gap-x-4 gap-y-8")}>
           {catalog.products.map((product) => (
             <div
               key={product.id}
               className={cn(
                 "col-span-12 flex flex-col gap-y-4",
-                "lg:col-span-6",
+                "last:hidden",
+                "lg:col-span-6 lg:last:block",
               )}
             >
               <div className="flex h-full flex-col rounded-b-md bg-neutral-900">
@@ -122,9 +123,6 @@ export function ReadyCatalogIntro({ format, amount, titleId }: Props) {
               </div>
             </div>
           ))}
-          <div
-            className={cn("col-span-12 flex flex-col gap-y-4", "lg:col-span-6")}
-          ></div>
         </div>
       </div>
       <ReadyComingSoon />
