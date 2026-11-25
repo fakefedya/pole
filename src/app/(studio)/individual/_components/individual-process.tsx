@@ -28,17 +28,23 @@ export function IndividualProcess() {
             </p>
           </div>
 
-          <ol className={cn("grid grid-cols-1 gap-4", "lg:grid-cols-12")}>
+          <ol className={cn("grid grid-cols-12 gap-x-4 gap-y-16")}>
             {process.steps.map((step) => (
               <li
-                className={cn("col-span-12", "lg:col-span-3")}
+                className={cn("col-span-12", "lg:col-span-6", "xl:col-span-3")}
                 key={step.number}
               >
-                <div className="flex h-full flex-col gap-y-8">
+                <div
+                  className={cn(
+                    "flex h-full gap-x-4",
+                    "lg:flex-col lg:gap-y-8",
+                  )}
+                >
                   <div
                     className={cn(
-                      "flex items-center",
-                      'after:ml-4 after:h-px after:flex-1 after:bg-[#d79a7266] after:content-[""]',
+                      "flex flex-col items-center",
+                      'after:bg-brand-terracota after:mt-4 after:w-px after:flex-1 after:content-[""]',
+                      "lg:flex-row lg:after:mt-0 lg:after:ml-4 lg:after:h-px",
                     )}
                   >
                     <span

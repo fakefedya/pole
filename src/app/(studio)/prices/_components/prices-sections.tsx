@@ -22,7 +22,7 @@ export async function PricesSections() {
     <>
       {pricesInformation.map((section) => (
         <SiteSection id={section.id} key={section.id}>
-          <SiteContainer className={cn("z-2 pt-24 pb-5", "lg:pt-32 lg:pb-10")}>
+          <SiteContainer className={cn("z-2 pt-24 pb-24", "lg:pt-32 lg:pb-10")}>
             <div className="grid grid-cols-12 gap-x-8 gap-y-8">
               <div
                 className={cn(

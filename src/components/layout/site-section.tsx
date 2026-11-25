@@ -1,15 +1,12 @@
 import { cn } from "@/lib/utils";
+import type { ComponentPropsWithoutRef } from "react";
 
-type Props = {
-  children: React.ReactNode;
-  className?: string;
-  id?: string;
-};
+type Props = ComponentPropsWithoutRef<"section">;
 
-export function SiteSection({ children, className, id }: Props) {
+export function SiteSection({ children, className, ...props }: Props) {
   return (
     <section
-      id={id}
+      {...props}
       className={cn("flex w-full flex-col items-center", className)}
     >
       {children}

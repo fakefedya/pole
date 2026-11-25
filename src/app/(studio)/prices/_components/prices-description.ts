@@ -74,7 +74,7 @@ export const pricesInformation = [
     description: "Выберите уже разработанное интерьерное решение.",
     link: {
       label: "Выбрать интерьер",
-      href: "/contact",
+      href: "/ready",
       icon: ArrowUpRight,
     },
     result:

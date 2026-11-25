@@ -15,7 +15,7 @@ export function IndividualSupport({ prices }: Props) {
 
   return (
     <SiteSection id="support" aria-labelledby="individual-support-title">
-      <SiteContainer>
+      <SiteContainer className={cn("pb-24")}>
         <div className="flex flex-col gap-y-8">
           <div className={cn("flex w-full flex-col gap-y-4", "lg:max-w-2/3")}>
             <h2

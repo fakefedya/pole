@@ -157,6 +157,7 @@ export function DesktopNavigation({
                                 className={cn(
                                   "bg-brand-milk/5 relative flex h-40 w-full flex-col items-start justify-between overflow-hidden p-8",
                                   "hover:bg-brand-milk/10 transition-colors duration-300",
+                                  "focus:bg-brand-milk/10",
                                 )}
                               >
                                 <div className="text-brand-milk flex flex-col gap-4">

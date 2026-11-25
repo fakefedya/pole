@@ -74,7 +74,7 @@ export function IndividualServices({ prices }: Props) {
                         className={cn(
                           "text-brand-neutral relative pl-4 text-base",
                           "before:bg-brand-terracota-accent before:absolute before:top-1/2 before:left-0 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
-                          "lg:text-ls",
+                          "lg:text-lg",
                         )}
                         key={item}
                       >

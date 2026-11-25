@@ -1,4 +1,17 @@
-export function ReadyPage() {
-	return <div className=''>123</div>
+import { Suspense } from "react";
+
+import { ReadyHero } from "./_components/ready-hero";
+import { ReadySections } from "./_components/ready-sections";
+
+export function ReadySolutionsPage() {
+  return (
+    <>
+      <ReadyHero />
+      <Suspense fallback={<section aria-label="Загрузка готовых решений" />}>
+        <ReadySections />
+      </Suspense>
+    </>
+  );
 }
-export { ReadyPage as default }
+
+export { ReadySolutionsPage as default };
