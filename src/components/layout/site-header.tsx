@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useLenis } from "lenis/react";
 import { motion, useReducedMotion } from "motion/react";
 import { usePathname } from "next/navigation";
@@ -15,6 +15,8 @@ const ALWAYS_VISIBLE_NEAR_BOTTOM = 40;
 const HIDE_DISTANCE = 24;
 const SHOW_DISTANCE = 6;
 
+const SCROLL_IDLE_DELAY = 250;
+
 type Direction = -1 | 0 | 1;
 
 export function SiteHeader() {
@@ -28,6 +30,14 @@ export function SiteHeader() {
   const previousScroll = useRef<number | null>(null);
   const direction = useRef<Direction>(0);
   const distance = useRef(0);
+  const scrollIdleTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const clearScrollIdleTimer = useCallback(() => {
+    if (scrollIdleTimer.current !== null) {
+      clearTimeout(scrollIdleTimer.current);
+      scrollIdleTimer.current = null;
+    }
+  }, []);
 
   // Подключение Lenis
   useLenis(
@@ -40,6 +50,7 @@ export function SiteHeader() {
         current <= ALWAYS_VISIBLE_UNTIL ||
         current >= lenis.limit - ALWAYS_VISIBLE_NEAR_BOTTOM
       ) {
+        clearScrollIdleTimer();
         direction.current = 0;
         distance.current = 0;
         setHidden(false);
@@ -52,6 +63,7 @@ export function SiteHeader() {
         keyboardFocus ||
         previous === null
       ) {
+        clearScrollIdleTimer();
         direction.current = 0;
         distance.current = 0;
         return;
@@ -59,6 +71,14 @@ export function SiteHeader() {
 
       const delta = current - previous;
       if (Math.abs(delta) < 0.1) return;
+
+      clearScrollIdleTimer();
+      scrollIdleTimer.current = setTimeout(() => {
+        scrollIdleTimer.current = null;
+        direction.current = 0;
+        distance.current = 0;
+        setHidden(false);
+      }, SCROLL_IDLE_DELAY);
 
       const nextDirection: Direction = delta > 0 ? 1 : -1;
       if (direction.current !== nextDirection) {
@@ -73,10 +93,11 @@ export function SiteHeader() {
       setHidden(nextDirection === 1);
       distance.current = 0;
     },
-    [mobileMenuOpen, desktopMenuOpen, keyboardFocus],
+    [mobileMenuOpen, desktopMenuOpen, keyboardFocus, clearScrollIdleTimer],
   );
 
   useEffect(() => {
+    clearScrollIdleTimer();
     previousScroll.current = null;
     direction.current = 0;
     distance.current = 0;
@@ -86,11 +107,12 @@ export function SiteHeader() {
       setDesktopMenuOpen(false);
     });
     return () => cancelAnimationFrame(frameId);
-  }, [pathname]);
+  }, [pathname, clearScrollIdleTimer]);
 
   useEffect(() => {
     const desktop = window.matchMedia("(min-width: 1024px)");
     const resetOnBreakpointChange = () => {
+      clearScrollIdleTimer();
       previousScroll.current = null;
       direction.current = 0;
       distance.current = 0;
@@ -102,7 +124,9 @@ export function SiteHeader() {
 
     desktop.addEventListener("change", resetOnBreakpointChange);
     return () => desktop.removeEventListener("change", resetOnBreakpointChange);
-  }, []);
+  }, [clearScrollIdleTimer]);
+
+  useEffect(() => () => clearScrollIdleTimer(), [clearScrollIdleTimer]);
 
   const isHidden =
     hidden && !mobileMenuOpen && !desktopMenuOpen && !keyboardFocus;
