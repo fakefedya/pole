@@ -54,10 +54,10 @@ export function MaterialsCard({ material }: Props) {
           </div>
         </div>
       </div>
-      <div className={cn("flex flex-col gap-y-4 p-5", "lg:p-10")}>
+      <div className={cn("flex h-full flex-col gap-y-4 p-5", "lg:p-10")}>
         <span
           className={cn(
-            "w-fit rounded-full border border-current/25 px-2 py-1 text-sm font-medium",
+            "w-fit rounded-full border border-current/25 px-2 py-1 text-sm font-medium uppercase",
             "bg-brand-terracota/10 text-brand-terracota-accent lg:px-4",
           )}
         >
@@ -75,12 +75,12 @@ export function MaterialsCard({ material }: Props) {
             price === "Стоимость уточняется" && "text-brand-muted",
             (price === "Бесплатно" || price !== "Стоимость уточняется") &&
               "text-2xl text-orange-500",
-            "flex min-h-8 items-end font-semibold",
+            "mt-auto flex min-h-8 items-end font-semibold",
           )}
         >
           {price}
         </p>
-        <div className="mt-4 flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
           <MaterialsDetailsDialog material={material} />
           <Link
             href="/contacts"

@@ -60,7 +60,7 @@ export function SolutionsSection() {
                   </p>
 
                   {/* CTA */}
-                  <div>
+                  <div className="mt-4">
                     <Link
                       href={solution.action.href}
                       className={cn(
@@ -88,23 +88,55 @@ export function SolutionsSection() {
                     "lg:mx-0 lg:grid lg:w-full lg:snap-none lg:grid-cols-4 lg:gap-4 lg:overflow-visible lg:px-0",
                   )}
                 >
-                  {solution.images.map((image) => (
-                    <div
-                      key={image.alt}
-                      className={cn(
-                        "relative h-[clamp(24rem,45dvh,28rem)] w-[78vw] max-w-88 shrink-0 snap-start overflow-hidden rounded-lg",
-                        "lg:aspect-4/5 lg:h-auto lg:w-auto lg:max-w-none",
-                      )}
-                    >
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        fill
-                        sizes="(max-width: 767px) 78vw, 25vw"
-                        className="object-cover"
-                      />
-                    </div>
-                  ))}
+                  {solution.images &&
+                    solution.images.map((image) => (
+                      <div
+                        key={image.alt}
+                        className={cn(
+                          "relative h-[clamp(24rem,45dvh,28rem)] w-[78vw] max-w-88 shrink-0 snap-start overflow-hidden rounded-lg",
+                          "lg:aspect-4/5 lg:h-auto lg:w-auto lg:max-w-none",
+                        )}
+                      >
+                        <Image
+                          src={image.src}
+                          alt={image.alt}
+                          fill
+                          sizes="(max-width: 767px) 78vw, 25vw"
+                          className="object-cover"
+                        />
+                      </div>
+                    ))}
+                  {solution.covers &&
+                    solution.covers.map((cover) => (
+                      <div
+                        key={cover.title}
+                        className={cn(
+                          "relative h-[clamp(24rem,45dvh,28rem)] w-[78vw] max-w-88 shrink-0 snap-start overflow-hidden rounded-lg bg-[#EAE4DF] p-5",
+                          "lg:aspect-4/5 lg:h-auto lg:w-auto lg:max-w-none",
+                        )}
+                      >
+                        <div
+                          className={cn(
+                            "bg-brand-milk flex h-full w-full flex-col p-6",
+                            "group-odd:-rotate-4",
+                            "group-even:rotate-4",
+                            "transition-transform duration-300 group-hover:rotate-0",
+                          )}
+                        >
+                          <span className="font-display text-brand-terracota text-xl font-medium">
+                            POLE
+                          </span>
+                          <span className="text-brand-charcoal font-display mt-4 mb-auto text-lg leading-tight">
+                            {cover.title}
+                          </span>
+                          <div className="mb-[45%] flex flex-col gap-5">
+                            <i className="border-brand-charcoal/30 h-1 border-b"></i>
+                            <i className="border-brand-charcoal/30 h-1 border-b"></i>
+                            <i className="border-brand-charcoal/30 h-1 border-b"></i>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                 </div>
               </div>
             </SiteContainer>

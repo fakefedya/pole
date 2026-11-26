@@ -17,7 +17,7 @@ export function SiteLayout({ children }: { children: React.ReactNode }) {
       <SiteMain>{children}</SiteMain>
 
       <SiteFooter />
-      {/* <NoiseEffect /> */}
+      <NoiseEffect />
     </SiteSmoothScroll>
   );
 }

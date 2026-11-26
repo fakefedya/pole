@@ -48,7 +48,7 @@ export function MaterialsDetailsDialog({ material }: Props) {
         showCloseButton={false}
         data-lenis-prevent=""
         className={cn(
-          "flex max-h-[calc(100dvh-2rem)] flex-col gap-y-8 overflow-y-auto overscroll-contain rounded-lg bg-neutral-900",
+          "flex max-h-[calc(100dvh-2rem)] flex-col gap-y-8 overflow-y-auto overscroll-contain rounded-lg bg-neutral-900 p-10",
           "lg:max-w-xl",
         )}
       >
@@ -56,7 +56,7 @@ export function MaterialsDetailsDialog({ material }: Props) {
           type="button"
           aria-label="Закрыть окно"
           className={cn(
-            "text-brand-neutral border-brand-milk/15 bg-brand-charcoal/75 absolute top-4 right-4 flex size-9 cursor-pointer items-center justify-center rounded-full border",
+            "text-brand-neutral border-brand-milk/15 bg-brand-charcoal/75 absolute top-10 right-10 flex size-12 cursor-pointer items-center justify-center rounded-full border",
             "hover:border-brand-terracota-accent hover:bg-brand-terracota/20 hover:text-brand-milk transition-colors",
             "focus-visible:outline-brand-terracota-accent focus-visible:outline-2 focus-visible:outline-offset-2",
           )}
@@ -75,13 +75,13 @@ export function MaterialsDetailsDialog({ material }: Props) {
           <h3 className="text-brand-milk text-xl font-medium">
             Предлагаемый состав
           </h3>
-          <ul className="flex flex-col gap-y-2">
+          <ul className="flex flex-col gap-y-4">
             {material.contents.map((item) => (
               <li
                 key={item}
                 className={cn(
                   "text-brand-neutral relative pl-4 text-sm",
-                  "before:bg-brand-neutral before:absolute before:top-1/2 before:left-0 before:h-1.5 before:w-1.5 before:-translate-y-1/2 before:rounded-full",
+                  "before:bg-brand-neutral before:absolute before:top-3 before:left-0 before:h-1.5 before:w-1.5 before:rounded-full",
                   "lg:text-base",
                 )}
               >

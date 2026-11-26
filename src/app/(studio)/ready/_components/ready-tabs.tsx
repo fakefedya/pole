@@ -31,7 +31,7 @@ export function ReadyTabs({ interiors, capsules }: Props) {
                 "data-active:bg-brand-terracota-accent data-active:text-brand-milk",
                 "hover:data-active:text-brand-milk transition-colors duration-300",
                 "hover:text-brand-milk",
-                "lg:px-10lg:py-5 lg:text-xl",
+                "lg:px-10 lg:py-5 lg:text-xl",
               )}
               value="interiors"
             >
@@ -43,7 +43,7 @@ export function ReadyTabs({ interiors, capsules }: Props) {
                 "data-active:bg-brand-terracota-accent data-active:text-brand-milk",
                 "hover:data-active:text-brand-milk transition-colors duration-300",
                 "hover:text-brand-milk",
-                "lg:px-10lg:py-5 lg:text-xl",
+                "lg:px-10 lg:py-5 lg:text-xl",
               )}
               value="capsules"
             >
