@@ -5,7 +5,7 @@ import { readyInformation } from "./ready-description";
 import { cn } from "@/lib/utils";
 
 export function ReadyHero() {
-  const { hero, formats } = readyInformation;
+  const { hero } = readyInformation;
 
   return (
     <SiteSection aria-labelledby="ready-page-title">
@@ -25,14 +25,6 @@ export function ReadyHero() {
             {hero.description}
           </p>
         </div>
-        {/* <div>
-          {Object.entries(formats).map(([id, format]) => (
-            <div key={id}>
-              <h3>{format.label}</h3>
-              <p>{format.description}</p>
-            </div>
-          ))}
-        </div> */}
       </SiteContainer>
     </SiteSection>
   );
