@@ -14,13 +14,17 @@ import { getPublicImageUrl } from "@/lib/storage/public-image";
 type Props = {
   format: (typeof readyInformation.formats)[keyof typeof readyInformation.formats];
   amount?: number;
+  adaptationAmount?: number;
   titleId: string;
 };
 
-export function ReadyCatalogIntro({ format, amount, titleId }: Props) {
+export function ReadyCatalogIntro({ format, amount, adaptationAmount, titleId }: Props) {
   const { catalog } = format;
   const { unit } = getPriceDefinition(catalog.priceCode);
-
+  const adaptationCode =
+    "priceCodeAdaptation" in catalog
+      ? catalog.priceCodeAdaptation
+      : undefined;
   return (
     <section aria-labelledby={titleId}>
       <div className="flex flex-col gap-y-32">
@@ -79,9 +83,18 @@ export function ReadyCatalogIntro({ format, amount, titleId }: Props) {
                   strokeWidth={1.4}
                   className="text-brand-neutral ml-4 shrink-0"
                 />
-                <p className={cn("text-brand-neutral text-sm", "lg:text-base")}>
-                  {catalog.note}
-                </p>
+                <div className="flex flex-col gap-2">
+                  <p className={cn("text-brand-neutral text-sm", "lg:text-base")}>
+                    {catalog.note}
+                  </p>
+                  {adaptationCode && (
+                    <p className={cn("text-brand-milk text-sm font-medium", "lg:text-base")}>
+                      {adaptationAmount === undefined
+                        ? "Стоимость адаптации уточняется"
+                        : `Стоимость адаптации: ${formatPrice(adaptationAmount, getPriceDefinition(adaptationCode).unit)}`}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>

@@ -20,7 +20,7 @@ type IndividualService = {
   album?: {
     title: string;
     description: string;
-    action?: IndividualLink;
+    action?: { label: string; objectKey: string };
   };
 };
 
@@ -130,7 +130,10 @@ export const individualInformation: IndividualDescription = {
         title: "Посмотрите, что вы получите",
         description:
           "Пример альбома проекта: как оформлены рабочие чертежи и спецификации для реализации интерьера.",
-        action: { label: "Посмотреть альбом проекта", href: "/" },
+        action: {
+          label: "Посмотреть альбом проекта",
+          objectKey: "site/individual/albums/sample-design-project.pdf",
+        },
       },
     },
   ],

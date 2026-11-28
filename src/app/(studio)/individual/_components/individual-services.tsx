@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { ArrowUpRight, Send } from "lucide-react";
 import { IndividualDrawingsAccordion } from "./individual-drawings-accordion";
+import { getPublicDocumentUrl } from "@/lib/storage/public-document";
 
 type Props = {
   prices: IndividualPriceMap;
@@ -104,18 +105,20 @@ export function IndividualServices({ prices }: Props) {
                         {service.album.description}
                       </p>
                       {service.album.action && (
-                        <Link
+                        <a
                           className={cn(
                             buttonVariants({ variant: "default", size: "lg" }),
                             "flex h-12 items-center gap-2 px-5 text-sm",
                             "bg-brand-terracota-accent text-brand-milk",
                             "hover:bg-brand-terracota transition-colors duration-300",
                           )}
-                          href={service.album.action.href}
+                          href={getPublicDocumentUrl(service.album.action.objectKey)}
+                          target="_blank"
+                          rel="noopener noreferrer"
                         >
                           {service.album.action.label}
                           <ArrowUpRight size={16} />
-                        </Link>
+                        </a>
                       )}
                     </aside>
                   )}

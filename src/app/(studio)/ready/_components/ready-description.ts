@@ -18,6 +18,7 @@ type ReadyCatalog<Code extends PriceCode> = {
   description: string;
   includes: string;
   priceCode: Code;
+  priceCodeAdaptation?: "ready-adaptation";
   priceDescription: string;
   note: string;
   sample: {
@@ -78,6 +79,7 @@ export const readyInformation = {
           "Визуализации, план мебели с размерами, рабочие чертежи для исходной планировки и спецификации мебели и отделки.",
         priceCode: "ready-interior",
         priceDescription: "Единая цена за любой готовый интерьер.",
+        priceCodeAdaptation: "ready-adaptation",
         note: "Адаптация документации под вашу квартиру оплачивается отдельно.",
         sample: {
           label: "Посмотреть пример комплекта",

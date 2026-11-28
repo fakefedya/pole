@@ -16,6 +16,7 @@ export async function ReadySections() {
         <ReadyCatalogIntro
           format={readyInformation.formats.interiors}
           amount={prices.get("ready-interior")}
+          adaptationAmount={prices.get(readyInformation.formats.interiors.catalog.priceCodeAdaptation)}
           titleId="ready-interiors-title"
         />
       }
