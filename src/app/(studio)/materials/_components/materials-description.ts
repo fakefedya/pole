@@ -42,7 +42,7 @@ export const materialsInformation = {
     items: [
       {
         id: "renovation-budget",
-        coverColor: "bg-brand-cacao",
+        coverColor: "bg-brand-materials-1",
         type: "Таблица Excel",
         title: "Бюджет ремонта",
         description:
@@ -56,7 +56,7 @@ export const materialsInformation = {
       },
       {
         id: "repair-planer",
-        coverColor: "bg-brand-olive",
+        coverColor: "bg-brand-materials-2",
         type: "Документ PDF",
         title: "Планер ремонта",
         description:
@@ -71,7 +71,7 @@ export const materialsInformation = {
       },
       {
         id: "ergonomic-room",
-        coverColor: "bg-brand-terracota",
+        coverColor: "bg-brand-materials-3",
         type: "Документ PDF",
         title: "Эргономика: жилые комнаты",
         description:
@@ -86,7 +86,7 @@ export const materialsInformation = {
       },
       {
         id: "ergonomic-kitchen",
-        coverColor: "bg-brand-terracota",
+        coverColor: "bg-brand-materials-4",
         type: "Документ PDF",
         title: "Эргономика: кухня, санузел и хранение",
         description:
@@ -101,7 +101,7 @@ export const materialsInformation = {
       },
       {
         id: "shopping-plan",
-        coverColor: "bg-brand-terracota",
+        coverColor: "bg-brand-materials-5",
         type: "Таблица Excel",
         title: "План покупок",
         description:

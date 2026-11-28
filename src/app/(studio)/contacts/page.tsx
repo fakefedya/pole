@@ -1,4 +1,6 @@
+
 import { Suspense } from "react";
+import { ContactsInfoSkeleton } from "../_components/studio-page-skeletons";
 
 import { ContactsHeroSection } from "./_components/contacts-hero";
 import { ContactsInfoSection } from "./_components/contacts-info";
@@ -7,7 +9,7 @@ function ContactsPage() {
   return (
     <>
       <ContactsHeroSection />
-      <Suspense fallback={<p className="px-5 py-16 text-brand-neutral">Загружаем форму…</p>}>
+      <Suspense fallback={<ContactsInfoSkeleton />}>
         <ContactsInfoSection />
       </Suspense>
     </>

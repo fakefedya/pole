@@ -1,4 +1,6 @@
+
 import { Suspense } from "react";
+import { ProjectDetailSkeleton } from "../../_components/studio-page-skeletons";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
@@ -291,7 +293,7 @@ async function PublishedProject({ params }: Props) {
 
 export default function ProjectPage({ params }: Props) {
   return (
-    <Suspense fallback={<div className="bg-brand-milk min-h-dvh" />}>
+    <Suspense fallback={<ProjectDetailSkeleton />}>
       <PublishedProject params={params} />
 
       <CTASection

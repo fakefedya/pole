@@ -18,6 +18,12 @@
   --color-brand-black: lab(0% 0 0);
   --color-brand-green: #40b873;
 
+  --color-brand-materials-1: #383b32;
+  --color-brand-materials-2: #51382b;
+  --color-brand-materials-3: #363a3d;
+  --color-brand-materials-4: #3d3836;
+  --color-brand-materials-5: #443030;
+
   --color-dashboard-background: #0a0a0a;
   --color-dashboard-border: #222222;
   --color-dashboard-input: #181818;

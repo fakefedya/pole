@@ -1,7 +1,9 @@
+
 import { Suspense } from 'react'
 
 import { requireDashboardSession } from '@/features/auth/server/access'
 import { DashboardShell } from '@/features/dashboard/components/dashboard-shell'
+import { DashboardShellSkeleton } from '@/features/dashboard/components/dashboard-shell-skeleton'
 import { DashboardRouteBoundary } from '@/features/dashboard/components/dashboard-route-boundary'
 
 async function ProtectedArea({ children }: { children: React.ReactNode }) {
@@ -20,7 +22,7 @@ export default function ProtectedLayout({
 	children: React.ReactNode
 }) {
 	return (
-		<Suspense fallback={null}>
+		<Suspense fallback={<DashboardShellSkeleton />}>
 			<ProtectedArea>{children}</ProtectedArea>
 		</Suspense>
 	)

@@ -1,4 +1,6 @@
+
 import { Suspense } from "react";
+import { FeaturedProjectsSkeleton } from "./_components/studio-page-skeletons";
 import { AboutSection } from "./_components/about-section";
 import { HeroSection } from "./_components/hero/hero-section";
 import { SolutionsSection } from "./_components/solutions/solutions-section";
@@ -22,7 +24,7 @@ export function HomePage() {
       <AboutSection />
       <Suspense
         fallback={
-          <section className="min-h-80" aria-label="Загрузка проектов" />
+          <FeaturedProjectsSkeleton />
         }
       >
         <FeaturedProjectsSection />

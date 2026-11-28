@@ -1,3 +1,4 @@
+
 import { Suspense } from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -71,5 +72,5 @@ async function LeadDetails({ params }: { params: Promise<Params> }) {
 }
 
 export default function DashboardLeadDetailsPage({ params }: { params: Promise<Params> }) {
-  return <Suspense fallback={<DashboardPageSkeleton variant="form" />}><LeadDetails params={params} /></Suspense>;
+  return <Suspense fallback={<DashboardPageSkeleton variant="details" />}><LeadDetails params={params} /></Suspense>;
 }

@@ -1,6 +1,7 @@
+
 import { Skeleton } from '@/components/ui/skeleton'
 
-type Props = { variant?: 'overview' | 'table' | 'form' }
+type Props = { variant?: 'overview' | 'table' | 'form' | 'details' }
 
 /** Screen-specific fallbacks within the authenticated DashboardShell. No second fake sidebar. */
 export function DashboardPageSkeleton({ variant = 'table' }: Props) {
@@ -20,7 +21,40 @@ export function DashboardPageSkeleton({ variant = 'table' }: Props) {
         {variant !== 'overview' && <Skeleton className={`${line} h-9 w-40 rounded-md`} />}
       </div>
 
-      {variant === 'overview' ? (
+      {variant === 'details' ? (
+        <div className='max-w-4xl space-y-6'>
+          <div className='space-y-5 rounded-xl border border-dashboard-border bg-dashboard-input p-6'>
+            <Skeleton className={`${line} h-7 w-48 rounded-md`} />
+            <div className='grid gap-4 sm:grid-cols-2'>
+              {[0, 1, 2, 3].map((index) => (
+                <div key={index} className='space-y-2'>
+                  <Skeleton className='h-4 w-24 rounded-sm bg-dashboard-border' />
+                  <Skeleton className={`${line} h-6 w-3/4 rounded-sm`} />
+                </div>
+              ))}
+            </div>
+            <div className='space-y-3 border-t border-dashboard-border pt-5'>
+              <Skeleton className='h-4 w-32 rounded-sm bg-dashboard-border' />
+              <Skeleton className={`${line} h-5 w-full rounded-sm`} />
+              <Skeleton className={`${line} h-5 w-4/5 rounded-sm`} />
+            </div>
+          </div>
+          <div className='space-y-5 rounded-xl border border-dashboard-border p-6'>
+            <Skeleton className={`${line} h-6 w-44 rounded-md`} />
+            <Skeleton className={`${line} h-11 w-64 max-w-full rounded-md`} />
+            <Skeleton className={`${line} h-24 w-full rounded-md`} />
+          </div>
+          <div className='space-y-4 rounded-xl border border-dashboard-border p-6'>
+            <Skeleton className={`${line} h-6 w-52 rounded-md`} />
+            {[0, 1].map((index) => (
+              <div key={index} className='flex justify-between gap-5 border-t border-dashboard-border pt-4'>
+                <Skeleton className={`${line} h-10 w-40 rounded-md`} />
+                <Skeleton className={`${line} h-10 w-28 rounded-md`} />
+              </div>
+            ))}
+          </div>
+        </div>
+      ) : variant === 'overview' ? (
         <div className='grid gap-4 sm:grid-cols-3'>
           {[0, 1, 2].map((i) => (
             <Skeleton key={i} className={`${line} h-36 rounded-xl`} />

@@ -1,4 +1,6 @@
+
 import { Suspense } from "react";
+import { IndividualSectionsSkeleton } from "../_components/studio-page-skeletons";
 
 import { IndividualHeroSection } from "./_components/individual-hero";
 import { IndividualSections } from "./_components/individual-sections";
@@ -16,7 +18,7 @@ export function IndividualDesignPage() {
   return (
     <>
       <IndividualHeroSection />
-      <Suspense fallback={<section aria-label="Загрузка услуг" />}>
+      <Suspense fallback={<IndividualSectionsSkeleton />}>
         <IndividualSections />
       </Suspense>
 

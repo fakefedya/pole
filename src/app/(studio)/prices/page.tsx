@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { PricesSectionsSkeleton } from "../_components/studio-page-skeletons";
 import { PricesSections } from "./_components/prices-sections";
 import { CTASection } from "@/components/layout/site-cta";
 import { HeroSection } from "./_components/hero-section";
@@ -14,9 +15,7 @@ export function PricesPage() {
   return (
     <>
       <HeroSection />
-      <Suspense
-        fallback={<section className="min-h-96" aria-label="Загрузка цен" />}
-      >
+      <Suspense fallback={<PricesSectionsSkeleton />}>
         <PricesSections />
       </Suspense>
 
