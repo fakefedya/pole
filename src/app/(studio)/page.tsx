@@ -1,4 +1,3 @@
-
 import { Suspense } from "react";
 import { FeaturedProjectsSkeleton } from "./_components/studio-page-skeletons";
 import { AboutSection } from "./_components/about-section";
@@ -22,11 +21,7 @@ export function HomePage() {
     <>
       <HeroSection />
       <AboutSection />
-      <Suspense
-        fallback={
-          <FeaturedProjectsSkeleton />
-        }
-      >
+      <Suspense fallback={<FeaturedProjectsSkeleton />}>
         <FeaturedProjectsSection />
       </Suspense>
       <SolutionsSection />
